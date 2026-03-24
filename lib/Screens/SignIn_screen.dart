@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/Screens/SignUp_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -127,7 +128,9 @@ class _SigninScreenState extends State<SigninScreen> {
                   Text("Don't have an account? ",style: TextStyle(color:Colors.black,fontSize: 15,),//fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute<void>(builder: (context)=>const SignupScreen()));
+                    },
                     child: Text('Sign Up',style: TextStyle(color: Colors.orange,fontSize: 17,decoration: TextDecoration.underline,
                     fontWeight: FontWeight.w600,decorationColor: Colors.orange),),
                   )
