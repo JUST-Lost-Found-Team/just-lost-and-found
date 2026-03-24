@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753528120603",
+    "project_id": "just-lost-and-found",
+    "storage_bucket": "just-lost-and-found.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753528120603:android:52d92958fd92a1b67f5fbe",
+        "android_client_info": {
+          "package_name": "com.example.just_lost_and_found"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCexhkynQYIu-9acsxd_Cbtdc_4FDtqTbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753528120603:android:ab999f0332a66a6b7f5fbe",
+        "android_client_info": {
+          "package_name": "com.example.uni_flutter_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCexhkynQYIu-9acsxd_Cbtdc_4FDtqTbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
