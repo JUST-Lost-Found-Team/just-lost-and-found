@@ -11,6 +11,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final _formKey =GlobalKey<FormState>();
   TextEditingController emailCTRL=TextEditingController();
   TextEditingController passwordCTRL=TextEditingController();
+  bool _isObsure=true;
+  bool loader=false;
   void _submit(){
     if (_formKey.currentState!.validate()){
       print('Success: Welcome JUST student!');
@@ -21,18 +23,23 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
     body: SafeArea(
+      
      child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
+        
         child:Form(
           key:_formKey,
+          
           child: Column(
+          
             children: [
-              Image.asset('images/Gemini_Generated_Image.png',height: 200,fit:BoxFit.cover),
+              const SizedBox(height: 30,),
+              Image.asset('images/lost_and_found_logoo.png',height: 200,fit:BoxFit.cover),
               const Text(
                'Sign In',
                style: TextStyle(
-                color:Colors.black,
+                color:Color.fromARGB(255, 68, 118, 164),
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
                ),
@@ -56,7 +63,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     if (value == null || value.isEmpty) 
                     return 'Enter email';
                     
-                    if (!value.endsWith('@just.edu.jo')) {
+                    if (!value.endsWith('just.edu.jo')) {
                       return 'Use your JUST university email only';
                     }
                     return null;
@@ -76,13 +83,16 @@ class _SigninScreenState extends State<SigninScreen> {
                 prefixIcon: Icon(Icons.lock),
                 suffixIcon: GestureDetector(
                   onTap:(){
+                    setState(() {
+                        _isObsure=!_isObsure;
+                    });
                     
                   },
-                  child: Icon(Icons.remove_red_eye_outlined),
+                  child: Icon(_isObsure ? Icons.visibility_off : Icons.visibility),
                 ),
                ),
                keyboardType: TextInputType.visiblePassword,
-               obscureText: true,
+               obscureText:_isObsure,
               ),
               const SizedBox(height: 10,),
               Row(
@@ -96,9 +106,32 @@ class _SigninScreenState extends State<SigninScreen> {
                 ],
               ),
               const SizedBox(height: 32,),
-              // SizedBox(
-              //   width: ,
-              // )
+              SizedBox(
+                width:double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: _submit,
+                 child: Text('Sign In',style:TextStyle(color:Colors.white),),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFE4973F),
+                  shape:RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    ),
+                ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Don't have an account? ",style: TextStyle(color:Colors.black,fontSize: 15,),//fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: (){},
+                    child: Text('Sign Up',style: TextStyle(color: Colors.orange,fontSize: 17,decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w600,decorationColor: Colors.orange),),
+                  )
+                ],),
             ],
            
           ),
