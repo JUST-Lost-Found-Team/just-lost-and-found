@@ -16,7 +16,7 @@ void main()async {
 
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-     home: ProfilePage()));
+     home: SigninScreen()));
 }
 
 class MyApp extends StatelessWidget {
