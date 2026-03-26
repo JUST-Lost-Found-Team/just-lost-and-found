@@ -12,9 +12,41 @@ class AuthServices{
 
   }
   static handleSignUp(String email,String password,BuildContext context)async{
-    String message=await SignUpWithEmail(email, password);
+    String message=await SignUpWithEmail(email, password,);
     showSnackBar(message,context);
 
+  }
+  static Future<String>SignInWithEmail(String email,String password, BuildContext context)async{
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      return 'Sign In Successful!';
+    } catch (e) {
+      return 'Error during SignIn:${e.toString()}';
+    }
+  }
+  static handleSignIn(String email,String password,BuildContext context)async{
+    String message=await SignInWithEmail(email, password,context);
+    showSnackBar(message, context);
+  }
+  //هون كود عشان الي ناسي الباس تاعه (دانا)
+  static Future<String> resetPassword(String email)async{
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email:email.trim());
+      return 'Success : Reset link sent to your email';
+    } catch (e) {
+      return 'Error: ${e.toString()}';
+      
+    }
+
+  }
+  static Future<bool> userLogin()async{
+    final User? user =FirebaseAuth.instance.currentUser;
+    if(user!=null){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }
 
