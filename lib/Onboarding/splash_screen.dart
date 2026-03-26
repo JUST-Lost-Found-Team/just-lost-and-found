@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:just_lost_and_found/Screens/Home_screen.dart';
 import 'package:just_lost_and_found/managers/theme_manager.dart';
 import 'on_boarding_screen.dart';
 
@@ -24,7 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        //here we will implement the code that would actually takes us inside the app rather than keep showing the onboarding.
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const FeedPage()),
+        );
       } else {
         Navigator.pushReplacement(
           context,
