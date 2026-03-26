@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/Screens/Forget_password_screen.dart';
+import 'package:just_lost_and_found/Screens/Home_screen.dart';
 import 'package:just_lost_and_found/Screens/SignUp_screen.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 
@@ -30,6 +31,7 @@ class _SigninScreenState extends State<SigninScreen> {
         });
       }
     }
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>FeedPage()));
   }
   @override
   Widget build(BuildContext context) {
@@ -125,6 +127,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: _submit,
+                  
                  child: Text('Sign In',
                  style:TextStyle(color:Colors.white),),
                 style: ElevatedButton.styleFrom(
