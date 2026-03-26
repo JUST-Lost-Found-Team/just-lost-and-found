@@ -78,6 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 30),
+                  Image.asset('images/lost_and_found_logoo.png',height: 200,fit:BoxFit.cover),
                   const Text(
                     'Sign Up',
                     style: TextStyle(
@@ -85,6 +86,20 @@ class _SignupScreenState extends State<SignupScreen> {
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
                     ),
+                  ),
+                  const Text(
+                   'Because losing things is hard,\n finding them should be easy.',
+                   style: TextStyle(color:Color(0xFFE4973F),
+                   fontSize: 18,
+                   fontStyle: FontStyle.italic),
+                   
+                  ),
+                  const Text(
+                    'JOIN US NOW !',
+                     style: TextStyle(color:Color(0xFFE4973F),
+                    fontWeight: FontWeight.bold,
+                    fontSize:20, 
+                  ),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(

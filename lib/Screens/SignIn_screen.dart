@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/Screens/Forget_password_screen.dart';
 import 'package:just_lost_and_found/Screens/SignUp_screen.dart';
+import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -14,10 +16,19 @@ class _SigninScreenState extends State<SigninScreen> {
   TextEditingController passwordCTRL=TextEditingController();
   bool _isObsure=true;
   bool loader=false;
-  void _submit(){
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()){
-      print('Success: Welcome JUST student!');
-      //رح نحتاج نحط اشي للفايبربيس هون يا بنات
+      setState(() {
+        loader=true;
+      });
+      await AuthServices.SignInWithEmail(emailCTRL.text.toString(), 
+      passwordCTRL.text.toString(),
+      context);
+      if(mounted){
+        setState(() {
+          loader=false;
+        });
+      }
     }
   }
   @override
@@ -100,7 +111,9 @@ class _SigninScreenState extends State<SigninScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const ForgetPasswordScreen()));
+                    },
                     child: Text('Forget your password?',style: TextStyle(color: Colors.orange,fontSize: 13,fontWeight: FontWeight.bold),),
                   ),
 
@@ -112,7 +125,8 @@ class _SigninScreenState extends State<SigninScreen> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: _submit,
-                 child: Text('Sign In',style:TextStyle(color:Colors.white),),
+                 child: Text('Sign In',
+                 style:TextStyle(color:Colors.white),),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFE4973F),
                   shape:RoundedRectangleBorder(
