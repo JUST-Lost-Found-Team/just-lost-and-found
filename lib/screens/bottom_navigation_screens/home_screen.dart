@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 41, 94, 132),
+        backgroundColor: ThemeManager.primaryBlue,
         elevation: 5,
         title: const Text("JLF", style: TextStyle(color: Colors.white)),
         actions: [
@@ -59,7 +60,7 @@ class _FeedPageState extends State<FeedPage> {
         width: 55,
         child: FloatingActionButton(
           onPressed: () {},
-          backgroundColor: Color(0xFFE4973F),
+          backgroundColor: ThemeManager.primaryYellow,
           child: const Icon(Icons.add, size: 35, color: Colors.black),
         ),
       ),
@@ -85,16 +86,16 @@ class _FeedPageState extends State<FeedPage> {
                           Icons.home,
                           size: 28,
                           color: _currentIndex == 0
-                              ? Color(0xFFE4973F)
-                              : Color.fromARGB(255, 41, 94, 132),
+                              ? ThemeManager.primaryYellow
+                              : ThemeManager.primaryBlue,
                         ),
                         Text(
                           "Home",
                           style: TextStyle(
                             fontSize: 12,
                             color: _currentIndex == 0
-                                ? Color(0xFFE4973F)
-                                : Color.fromARGB(255, 41, 94, 132),
+                                ? ThemeManager.primaryYellow
+                                : ThemeManager.primaryBlue,
                           ),
                         ),
                       ],
@@ -110,16 +111,16 @@ class _FeedPageState extends State<FeedPage> {
                           Icons.manage_search_outlined,
                           size: 28,
                           color: _currentIndex == 1
-                              ? Color(0xFFE4973F)
-                              : Color.fromARGB(255, 41, 94, 132),
+                              ? ThemeManager.primaryYellow
+                              : ThemeManager.primaryBlue,
                         ),
                         Text(
                           "Explore",
                           style: TextStyle(
                             fontSize: 12,
                             color: _currentIndex == 1
-                                ? Color(0xFFE4973F)
-                                : Color.fromARGB(255, 41, 94, 132),
+                                ? ThemeManager.primaryYellow
+                                : ThemeManager.primaryBlue,
                           ),
                         ),
                       ],
@@ -139,16 +140,16 @@ class _FeedPageState extends State<FeedPage> {
                           Icons.chat,
                           size: 28,
                           color: _currentIndex == 2
-                              ? Color(0xFFE4973F)
-                              : Color.fromARGB(255, 41, 94, 132),
+                              ? ThemeManager.primaryYellow
+                              : ThemeManager.primaryBlue,
                         ),
                         Text(
                           "Messages",
                           style: TextStyle(
                             fontSize: 12,
                             color: _currentIndex == 2
-                                ? Color(0xFFE4973F)
-                                : Color.fromARGB(255, 41, 94, 132),
+                                ? ThemeManager.primaryYellow
+                                : ThemeManager.primaryBlue,
                           ),
                         ),
                       ],
@@ -164,16 +165,16 @@ class _FeedPageState extends State<FeedPage> {
                           Icons.person,
                           size: 28,
                           color: _currentIndex == 3
-                              ? Color(0xFFE4973F)
-                              : Color.fromARGB(255, 41, 94, 132),
+                              ? ThemeManager.primaryYellow
+                              : ThemeManager.primaryBlue,
                         ),
                         Text(
                           "Profile",
                           style: TextStyle(
                             fontSize: 12,
                             color: _currentIndex == 3
-                                ? Color(0xFFE4973F)
-                                : Color.fromARGB(255, 41, 94, 132),
+                                ? ThemeManager.primaryYellow
+                                : ThemeManager.primaryBlue,
                           ),
                         ),
                       ],
