@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/Screens/SignUp_screen.dart';
-import 'package:just_lost_and_found/managers/theme_manager.dart';
+import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -21,19 +21,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         "title": "Welcome to JUST Lost & Found",
         "subtitle":
             "Find your belongings and help others find theirs - easily, and in one place.",
-        "image": "images/onboarding1.png",
+        "image": "assets/images/onboarding1.png",
       },
       {
         "title": "Lost something?",
         "subtitle":
             "Create a post with details and images, and let the community help you find it.",
-        "image": "images/onboarding2.png",
+        "image": "assets/images/onboarding2.png",
       },
       {
         "title": "Found Something?",
         "subtitle":
             "Share where you found it and where you kept it—return it to its owner.",
-        "image": "images/onboarding3.png",
+        "image": "assets/images/onboarding3.png",
       },
     ];
 
@@ -175,8 +175,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignupScreen(),
+                                      builder: (context) => const LoginScreen(),
                                     ),
                                   );
                                 } else {
@@ -227,7 +226,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
+                        builder: (context) => const LoginScreen(),
                       ),
                     );
                   },

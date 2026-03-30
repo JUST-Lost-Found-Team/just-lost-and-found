@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailCTRL = TextEditingController();
   TextEditingController passwordCTRL = TextEditingController();
@@ -17,46 +18,43 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-    
       setState(() {
         loader = true;
       });
 
       try {
-        
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailCTRL.text.trim(),
           password: passwordCTRL.text.trim(),
         );
 
-        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Success! Account Created.'),
-              backgroundColor: Colors.green,
+              backgroundColor: ThemeManager.successGreen,
             ),
           );
         }
       } on FirebaseAuthException catch (e) {
-        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(e.message ?? 'Registration Failed'),
-              backgroundColor: Colors.red,
+              backgroundColor: ThemeManager.errorRed,
             ),
           );
         }
       } catch (e) {
-        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('An error occurred'), backgroundColor: Colors.red),
+            const SnackBar(
+              content: Text('An error occurred'),
+              backgroundColor: ThemeManager.errorRed,
+            ),
           );
         }
       } finally {
-        
         if (mounted) {
           setState(() {
             loader = false;
@@ -78,8 +76,11 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  Image.asset('images/lost_and_found_logoo.png',height: 200,fit:BoxFit.cover),
-                  const Text(
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ), const Text(
                     'Sign Up',
                     style: TextStyle(
                       color: Color.fromARGB(255, 68, 118, 164),
@@ -88,19 +89,20 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   const Text(
-                   'Because losing things is hard,\n finding them should be easy.',
-                   style: TextStyle(color:Color(0xFFE4973F),
-                   fontSize: 18,
-                   fontStyle: FontStyle.italic),
-                   
+                    'Because losing things is hard,\n finding them should be easy.',
+                    style: TextStyle(color:Color(0xFFE4973F),
+                        fontSize: 18,
+                        fontStyle: FontStyle.italic),
+
                   ),
                   const Text(
                     'JOIN US NOW !',
-                     style: TextStyle(color:Color(0xFFE4973F),
-                    fontWeight: FontWeight.bold,
-                    fontSize:20, 
+                    style: TextStyle(color:Color(0xFFE4973F),
+                      fontWeight: FontWeight.bold,
+                      fontSize:20,
+                    ),
                   ),
-                  ),
+
                   const SizedBox(height: 30),
                   TextFormField(
                     controller: emailCTRL,
@@ -138,7 +140,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.lock),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Enter password';
+                      if (value == null || value.isEmpty)
+                        return 'Enter password';
                       if (value.length < 6) return 'Password too short';
                       return null;
                     },
@@ -158,8 +161,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       prefixIcon: const Icon(Icons.lock_outline),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Please confirm your password';
-                      if (value != passwordCTRL.text) return 'Passwords do not match!';
+                      if (value == null || value.isEmpty)
+                        return 'Please confirm your password';
+                      if (value != passwordCTRL.text)
+                        return 'Passwords do not match!';
                       return null;
                     },
                   ),
@@ -170,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: ElevatedButton(
                       onPressed: loader ? null : _submit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE4973F),
+                        backgroundColor: ThemeManager.primaryYellow,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

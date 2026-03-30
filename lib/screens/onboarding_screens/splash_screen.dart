@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:just_lost_and_found/Screens/Home_screen.dart';
-import 'package:just_lost_and_found/managers/theme_manager.dart';
+import 'package:just_lost_and_found/Screens/home_screen.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'on_boarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,11 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              "images/lost_and_found_logoo.png",
-              height: 200,
-              width: 200,
-            ),
+            Image.asset("assets/images/logo.png", height: 200, width: 200),
             const SizedBox(height: 16),
             Text(
               "Find what's yours,",

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:just_lost_and_found/services/Auth-service_screen.dart';
-import 'package:just_lost_and_found/Screens/SignIn_screen.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
+import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
       Future.microtask(() {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const SigninScreen()),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
         );
       });
     }
@@ -23,11 +23,11 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A5F),
-        title: const Text("Profile",style:TextStyle(
-          color:Color(0xFFE4973F),
-        )),
+        title: const Text(
+          "Profile",
+          style: TextStyle(color: ThemeManager.primaryYellow),
+        ),
         centerTitle: true,
-        
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: const Color(0xFFE4973F),
+                  backgroundColor: ThemeManager.primaryYellow,
                   child: const Icon(
                     Icons.person,
                     size: 40,
@@ -76,7 +76,7 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Color(0xFF1E3A5F)),
                 ),
                 Switch(
-                  activeColor: Color(0xFFE4973F),
+                  activeColor: ThemeManager.primaryYellow,
                   value: false,
                   onChanged: (value) {},
                 ),
@@ -84,7 +84,10 @@ class ProfilePage extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.language, color: Color(0xFFE4973F)),
+              leading: const Icon(
+                Icons.language,
+                color: ThemeManager.primaryYellow,
+              ),
               title: const Text(
                 "Change Language",
                 style: TextStyle(color: Color(0xFF1E3A5F)),
@@ -94,7 +97,10 @@ class ProfilePage extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.post_add, color: Color(0xFFE4973F)),
+              leading: const Icon(
+                Icons.post_add,
+                color: ThemeManager.primaryYellow,
+              ),
               title: const Text(
                 "My Posts",
                 style: TextStyle(color: Color(0xFF1E3A5F)),
@@ -104,19 +110,16 @@ class ProfilePage extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: const Icon(Icons.logout, color: ThemeManager.errorRed),
               title: const Text(
                 "Logout",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: ThemeManager.errorRed),
               ),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () async {
-               
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const SigninScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
             ),
