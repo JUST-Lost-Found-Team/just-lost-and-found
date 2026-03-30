@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/add_post_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class FeedPage extends StatefulWidget {
@@ -59,7 +60,12 @@ class _FeedPageState extends State<FeedPage> {
         height: 55,
         width: 55,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddPost()),
+            );
+          },
           backgroundColor: ThemeManager.primaryYellow,
           child: const Icon(Icons.add, size: 35, color: Colors.black),
         ),
