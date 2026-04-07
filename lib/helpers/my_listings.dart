@@ -1,5 +1,6 @@
 class ListingOptions {
   static const List<String> categories = [
+    "All",
     "Keys & Wallets",
     "Electronics",
     "Books/papers",
