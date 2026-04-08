@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/filter_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'bottom_navigation_screens/home_screen.dart';
 import 'bottom_navigation_screens/chats_screen.dart';
@@ -36,7 +37,9 @@ class _FeedPageState extends State<FeedPage> {
           IconButton(
             icon: const Icon(Icons.filter_alt),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>FilterScreen()));
+            },
           ),
         ],
       ),
