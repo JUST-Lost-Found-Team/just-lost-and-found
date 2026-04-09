@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/helpers/my_listings.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class AddPost extends StatefulWidget {
@@ -81,13 +80,13 @@ class _AddPostState extends State<AddPost> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSectionTitle("Location:"),
-                        _buildDropdown(
-                          hint: "Select",
-                          value: _selectedLocation,
-                          items: ListingOptions.locations,
-                          onChanged: (val) =>
-                              setState(() => _selectedLocation = val),
-                        ),
+                        // _buildDropdown(
+                        //   hint: "Select",
+                        //   value: _selectedLocation,
+                        //   items: ListingOptions.locations,
+                        //   onChanged: (val) =>
+                        //       setState(() => _selectedLocation = val),
+                        // ),
                       ],
                     ),
                   ),
@@ -97,13 +96,13 @@ class _AddPostState extends State<AddPost> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSectionTitle("Category:"),
-                        _buildDropdown(
-                          hint: "Select",
-                          value: _selectedCategory,
-                          items: ListingOptions.categories,
-                          onChanged: (val) =>
-                              setState(() => _selectedCategory = val),
-                        ),
+                        // _buildDropdown(
+                        //   hint: "Select",
+                        //   value: _selectedCategory,
+                        //   items: ListingOptions.categories,
+                        //   onChanged: (val) =>
+                        //       setState(() => _selectedCategory = val),
+                        // ),
                       ],
                     ),
                   ),

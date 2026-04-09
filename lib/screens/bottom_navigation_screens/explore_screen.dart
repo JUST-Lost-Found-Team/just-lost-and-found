@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/helpers/my_listings.dart';
+import 'package:just_lost_and_found/helpers/explore_options.dart';
+
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -114,7 +115,7 @@ class _ExplorePageState extends State<ExplorePage> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(vertical: 5),
-              itemCount: ListingOptions.categories.length,
+              itemCount: Categories.categories.length,
               itemBuilder: (context, index) {
                 final isSelected = selectedCategory == index;
 
@@ -142,7 +143,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      ListingOptions.categories[index],
+                      Categories.categories[index],
                       style: TextStyle(
                         color: isSelected ? Colors.white : Colors.black,
                       ),
