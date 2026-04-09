@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/helpers/explore_options.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class AddPost extends StatefulWidget {
@@ -21,6 +22,64 @@ class _AddPostState extends State<AddPost> {
 
   final Color _fillColor = const Color(0xFFDFE7ED);
 
+  late List<DropdownMenuItem<String>> _locationDropdownItems;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _locationDropdownItems = _getLocationDropdownItems();
+  }
+
+  List<DropdownMenuItem<String>> _getLocationDropdownItems() {
+    List<DropdownMenuItem<String>> items = [];
+
+    LocationData.locationsMap.forEach((sectionTitle, buildings) {
+      items.add(
+        DropdownMenuItem<String>(
+          enabled: false,
+          value: null,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+            child: Text(
+              sectionTitle,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: ThemeManager.primaryBlue,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // I am keeping this because I think this is how I am gonna store the locations in the database.
+
+      String cleanSectionTitle = sectionTitle
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .trim();
+
+      for (var building in buildings) {
+        String uniqueValue = "$building - $cleanSectionTitle";
+
+        items.add(
+          DropdownMenuItem<String>(
+            value: uniqueValue,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text(
+                building,
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
+              ),
+            ),
+          ),
+        );
+      }
+    });
+
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +87,13 @@ class _AddPostState extends State<AddPost> {
       appBar: AppBar(
         backgroundColor: ThemeManager.primaryBlue,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "Add Post",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -73,40 +132,36 @@ class _AddPostState extends State<AddPost> {
 
               const SizedBox(height: 16),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Location:"),
-                        // _buildDropdown(
-                        //   hint: "Select",
-                        //   value: _selectedLocation,
-                        //   items: ListingOptions.locations,
-                        //   onChanged: (val) =>
-                        //       setState(() => _selectedLocation = val),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle("Category:"),
-                        // _buildDropdown(
-                        //   hint: "Select",
-                        //   value: _selectedCategory,
-                        //   items: ListingOptions.categories,
-                        //   onChanged: (val) =>
-                        //       setState(() => _selectedCategory = val),
-                        // ),
-                      ],
-                    ),
-                  ),
-                ],
+              _buildSectionTitle("Location:"),
+              _buildDropdown(
+                hint: "Select Campus Location...",
+                value: _selectedLocation,
+                items: _locationDropdownItems,
+                onChanged: (val) => setState(() => _selectedLocation = val),
+              ),
+
+              const SizedBox(height: 16),
+
+              _buildSectionTitle("Category:"),
+              _buildDropdown(
+                hint: "Select Item Category...",
+                value: _selectedCategory,
+
+                items: Categories.categories
+                    .map(
+                      (item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (val) => setState(() => _selectedCategory = val),
               ),
 
               const SizedBox(height: 20),
@@ -237,7 +292,7 @@ class _AddPostState extends State<AddPost> {
           value == null || value.trim().isEmpty ? "Required field" : null,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade500),
+        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
         filled: true,
         fillColor: _fillColor,
         border: OutlineInputBorder(
@@ -255,26 +310,19 @@ class _AddPostState extends State<AddPost> {
   Widget _buildDropdown({
     required String hint,
     required String? value,
-    required List<String> items,
+    required List<DropdownMenuItem<String>> items,
     required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
-      items: items
-          .map(
-            (item) => DropdownMenuItem(
-              value: item,
-              child: Text(item, overflow: TextOverflow.ellipsis),
-            ),
-          )
-          .toList(),
+      items: items,
       onChanged: onChanged,
       validator: (value) => value == null ? "Required" : null,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade500),
+        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
         filled: true,
         fillColor: _fillColor,
         border: OutlineInputBorder(
@@ -283,12 +331,13 @@ class _AddPostState extends State<AddPost> {
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 14,
+          vertical: 18,
         ),
       ),
       icon: const Icon(
         Icons.keyboard_arrow_down_rounded,
         color: ThemeManager.primaryYellow,
+        size: 28,
       ),
     );
   }
@@ -305,7 +354,6 @@ class _AddPostState extends State<AddPost> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
-
           const SizedBox(height: 10),
           Text(
             "press to add the photos",
