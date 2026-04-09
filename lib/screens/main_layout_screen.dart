@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/screens/bottom_navigation_screens/filter_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'bottom_navigation_screens/home_screen.dart';
 import 'bottom_navigation_screens/chats_screen.dart';
@@ -7,18 +6,19 @@ import 'bottom_navigation_screens/explore_screen.dart';
 import 'bottom_navigation_screens/profile_screen.dart';
 import 'bottom_navigation_screens/add_post_screen.dart';
 
-class FeedPage extends StatefulWidget {
-  const FeedPage({Key? key}) : super(key: key);
+class MainLayoutScreen extends StatefulWidget {
+  const MainLayoutScreen({Key? key}) : super(key: key);
 
   @override
-  State<FeedPage> createState() => _FeedPageState();
+  State<MainLayoutScreen> createState() => _MainLayoutScreenState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _MainLayoutScreenState extends State<MainLayoutScreen> {
   int _currentIndex = 0;
 
   final List<Widget> pages = [HomePage(), ExplorePage(), Chat(), ProfilePage()];
-
+  final List pageTitles = ["Home", "Explore", "Messages", "Profile"];
+  String selectedFilter = "All";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,20 +27,112 @@ class _FeedPageState extends State<FeedPage> {
         titleSpacing: 20,
         backgroundColor: ThemeManager.primaryBlue,
         elevation: 5,
-        title: const Text("JLF", style: TextStyle(color: Colors.white)),
+
+        title: _currentIndex == 0
+            ? Image.asset("assets/images/logo.png", height: 50)
+            : Text(
+                pageTitles[_currentIndex],
+                style: TextStyle(color: Colors.white),
+              ),
+        centerTitle: _currentIndex == 0 ? false : true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            color: Colors.white,
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>FilterScreen()));
-            },
-          ),
+          if (_currentIndex == 0) ...[
+            IconButton(
+              icon: const Icon(Icons.notifications_rounded),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              offset: const Offset(0, 45),
+              onSelected: (String newValue) {
+                setState(() {
+                  selectedFilter = newValue;
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'All',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'All',
+                        style: TextStyle(
+                          fontWeight: selectedFilter == 'All'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: selectedFilter == 'All'
+                              ? ThemeManager.primaryBlue
+                              : Colors.black87,
+                        ),
+                      ),
+                      if (selectedFilter == 'All')
+                        Icon(
+                          Icons.check,
+                          color: ThemeManager.primaryBlue,
+                          size: 20,
+                        ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Lost',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Lost',
+                        style: TextStyle(
+                          fontWeight: selectedFilter == 'Lost'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: selectedFilter == 'Lost'
+                              ? ThemeManager.primaryBlue
+                              : Colors.black87,
+                        ),
+                      ),
+                      if (selectedFilter == 'Lost')
+                        Icon(
+                          Icons.check,
+                          color: ThemeManager.primaryBlue,
+                          size: 20,
+                        ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Found',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Found',
+                        style: TextStyle(
+                          fontWeight: selectedFilter == 'Found'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: selectedFilter == 'Found'
+                              ? ThemeManager.primaryBlue
+                              : Colors.black87,
+                        ),
+                      ),
+                      if (selectedFilter == 'Found')
+                        Icon(
+                          Icons.check,
+                          color: ThemeManager.primaryBlue,
+                          size: 20,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
       body: pages[_currentIndex],
@@ -49,7 +141,6 @@ class _FeedPageState extends State<FeedPage> {
         height: 55,
         width: 55,
         child: FloatingActionButton(
-          tooltip: "Add Post",
           onPressed: () {
             Navigator.push(
               context,
@@ -57,7 +148,11 @@ class _FeedPageState extends State<FeedPage> {
             );
           },
           backgroundColor: ThemeManager.primaryYellow,
-          child: const Icon(Icons.add, size: 35, color: Colors.black),
+          child: const Icon(
+            Icons.add,
+            size: 35,
+            color: ThemeManager.primaryBlue,
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
