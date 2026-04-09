@@ -1,3 +1,5 @@
+//import 'dart:nativewrappers/_internal/vm/lib/ffi_native_type_patch.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,17 +18,20 @@ class AuthServices{
     showSnackBar(message,context);
 
   }
-  static Future<String>SignInWithEmail(String email,String password, BuildContext context)async{
+  static Future<bool>SignInWithEmail(String email,String password, BuildContext context)async{
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      return 'Sign In Successful!';
+      return true;
     } catch (e) {
-      return 'Error during SignIn:${e.toString()}';
+      showSnackBar( 'Error:${e.toString()}',context);
+      return false;
     }
   }
   static handleSignIn(String email,String password,BuildContext context)async{
-    String message=await SignInWithEmail(email, password,context);
-    showSnackBar(message, context);
+    bool success=await SignInWithEmail(email, password,context);
+    if(success){
+      showSnackBar("Sign In Successful!", context);
+    }
   }
   //هون كود عشان الي ناسي الباس تاعه (دانا)
   static Future<String> resetPassword(String email)async{
