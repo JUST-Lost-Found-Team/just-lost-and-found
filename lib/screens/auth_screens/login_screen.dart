@@ -23,23 +23,43 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         loader = true;
       });
-      await AuthServices.SignInWithEmail(
-        emailCTRL.text.toString(),
-        passwordCTRL.text.toString(),
-        context,
-      );
-      if (mounted) {
-        setState(() {
-          loader = false;
-        });
-      }
-    }
-    Navigator.push(
+       bool isSuccess = await AuthServices.SignInWithEmail(
+      emailCTRL.text.trim(),
+      passwordCTRL.text.trim(),
       context,
-      MaterialPageRoute(builder: (context) => FeedPage()),
     );
-  }
 
+    if (mounted) {
+      setState(() {
+        loader = false;
+      });
+       if (isSuccess == true){ 
+        // إذا نجح (true)، دخله عالتطبيق
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const FeedPage()),
+        );
+      }else {
+        // إذا فشل (false)، ما تعمل إشي! 
+        // هو أصلاً رح يطلع الـ SnackBar البرتقالي اللي بالصورة ويضل مكانه
+        print("Login failed, staying on login screen.");
+      }
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(builder: (context)=>const FeedPage()));
+      //   }
+      // }catch(e){
+      //   if(mounted){
+      //     setState(() {
+      //       loader=false;
+      //     });
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(content:Text("Login Failed:${e.toString()}")));
+      //   }
+      // }
+    }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,3 +222,5 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
