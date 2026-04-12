@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:just_lost_and_found/helpers/explore_options.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
+import 'package:just_lost_and_found/services/cloudinary_service.dart';
 
 class AddPost extends StatefulWidget {
   const AddPost({super.key});
@@ -11,73 +16,115 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   final _formKey = GlobalKey<FormState>();
-
+  List<File> _selectedImages = [];
+  final ImagePicker _picker = ImagePicker();
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
-
   bool _isLost = true;
-
+  bool _isLoading = false;
   String? _selectedCategory;
   String? _selectedLocation;
+  final Color _fillColor = Colors.grey.shade200;
 
-  final Color _fillColor = const Color(0xFFDFE7ED);
+  Future<void> _pickImages() async {
+    final List<XFile> images = await _picker.pickMultiImage(
+      imageQuality: 70,
+      maxWidth: 1080,
+      maxHeight: 1080,
+    );
 
-  late List<DropdownMenuItem<String>> _locationDropdownItems;
+    if (images.isNotEmpty) {
+      int availableSlots = 3 - _selectedImages.length;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _locationDropdownItems = _getLocationDropdownItems();
-  }
-
-  List<DropdownMenuItem<String>> _getLocationDropdownItems() {
-    List<DropdownMenuItem<String>> items = [];
-
-    LocationData.locationsMap.forEach((sectionTitle, buildings) {
-      items.add(
-        DropdownMenuItem<String>(
-          enabled: false,
-          value: null,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-            child: Text(
-              sectionTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: ThemeManager.primaryBlue,
-              ),
+      if (images.length > availableSlots && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "You can only select up to 3 images, Extra images were ignored",
             ),
-          ),
-        ),
-      );
-
-      // I am keeping this because I think this is how I am gonna store the locations in the database.
-
-      String cleanSectionTitle = sectionTitle
-          .replaceAll(RegExp(r'[^\w\s]+'), '')
-          .trim();
-
-      for (var building in buildings) {
-        String uniqueValue = "$building - $cleanSectionTitle";
-
-        items.add(
-          DropdownMenuItem<String>(
-            value: uniqueValue,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text(
-                building,
-                style: const TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-            ),
+            backgroundColor: ThemeManager.errorRed,
           ),
         );
       }
+
+      setState(() {
+        for (var img in images) {
+          if (_selectedImages.length < 3) {
+            _selectedImages.add(File(img.path));
+          }
+        }
+      });
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _selectedImages.removeAt(index);
+    });
+  }
+
+  Future<void> _submitPost() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select at least one image!")),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
     });
 
-    return items;
+    try {
+      List<String> imageUrls = [];
+      Cloudinary cloudinary = Cloudinary();
+
+      for (var file in _selectedImages) {
+        String? url = await cloudinary.uploadToCloudinary(file);
+        if (url != null) {
+          imageUrls.add(url);
+        }
+      }
+
+      await FirebaseFirestore.instance.collection('posts').add({
+        'title': _titleController.text.trim(),
+        'description': _descController.text.trim(),
+        'location': _selectedLocation,
+        'category': _selectedCategory,
+        'status': _isLost ? 'Lost' : 'Found',
+        'images': imageUrls,
+        'createdAt': FieldValue.serverTimestamp(),
+        'isResolved': false,
+        'userId': FirebaseAuth.instance.currentUser?.uid,
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Post added successfully!'),
+            backgroundColor: ThemeManager.successGreen,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload post: $e'),
+            backgroundColor: ThemeManager.errorRed,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -104,14 +151,16 @@ class _AddPostState extends State<AddPost> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle("Add Photos of the item (up to 4)"),
-              GestureDetector(
-                onTap: () {},
-                child: _buildImagePickerBox(
-                  height: 180,
-                  width: double.infinity,
-                ),
-              ),
+              _buildSectionTitle("Add Photos of the item (up to 3)"),
+              _selectedImages.isEmpty
+                  ? GestureDetector(
+                      onTap: _pickImages,
+                      child: _buildImagePickerBox(
+                        height: 180,
+                        width: double.infinity,
+                      ),
+                    )
+                  : _buildImagePreviewList(),
 
               const SizedBox(height: 20),
 
@@ -136,7 +185,21 @@ class _AddPostState extends State<AddPost> {
               _buildDropdown(
                 hint: "Select Campus Location...",
                 value: _selectedLocation,
-                items: _locationDropdownItems,
+
+                items: LocationData.locations
+                    .map(
+                      (item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (val) => setState(() => _selectedLocation = val),
               ),
 
@@ -146,7 +209,6 @@ class _AddPostState extends State<AddPost> {
               _buildDropdown(
                 hint: "Select Item Category...",
                 value: _selectedCategory,
-
                 items: Categories.categories
                     .map(
                       (item) => DropdownMenuItem<String>(
@@ -244,7 +306,7 @@ class _AddPostState extends State<AddPost> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _submitPost,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ThemeManager.primaryBlue,
                     shape: RoundedRectangleBorder(
@@ -252,14 +314,16 @@ class _AddPostState extends State<AddPost> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    "Add Post",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Add Post",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -317,12 +381,14 @@ class _AddPostState extends State<AddPost> {
       isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
+      menuMaxHeight: 400,
+      borderRadius: BorderRadius.circular(15),
       items: items,
       onChanged: onChanged,
       validator: (value) => value == null ? "Required" : null,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
+        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
         filled: true,
         fillColor: _fillColor,
         border: OutlineInputBorder(
@@ -331,13 +397,13 @@ class _AddPostState extends State<AddPost> {
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 18,
+          vertical: 16,
         ),
       ),
       icon: const Icon(
         Icons.keyboard_arrow_down_rounded,
         color: ThemeManager.primaryYellow,
-        size: 28,
+        size: 26,
       ),
     );
   }
@@ -360,6 +426,71 @@ class _AddPostState extends State<AddPost> {
             style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImagePreviewList() {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _selectedImages.length < 3
+            ? _selectedImages.length + 1
+            : _selectedImages.length,
+        itemBuilder: (context, index) {
+          if (index == _selectedImages.length) {
+            return GestureDetector(
+              onTap: _pickImages,
+              child: Container(
+                width: 100,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: _fillColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Icon(Icons.add, size: 40, color: Colors.grey),
+                ),
+              ),
+            );
+          }
+
+          return Stack(
+            children: [
+              Container(
+                width: 120,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: FileImage(_selectedImages[index]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 15,
+                child: GestureDetector(
+                  onTap: () => _removeImage(index),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
