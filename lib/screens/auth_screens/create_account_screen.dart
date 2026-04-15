@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -11,9 +12,11 @@ class CreateAccountScreen extends StatefulWidget {
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController nameCTRL=TextEditingController();
   TextEditingController emailCTRL = TextEditingController();
   TextEditingController passwordCTRL = TextEditingController();
   TextEditingController confirmPasswordCTRL = TextEditingController();
+  
   bool loader = false;
 
   void _submit() async {
@@ -22,11 +25,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         loader = true;
       });
 
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailCTRL.text.trim(),
-          password: passwordCTRL.text.trim(),
-        );
+      
+        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   //name:nameCTRL.text.trim(),
+        //   email: emailCTRL.text.trim(),
+        //   password: passwordCTRL.text.trim(),
+        // );
+        try{
+          String result=await AuthServices.SignUpWithEmail(
+            nameCTRL.text.trim(),
+            emailCTRL.text.trim(),
+             passwordCTRL.text.trim());
+        
+        
+           
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -63,6 +75,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       }
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +116,35 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     ),
                   ),
 
+
                   const SizedBox(height: 30),
+                  TextFormField(
+                  controller: nameCTRL,
+                  decoration: InputDecoration(
+                    hintText: 'Full Name',
+                    filled: true,
+                    fillColor: Colors.grey.withOpacity(0.24),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    prefixIcon: const Icon(Icons.person)
+                  ),
+                  keyboardType: TextInputType.name,
+                  textCapitalization: TextCapitalization.words,
+                  validator: (value){
+                    if(value==null||value.isEmpty)
+                    return"Please Enter Your Name";
+                    else{
+                      return null;
+                    }
+
+                
+                  },
+                  ),
+
+                
+                  const SizedBox(height:20),
                   TextFormField(
                     controller: emailCTRL,
                     decoration: InputDecoration(
