@@ -4,21 +4,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthServices{
-  static Future<String>SignUpWithEmail(String email,String password) async{
+
+
+
+
+  static Future<String>SignUpWithEmail(String name,String email,String password) async{
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-      return 'Sign Up Successful';
+      UserCredential userCredential=await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email, password: password);
+        if(userCredential.user!=null){
+          await userCredential.user!.updateDisplayName(name);
+        }
+        return "Sign Up Successful!";
+
     } catch (e) {
-      return 'Error during signup!:${e.toString()}';
+      return"Error During Sign Up!:${e.toString()}";
+      
     }
+    // try {
+    //   await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    //   return 'Sign Up Successful';
+    // } catch (e) {
+    //   return 'Error during signup!:${e.toString()}';
+    // }
 
   }
-  static handleSignUp(String email,String password,BuildContext context)async{
-    String message=await SignUpWithEmail(email, password,);
+  static handleSignUp(String name,String email,String password,BuildContext context)async{
+    String message=await SignUpWithEmail(name,email, password);
     showSnackBar(message,context);
 
   }
   static Future<bool>SignInWithEmail(String email,String password, BuildContext context)async{
+  
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       return true;

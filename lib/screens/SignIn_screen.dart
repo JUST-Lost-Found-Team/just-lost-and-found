@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/Screens/auth_screens/forget_password_screen.dart';
 //import 'package:just_lost_and_found/Screens/SignUp_screen.dart';
 import 'package:just_lost_and_found/screens/auth_screens/create_account_screen.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/home_screen.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -23,16 +24,25 @@ class _SigninScreenState extends State<SigninScreen> {
       setState(() {
         loader=true;
       });
-      await AuthServices.SignInWithEmail(emailCTRL.text.toString(), 
-      passwordCTRL.text.toString(),
-      context);
+      bool success=await AuthServices.SignInWithEmail(
+        emailCTRL.text.trim(),
+         passwordCTRL.text.trim(),
+          context
+          );
       if(mounted){
         setState(() {
           loader=false;
         });
+       if(success){
+        Navigator.pushReplacement(context, 
+        MaterialPageRoute(builder: (context)=>const HomePage()));
+       }
       }
+      }
+
     }
-  }
+    
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +59,7 @@ class _SigninScreenState extends State<SigninScreen> {
           
             children: [
               const SizedBox(height: 30,),
-              Image.asset('images/lost_and_found_logoo.png',height: 200,fit:BoxFit.cover),
+              Image.asset('assets/images/logo.png',height: 200,fit:BoxFit.cover),
               const Text(
                'Sign In',
                style: TextStyle(

@@ -16,7 +16,7 @@ class MainLayoutScreen extends StatefulWidget {
 class _MainLayoutScreenState extends State<MainLayoutScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> pages = [HomePage(), ExplorePage(), Chat(), ProfilePage()];
+  final List<Widget> pages = [HomePage(), ExplorePage(), Chat(), ProfileScreen()];
   final List pageTitles = ["Home", "Explore", "Messages", "Profile"];
   String selectedFilter = "All";
   @override
