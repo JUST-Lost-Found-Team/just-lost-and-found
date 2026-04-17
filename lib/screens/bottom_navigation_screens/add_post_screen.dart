@@ -104,6 +104,7 @@ class _AddPostState extends State<AddPost> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post added successfully!'),
+            behavior: SnackBarBehavior.floating,
             backgroundColor: ThemeManager.successGreen,
           ),
         );

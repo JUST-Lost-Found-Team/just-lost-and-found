@@ -1,10 +1,12 @@
 class Categories {
   static const List<String> categories = [
-    "Keys & Wallets",
+    "All",
     "Electronics",
-    "Books/papers",
-    "Accessories",
+    "IDs & Documents",
+    "Books",
     "Bags",
+    "Accessories",
+    "Keys & Wallets",
     "Clothing",
     "others",
   ];
