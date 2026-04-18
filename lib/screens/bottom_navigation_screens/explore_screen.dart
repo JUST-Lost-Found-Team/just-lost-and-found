@@ -103,8 +103,9 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   String selectedType = "Categories";
-
   int selectedCategory = 0;
+
+  String? selectedLocationFilter;
 
   Widget _buildCategoryList() {
     return SizedBox(
@@ -154,7 +155,74 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Widget _buildLocationList() {
-    return Center(child: Text("List"));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15),
+        onTap: () async {
+          final result = await showModalBottomSheet<String>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => const LocationSelectionSheet(),
+          );
+
+          if (result != null) {
+            setState(() {
+              selectedLocationFilter = result;
+            });
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.map_outlined,
+                color: ThemeManager.primaryYellow,
+                size: 30,
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      selectedLocationFilter ?? "Campus facilities",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      selectedLocationFilter == null
+                          ? "find items by specific building"
+                          : "Tap to change building",
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.grey.shade400,
+                size: 28,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildPosts() {
@@ -259,6 +327,137 @@ class _ExplorePageState extends State<ExplorePage> {
           SizedBox(height: 15),
 
           _buildPosts(),
+        ],
+      ),
+    );
+  }
+}
+
+class LocationSelectionSheet extends StatelessWidget {
+  const LocationSelectionSheet({Key? key}) : super(key: key);
+
+  IconData getCategoryIcon(String category) {
+    if (category.contains("Medical")) return Icons.local_hospital;
+    if (category.contains("Engineering")) return Icons.engineering;
+    return Icons.account_balance;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locations = LocationData.locations;
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.7,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+
+          Container(
+            width: 40,
+            height: 5,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          const SizedBox(height: 15),
+
+          const Text(
+            "Select Location",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 15),
+
+          Expanded(
+            child: ListView.builder(
+              itemCount: locations.length,
+              itemBuilder: (context, index) {
+                final location = locations[index];
+
+                final parts = location.split(" - ");
+                final category = parts[0];
+                final building = parts.length > 1 ? parts[1] : "";
+
+                final fullCategoryName = category == "General"
+                    ? "General Facilities"
+                    : "$category Buildings";
+
+                bool showHeader = false;
+                if (index == 0) {
+                  showHeader = true;
+                } else {
+                  final prevLocation = locations[index - 1];
+                  final prevCategory = prevLocation.split(" - ")[0];
+                  if (category != prevCategory) {
+                    showHeader = true;
+                  }
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (showHeader)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          top: 15,
+                          bottom: 5,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              getCategoryIcon(category),
+                              color: ThemeManager.primaryBlue,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              fullCategoryName,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: ThemeManager.primaryBlue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                      ),
+                      leading: Icon(
+                        Icons.location_on_outlined,
+                        color: Colors.grey.shade500,
+                      ),
+                      title: Text(
+                        building,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        fullCategoryName,
+                        style: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 12,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context, location);
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
