@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                         .get()
                   : null,
               builder: (context, userSnapshot) {
-                String postUserName = "Loading...";
+                String postUserName = "";
                 String? postAvatarUrl;
 
                 if (userSnapshot.hasData && userSnapshot.data!.exists) {
@@ -145,18 +145,6 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: Colors.grey.shade300,
                         backgroundImage: postAvatarUrl != null
                             ? NetworkImage(postAvatarUrl)
-                            : null,
-                        child:
-                            postAvatarUrl == null &&
-                                userSnapshot.connectionState ==
-                                    ConnectionState.waiting
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
                             : null,
                       ),
                     ),
@@ -300,9 +288,11 @@ class _HomePageState extends State<HomePage> {
                     return Container(
                       height: 200,
                       color: Colors.grey.shade200,
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: ThemeManager.primaryYellow,
+                      child: Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          color: Colors.grey[400],
+                          size: 40,
                         ),
                       ),
                     );

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:just_lost_and_found/screens/SignIn_screen.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/my_posts_screen.dart';
+import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/cloudinary_service.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'dart:io';
@@ -319,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SigninScreen(),
+                                  builder: (context) => const LoginScreen(),
                                 ),
                                 (route) => false,
                               );
