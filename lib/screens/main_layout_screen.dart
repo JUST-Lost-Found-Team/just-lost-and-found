@@ -16,23 +16,52 @@ class MainLayoutScreen extends StatefulWidget {
 class _MainLayoutScreenState extends State<MainLayoutScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> pages = [HomePage(), ExplorePage(), Chat(), ProfileScreen()];
-  final List pageTitles = ["Home", "Explore", "Messages", "Profile"];
+  final List<Widget> pages = [
+    HomePage(),
+    ExplorePage(),
+    Chat(),
+    ProfileScreen(),
+  ];
+  final List pageTitles = ["Home Page", "Explore", "Messages", "Profile"];
   String selectedFilter = "All";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         titleSpacing: 20,
         backgroundColor: ThemeManager.primaryBlue,
-        elevation: 5,
 
         title: _currentIndex == 0
-            ? Image.asset("assets/images/logo.png", height: 50)
+            ? Row(
+                children: [
+                  Image.asset("assets/images/logo.png", height: 50),
+                  const Expanded(
+                    child: Text(
+                      "JUST LOST & FOUND",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
             : Text(
                 pageTitles[_currentIndex],
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
         centerTitle: _currentIndex == 0 ? false : true,
         actions: [
@@ -44,6 +73,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
             ),
 
             PopupMenuButton<String>(
+              color: Colors.white,
               icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -157,124 +187,139 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () => setState(() => _currentIndex = 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.home,
-                          size: 28,
-                          color: _currentIndex == 0
-                              ? ThemeManager.primaryYellow
-                              : ThemeManager.primaryBlue,
-                        ),
-                        Text(
-                          "Home",
-                          style: TextStyle(
-                            fontSize: 12,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, -3),
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          elevation: 25,
+          shadowColor: Colors.black,
+          surfaceTintColor: Colors.white,
+          color: Colors.white,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 10,
+          child: SizedBox(
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () => setState(() => _currentIndex = 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.home,
+                            size: 28,
                             color: _currentIndex == 0
                                 ? ThemeManager.primaryYellow
                                 : ThemeManager.primaryBlue,
                           ),
-                        ),
-                      ],
+                          Text(
+                            "Home",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentIndex == 0
+                                  ? ThemeManager.primaryYellow
+                                  : ThemeManager.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 35),
-                  GestureDetector(
-                    onTap: () => setState(() => _currentIndex = 1),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.manage_search_outlined,
-                          size: 28,
-                          color: _currentIndex == 1
-                              ? ThemeManager.primaryYellow
-                              : ThemeManager.primaryBlue,
-                        ),
-                        Text(
-                          "Explore",
-                          style: TextStyle(
-                            fontSize: 12,
+                    SizedBox(width: 35),
+                    GestureDetector(
+                      onTap: () => setState(() => _currentIndex = 1),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.manage_search_outlined,
+                            size: 28,
                             color: _currentIndex == 1
                                 ? ThemeManager.primaryYellow
                                 : ThemeManager.primaryBlue,
                           ),
-                        ),
-                      ],
+                          Text(
+                            "Explore",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentIndex == 1
+                                  ? ThemeManager.primaryYellow
+                                  : ThemeManager.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => setState(() => _currentIndex = 2),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.chat,
-                          size: 28,
-                          color: _currentIndex == 2
-                              ? ThemeManager.primaryYellow
-                              : ThemeManager.primaryBlue,
-                        ),
-                        Text(
-                          "Messages",
-                          style: TextStyle(
-                            fontSize: 12,
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => setState(() => _currentIndex = 2),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.chat,
+                            size: 28,
                             color: _currentIndex == 2
                                 ? ThemeManager.primaryYellow
                                 : ThemeManager.primaryBlue,
                           ),
-                        ),
-                      ],
+                          Text(
+                            "Messages",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentIndex == 2
+                                  ? ThemeManager.primaryYellow
+                                  : ThemeManager.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 30),
-                  GestureDetector(
-                    onTap: () => setState(() => _currentIndex = 3),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.person,
-                          size: 28,
-                          color: _currentIndex == 3
-                              ? ThemeManager.primaryYellow
-                              : ThemeManager.primaryBlue,
-                        ),
-                        Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontSize: 12,
+                    SizedBox(width: 30),
+                    GestureDetector(
+                      onTap: () => setState(() => _currentIndex = 3),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 28,
                             color: _currentIndex == 3
                                 ? ThemeManager.primaryYellow
                                 : ThemeManager.primaryBlue,
                           ),
-                        ),
-                      ],
+                          Text(
+                            "Profile",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentIndex == 3
+                                  ? ThemeManager.primaryYellow
+                                  : ThemeManager.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
-            ],
+                    SizedBox(width: 10),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

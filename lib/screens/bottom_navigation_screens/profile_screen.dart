@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,7 +36,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? selectedImage = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
       if (selectedImage != null) {
         setState(() {
           _imageFile = selectedImage;
@@ -54,15 +57,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     try {
       Cloudinary cloudinary = Cloudinary();
-      String? imageUrl = await cloudinary.uploadToCloudinary(File(_imageFile!.path));
+      String? imageUrl = await cloudinary.uploadToCloudinary(
+        File(_imageFile!.path),
+      );
+
       if (imageUrl != null && user != null) {
         await user!.updatePhotoURL(imageUrl);
         await user!.reload();
         await _refreshUser();
 
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .update({'profileImage': imageUrl});
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Profile picture updated successfully!!")),
+            const SnackBar(
+              content: Text("Profile picture updated successfully!!"),
+              backgroundColor: ThemeManager.successGreen,
+            ),
           );
         }
       }
@@ -70,7 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("Error uploading profile image: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error updating picture: $e"), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text("Error updating picture: $e"),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -117,18 +134,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: CircleAvatar(
                         radius: 85.0,
                         backgroundColor: Colors.grey[300],
-                        // 💡 هون الترتيب الصح للعرض
-                        child: isUploading 
-                          ? const CircularProgressIndicator(color: ThemeManager.primaryBlue)
-                          : _imageFile != null 
-                              ? ClipOval(child: Image.file(File(_imageFile!.path), width: 170, height: 170, fit: BoxFit.cover))
-                              : user?.photoURL != null 
-                                  ? ClipOval(child: Image.network(user!.photoURL!, width: 170, height: 170, fit: BoxFit.cover))
-                                  : Icon(Icons.person, size: avatarRadius, color: Colors.grey[600]),
+
+                        child: isUploading
+                            ? const CircularProgressIndicator(
+                                color: ThemeManager.primaryBlue,
+                              )
+                            : _imageFile != null
+                            ? ClipOval(
+                                child: Image.file(
+                                  File(_imageFile!.path),
+                                  width: 170,
+                                  height: 170,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : user?.photoURL != null
+                            ? ClipOval(
+                                child: Image.network(
+                                  user!.photoURL!,
+                                  width: 170,
+                                  height: 170,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Icon(
+                                Icons.person,
+                                size: avatarRadius,
+                                color: Colors.grey[600],
+                              ),
                       ),
                     ),
                     GestureDetector(
-                      onTap: _pickImage, // 👈 ربطنا كبسة القلم بالاستوديو
+                      onTap: _pickImage,
                       child: Container(
                         height: 40,
                         width: 40,
@@ -178,15 +215,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: ListTile(
-                      title: const Text("View All", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)),
+                      title: const Text(
+                        "View All",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       leading: const Icon(Icons.post_add, color: Colors.black),
-                      trailing: const Icon(Icons.arrow_forward_ios, color: ThemeManager.primaryYellow),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: ThemeManager.primaryYellow,
+                      ),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyPostsScreen()));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyPostsScreen(),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -198,7 +249,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Settings",
-                      style: TextStyle(color: ThemeManager.primaryBlue, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: ThemeManager.primaryBlue,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -206,35 +261,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: Column(
                       children: [
                         ListTile(
-                          title: const Text("Language", style: TextStyle(color: Colors.black)),
-                          leading: const Icon(Icons.language, color: Colors.black),
-                          trailing: const Icon(Icons.arrow_forward_ios, color: ThemeManager.primaryYellow),
+                          title: const Text(
+                            "Language",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          leading: const Icon(
+                            Icons.language,
+                            color: Colors.black,
+                          ),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            color: ThemeManager.primaryYellow,
+                          ),
                           onTap: () {},
                         ),
-                        const Divider(height: 0, indent: 0.0, endIndent: 20.0, thickness: 0.5),
+                        const Divider(
+                          height: 0,
+                          indent: 0.0,
+                          endIndent: 20.0,
+                          thickness: 0.5,
+                        ),
                         ListTile(
                           title: const Text("Light Mode"),
-                          leading: const Icon(Icons.wb_sunny_outlined, color: ThemeManager.primaryYellow),
-                          trailing: Switch(value: true, activeColor: ThemeManager.primaryYellow, onChanged: (val) {}),
+                          leading: const Icon(
+                            Icons.wb_sunny_outlined,
+                            color: ThemeManager.primaryYellow,
+                          ),
+                          trailing: Switch(
+                            value: true,
+                            activeColor: ThemeManager.primaryYellow,
+                            onChanged: (val) {},
+                          ),
                         ),
-                        const Divider(height: 0, indent: 0.0, endIndent: 20.0, thickness: 0.5),
+                        const Divider(
+                          height: 0,
+                          indent: 0.0,
+                          endIndent: 20.0,
+                          thickness: 0.5,
+                        ),
                         ListTile(
                           title: const Text("Log Out"),
                           leading: const Icon(Icons.logout, color: Colors.red),
-                          trailing: const Icon(Icons.arrow_forward_ios, color: ThemeManager.primaryYellow),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            color: ThemeManager.primaryYellow,
+                          ),
                           onTap: () async {
                             try {
                               await FirebaseAuth.instance.signOut();
                               if (!mounted) return;
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SigninScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => const SigninScreen(),
+                                ),
                                 (route) => false,
                               );
                             } catch (e) {
@@ -246,6 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                SizedBox(height: 40),
               ],
             ),
           ),
