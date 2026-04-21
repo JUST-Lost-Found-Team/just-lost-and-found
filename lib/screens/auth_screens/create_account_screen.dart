@@ -12,11 +12,11 @@ class CreateAccountScreen extends StatefulWidget {
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameCTRL=TextEditingController();
+  TextEditingController nameCTRL = TextEditingController();
   TextEditingController emailCTRL = TextEditingController();
   TextEditingController passwordCTRL = TextEditingController();
   TextEditingController confirmPasswordCTRL = TextEditingController();
-  
+
   bool loader = false;
 
   void _submit() async {
@@ -25,20 +25,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         loader = true;
       });
 
-      
-        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //   //name:nameCTRL.text.trim(),
-        //   email: emailCTRL.text.trim(),
-        //   password: passwordCTRL.text.trim(),
-        // );
-        try{
-          String result=await AuthServices.SignUpWithEmail(
-            nameCTRL.text.trim(),
-            emailCTRL.text.trim(),
-             passwordCTRL.text.trim());
-        
-        
-           
+      try {
+        await AuthServices.SignUpWithEmail(
+          nameCTRL.text.trim(),
+          emailCTRL.text.trim(),
+          passwordCTRL.text.trim(),
+        );
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +67,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       }
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +84,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     'assets/images/logo.png',
                     height: 200,
                     fit: BoxFit.cover,
-                  ), const Text(
+                  ),
+                  const Text(
                     'Sign Up',
                     style: TextStyle(
                       color: Color.fromARGB(255, 68, 118, 164),
@@ -103,48 +95,46 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                   const Text(
                     'Because losing things is hard,\n finding them should be easy.',
-                    style: TextStyle(color:Color(0xFFE4973F),
-                        fontSize: 18,
-                        fontStyle: FontStyle.italic),
-
+                    style: TextStyle(
+                      color: Color(0xFFE4973F),
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   const Text(
                     'JOIN US NOW !',
-                    style: TextStyle(color:Color(0xFFE4973F),
+                    style: TextStyle(
+                      color: Color(0xFFE4973F),
                       fontWeight: FontWeight.bold,
-                      fontSize:20,
+                      fontSize: 20,
                     ),
                   ),
-
 
                   const SizedBox(height: 30),
                   TextFormField(
-                  controller: nameCTRL,
-                  decoration: InputDecoration(
-                    hintText: 'Full Name',
-                    filled: true,
-                    fillColor: Colors.grey.withOpacity(0.24),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+                    controller: nameCTRL,
+                    decoration: InputDecoration(
+                      hintText: 'Full Name',
+                      filled: true,
+                      fillColor: Colors.grey.withOpacity(0.24),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: const Icon(Icons.person),
                     ),
-                    prefixIcon: const Icon(Icons.person)
-                  ),
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  validator: (value){
-                    if(value==null||value.isEmpty)
-                    return"Please Enter Your Name";
-                    else{
-                      return null;
-                    }
-
-                
-                  },
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return "Please Enter Your Name";
+                      else {
+                        return null;
+                      }
+                    },
                   ),
 
-                
-                  const SizedBox(height:20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: emailCTRL,
                     decoration: InputDecoration(
