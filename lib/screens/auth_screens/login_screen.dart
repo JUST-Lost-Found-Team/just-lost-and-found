@@ -167,18 +167,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
-                      onPressed: _submit,
-
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      onPressed: loader ? null : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ThemeManager.primaryYellow,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+
+                      child: loader
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -187,10 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(
                         "Don't have an account? ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ), //fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       GestureDetector(
                         onTap: () {
