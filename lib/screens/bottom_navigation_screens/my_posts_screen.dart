@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/add_post_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -8,6 +9,7 @@ class MyPostsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? currentUserId=FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
     backgroundColor: Colors.white,
     appBar: AppBar(
@@ -17,7 +19,10 @@ class MyPostsScreen extends StatelessWidget {
       elevation: 0,
     ),
     body: StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('posts').orderBy('createdAt',descending: true).snapshots(),
+      stream: FirebaseFirestore.instance.collection('posts')
+      .where('uid',isEqualTo:currentUserId)
+      .orderBy('createdAt',descending: true)
+      .snapshots(),
        builder: (context,snapshot){
         if (snapshot.connectionState==ConnectionState.waiting){
           return const Center(

@@ -8,6 +8,8 @@ import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/services/cloudinary_service.dart';
 
 class AddPost extends StatefulWidget {
+
+
   const AddPost({super.key});
 
   @override
@@ -17,6 +19,7 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   final _formKey = GlobalKey<FormState>();
   List<File> _selectedImages = [];
+  
   final ImagePicker _picker = ImagePicker();
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
@@ -97,7 +100,9 @@ class _AddPostState extends State<AddPost> {
         'images': imageUrls,
         'createdAt': FieldValue.serverTimestamp(),
         'isResolved': false,
-        'userId': FirebaseAuth.instance.currentUser?.uid,
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        
+        
       });
 
       if (mounted) {
