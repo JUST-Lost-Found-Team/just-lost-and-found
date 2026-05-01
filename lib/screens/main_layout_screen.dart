@@ -24,6 +24,37 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
   ];
   final List pageTitles = ["Home Page", "Explore", "Messages", "Profile"];
   String selectedFilter = "All";
+
+  Widget _buildNavItem(IconData icon, String label, int index) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _currentIndex = index),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 28,
+              color: _currentIndex == index
+                  ? ThemeManager.primaryYellow
+                  : ThemeManager.primaryBlue,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: _currentIndex == index
+                    ? ThemeManager.primaryYellow
+                    : ThemeManager.primaryBlue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,117 +238,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
           child: SizedBox(
             height: 70,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () => setState(() => _currentIndex = 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.home,
-                            size: 28,
-                            color: _currentIndex == 0
-                                ? ThemeManager.primaryYellow
-                                : ThemeManager.primaryBlue,
-                          ),
-                          Text(
-                            "Home",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _currentIndex == 0
-                                  ? ThemeManager.primaryYellow
-                                  : ThemeManager.primaryBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 35),
-                    GestureDetector(
-                      onTap: () => setState(() => _currentIndex = 1),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.manage_search_outlined,
-                            size: 28,
-                            color: _currentIndex == 1
-                                ? ThemeManager.primaryYellow
-                                : ThemeManager.primaryBlue,
-                          ),
-                          Text(
-                            "Explore",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _currentIndex == 1
-                                  ? ThemeManager.primaryYellow
-                                  : ThemeManager.primaryBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => setState(() => _currentIndex = 2),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.chat,
-                            size: 28,
-                            color: _currentIndex == 2
-                                ? ThemeManager.primaryYellow
-                                : ThemeManager.primaryBlue,
-                          ),
-                          Text(
-                            "Messages",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _currentIndex == 2
-                                  ? ThemeManager.primaryYellow
-                                  : ThemeManager.primaryBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 30),
-                    GestureDetector(
-                      onTap: () => setState(() => _currentIndex = 3),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.person,
-                            size: 28,
-                            color: _currentIndex == 3
-                                ? ThemeManager.primaryYellow
-                                : ThemeManager.primaryBlue,
-                          ),
-                          Text(
-                            "Profile",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _currentIndex == 3
-                                  ? ThemeManager.primaryYellow
-                                  : ThemeManager.primaryBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                ),
+                _buildNavItem(Icons.home, "Home", 0),
+                _buildNavItem(Icons.manage_search_outlined, "Explore", 1),
+                const SizedBox(width: 60),
+                _buildNavItem(Icons.chat, "Messages", 2),
+                _buildNavItem(Icons.person, "Profile", 3),
               ],
             ),
           ),

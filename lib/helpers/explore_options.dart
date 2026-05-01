@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 class Categories {
   static const List<String> categories = [
-    "All",
     "Electronics",
     "IDs & Documents",
     "Books",
@@ -8,8 +9,21 @@ class Categories {
     "Accessories",
     "Keys & Wallets",
     "Clothing",
-    "others",
+    "Others",
   ];
+}
+
+class categoryIcons {
+  static const Map<String, IconData> icons = {
+    "Electronics": Icons.devices,
+    "IDs & Documents": Icons.badge,
+    "Books": Icons.menu_book_outlined,
+    "Bags": Icons.work,
+    "Accessories": Icons.diamond_outlined,
+    "Keys & Wallets": Icons.wallet,
+    "Clothing": Icons.checkroom_rounded,
+    "Others": Icons.category,
+  };
 }
 
 class LocationData {
