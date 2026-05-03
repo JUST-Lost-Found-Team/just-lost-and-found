@@ -7,6 +7,7 @@ import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/cloudinary_service.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,10 +22,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   XFile? _imageFile;
   bool isUploading = false;
 
+  String? _firestoreProfileImageUrl =
+      FirebaseAuth.instance.currentUser?.photoURL;
   @override
   void initState() {
     super.initState();
     _refreshUser();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    if (user != null) {
+      try {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+        if (doc.exists && mounted) {
+          setState(() {
+            _firestoreProfileImageUrl =
+                (doc.data() as Map<String, dynamic>)['profileImage'];
+          });
+        }
+      } catch (e) {
+        print("Error fetching user data: $e");
+      }
+    }
   }
 
   Future<void> _refreshUser() async {
@@ -72,6 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .update({'profileImage': imageUrl});
 
         if (mounted) {
+          setState(() {
+            _firestoreProfileImageUrl = imageUrl;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Profile picture updated successfully!!"),
@@ -148,13 +174,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               )
-                            : user?.photoURL != null
+                            : (_firestoreProfileImageUrl != null &&
+                                  _firestoreProfileImageUrl!.isNotEmpty)
                             ? ClipOval(
-                                child: Image.network(
-                                  user!.photoURL!,
+                                child: CachedNetworkImage(
+                                  imageUrl: _firestoreProfileImageUrl!,
                                   width: 170,
                                   height: 170,
                                   fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeManager.primaryBlue,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.person,
+                                    size: avatarRadius,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                               )
                             : Icon(
