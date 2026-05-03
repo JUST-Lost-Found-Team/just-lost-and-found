@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/add_post_screen.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/edit_post_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class MyPostsScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class MyPostsScreen extends StatelessWidget {
     ),
     body: StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('posts')
-      .where('uid',isEqualTo:currentUserId)
+      .where('userId',isEqualTo:currentUserId)
       .orderBy('createdAt',descending: true)
       .snapshots(),
        builder: (context,snapshot){
@@ -81,6 +82,7 @@ class MyPostsScreen extends StatelessWidget {
     : 'https://via.placeholder.com/150';
 
     bool isLost=data['status'] =='Lost';
+    bool resolved=data['isResolved']??false;
     
     return Container(
       decoration: BoxDecoration(
@@ -92,39 +94,85 @@ class MyPostsScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(20)),
-                child:Image.network(
-                  imageURL,
-                  height: 120,
-                  width: double.infinity,
-                  fit:BoxFit.cover,
-                  errorBuilder: (context,error,StackTrace)=>
-                  Container(height: 120,color:Colors.grey[300],child: const Icon(Icons.broken_image),),
-
-                ),
-              ),
+              Opacity(
+                opacity: resolved ? 0.5 :1.0,
+                child:ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top:Radius.circular(20)),
+                  child:Image.network(imageURL,height: 120,width: double.infinity,fit:BoxFit.cover),
+                ),),
+                if (!resolved)
               Positioned(
-                bottom: 0,
+                bottom: 8,
                 left: 0,
                 right: 0,
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: isLost?Colors.red.withOpacity(0.9):Colors.green.withOpacity(0.9),
+                      color: isLost ? Colors.red.withOpacity(0.9) : Colors.green.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(15),
-
                     ),
-                    child: Text(
-                      data["status"]??"Lost",
-                      style: const TextStyle(color: Colors.white,fontSize: 10,fontWeight: FontWeight.bold),
+                    child: Text(data["status"] ?? "Lost", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+              if (resolved)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3), // طبقة غامقة خفيفة
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey, // لون هادي للـ Resolved
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        "RESOLVED",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
                     ),
                   ),
                 ),
-                ),
-            ],
-          ),
+              ),
+          ],
+        ),
+            //   ClipRRect(
+            //     borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(20)),
+            //     child:Image.network(
+            //       imageURL,
+            //       height: 120,
+            //       width: double.infinity,
+            //       fit:BoxFit.cover,
+            //       errorBuilder: (context,error,StackTrace)=>
+            //       Container(height: 120,color:Colors.grey[300],child: const Icon(Icons.broken_image),),
+
+            //     ),
+            //   ),
+            //   Positioned(
+            //     bottom: 0,
+            //     left: 0,
+            //     right: 0,
+            //     child: Center(
+            //       child: Container(
+            //         padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 4),
+            //         decoration: BoxDecoration(
+            //           color: isLost?Colors.red.withOpacity(0.9):Colors.green.withOpacity(0.9),
+            //           borderRadius: BorderRadius.circular(15),
+
+            //         ),
+            //         child: Text(
+            //           data["status"]??"Lost",
+            //           style: const TextStyle(color: Colors.white,fontSize: 10,fontWeight: FontWeight.bold),
+            //         ),
+            //       ),
+            //     ),
+            //     ),
+            // ],
+          //),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -150,8 +198,12 @@ class MyPostsScreen extends StatelessWidget {
                         onSelected: (value){
                           if(value =='resolved'){
                             _markAsResolved(docId,context);
-                          // }else if(value =='edit'){
-                          //  _editPost(data,docId,context);
+                          }else if(value =='edit'){
+                           Navigator.push(context,
+                            MaterialPageRoute(
+                              builder:(context)=>EditPostScreen(
+                                postData: data,
+                               postId: docId), ));
                            }else if(value=='delete'){
                            _deletePost(docId,context);
                           }
@@ -231,7 +283,7 @@ class MyPostsScreen extends StatelessWidget {
    try {
      await FirebaseFirestore.instance.collection('posts').doc(docId).update({
      'isResolved': true,
-      'status': 'Resolved'
+      //'status': 'Resolved'
      });
      if (context.mounted){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post marked as resolved!')));
