@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAV0t6F4gmW0egDF_0M8OnIvoinR7l088A',
-    appId: '1:753528120603:web:1555d963c1c4327b7f5fbe',
-    messagingSenderId: '753528120603',
-    projectId: 'just-lost-and-found',
-    authDomain: 'just-lost-and-found.firebaseapp.com',
-    storageBucket: 'just-lost-and-found.firebasestorage.app',
-    measurementId: 'G-KTDR4X8P4L',
+    apiKey: 'AIzaSyBGO_X_3YcZjdUl8rFL91Wc0ToPNwmPt8Q',
+    appId: '1:1078239455973:web:313c403147514fd4d2020c',
+    messagingSenderId: '1078239455973',
+    projectId: 'just-lost-found-project',
+    authDomain: 'just-lost-found-project.firebaseapp.com',
+    storageBucket: 'just-lost-found-project.firebasestorage.app',
+    measurementId: 'G-WWD691TYSN',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCexhkynQYIu-9acsxd_Cbtdc_4FDtqTbw',
-    appId: '1:753528120603:android:52d92958fd92a1b67f5fbe',
-    messagingSenderId: '753528120603',
-    projectId: 'just-lost-and-found',
-    storageBucket: 'just-lost-and-found.firebasestorage.app',
+    apiKey: 'AIzaSyDeFDO4ld-OLOnjid__UZlZUIB7FreXTms',
+    appId: '1:1078239455973:android:bebde1a8e0591dd1d2020c',
+    messagingSenderId: '1078239455973',
+    projectId: 'just-lost-found-project',
+    storageBucket: 'just-lost-found-project.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA-Drb4h2kdTV1VUWWyrXKkT3Z0srpMbCc',
-    appId: '1:753528120603:ios:f7f23202425cdf007f5fbe',
-    messagingSenderId: '753528120603',
-    projectId: 'just-lost-and-found',
-    storageBucket: 'just-lost-and-found.firebasestorage.app',
+    apiKey: 'AIzaSyBlFtTbiJshIh5ADGJXwoaxYs1O_7FNY-w',
+    appId: '1:1078239455973:ios:71bd5ab65d7e71e2d2020c',
+    messagingSenderId: '1078239455973',
+    projectId: 'just-lost-found-project',
+    storageBucket: 'just-lost-found-project.firebasestorage.app',
     iosBundleId: 'com.example.justLostAndFound',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA-Drb4h2kdTV1VUWWyrXKkT3Z0srpMbCc',
-    appId: '1:753528120603:ios:f7f23202425cdf007f5fbe',
-    messagingSenderId: '753528120603',
-    projectId: 'just-lost-and-found',
-    storageBucket: 'just-lost-and-found.firebasestorage.app',
+    apiKey: 'AIzaSyBlFtTbiJshIh5ADGJXwoaxYs1O_7FNY-w',
+    appId: '1:1078239455973:ios:71bd5ab65d7e71e2d2020c',
+    messagingSenderId: '1078239455973',
+    projectId: 'just-lost-found-project',
+    storageBucket: 'just-lost-found-project.firebasestorage.app',
     iosBundleId: 'com.example.justLostAndFound',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAV0t6F4gmW0egDF_0M8OnIvoinR7l088A',
-    appId: '1:753528120603:web:565b780327d351c17f5fbe',
-    messagingSenderId: '753528120603',
-    projectId: 'just-lost-and-found',
-    authDomain: 'just-lost-and-found.firebaseapp.com',
-    storageBucket: 'just-lost-and-found.firebasestorage.app',
-    measurementId: 'G-TNK98QH5Q5',
+    apiKey: 'AIzaSyBGO_X_3YcZjdUl8rFL91Wc0ToPNwmPt8Q',
+    appId: '1:1078239455973:web:803ac150e5e661d0d2020c',
+    messagingSenderId: '1078239455973',
+    projectId: 'just-lost-found-project',
+    authDomain: 'just-lost-found-project.firebaseapp.com',
+    storageBucket: 'just-lost-found-project.firebasestorage.app',
+    measurementId: 'G-3J82MXYZ5P',
   );
+
 }

@@ -27,7 +27,7 @@ class _AddPostState extends State<AddPost> {
   String? _selectedLocation;
   final Color _fillColor = Colors.grey.shade200;
 
-  Future<void> _pickImages() async {
+  Future<void> _pickImagesFromGallery() async {
     final List<XFile> images = await _picker.pickMultiImage(
       imageQuality: 70,
       maxWidth: 1080,
@@ -56,6 +56,71 @@ class _AddPostState extends State<AddPost> {
         }
       });
     }
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 70,
+      maxWidth: 1080,
+      maxHeight: 1080,
+    );
+
+    if (image != null) {
+      if (_selectedImages.length < 3) {
+        setState(() {
+          _selectedImages.add(File(image.path));
+        });
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("You can only select up to 3 images"),
+              backgroundColor: ThemeManager.errorRed,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_library,
+                  color: ThemeManager.primaryBlue,
+                ),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImagesFromGallery();
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_camera,
+                  color: ThemeManager.primaryBlue,
+                ),
+                title: const Text('Take a Photo'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImageFromCamera();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _removeImage(int index) {
@@ -156,7 +221,7 @@ class _AddPostState extends State<AddPost> {
               _buildSectionTitle("Add Photos of the item (up to 3)"),
               _selectedImages.isEmpty
                   ? GestureDetector(
-                      onTap: _pickImages,
+                      onTap: () => _showImageSourceActionSheet(context),
                       child: _buildImagePickerBox(
                         height: 180,
                         width: double.infinity,
@@ -443,7 +508,7 @@ class _AddPostState extends State<AddPost> {
         itemBuilder: (context, index) {
           if (index == _selectedImages.length) {
             return GestureDetector(
-              onTap: _pickImages,
+              onTap: () => _showImageSourceActionSheet(context),
               child: Container(
                 width: 100,
                 margin: const EdgeInsets.only(right: 10),
