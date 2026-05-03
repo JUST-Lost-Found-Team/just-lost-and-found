@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/helpers/date_helper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final Map<String, Future<DocumentSnapshot>> _userFuturesCache = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +98,13 @@ class _HomePageState extends State<HomePage> {
     required String? userId,
   }) {
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null && !_userFuturesCache.containsKey(userId)) {
+      _userFuturesCache[userId] = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+    }
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       width: double.infinity,
@@ -109,12 +118,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FutureBuilder<DocumentSnapshot>(
-              future: userId != null
-                  ? FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(userId)
-                        .get()
-                  : null,
+              future: userId != null ? _userFuturesCache[userId] : null,
               builder: (context, userSnapshot) {
                 String postUserName = "";
                 String? postAvatarUrl;
@@ -140,13 +144,37 @@ class _HomePageState extends State<HomePage> {
                           width: 2.5,
                         ),
                       ),
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.grey.shade300,
-                        backgroundImage: postAvatarUrl != null
-                            ? NetworkImage(postAvatarUrl)
-                            : null,
-                      ),
+                      child: postAvatarUrl != null
+                          ? CachedNetworkImage(
+                              imageUrl: postAvatarUrl,
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                    radius: 22,
+                                    backgroundImage: imageProvider,
+                                  ),
+                              placeholder: (context, url) => const CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.grey,
+                                child: Icon(Icons.person, color: Colors.white),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const CircleAvatar(
+                                    radius: 22,
+                                    backgroundColor: Colors.grey,
+                                    child: Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                            )
+                          : CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.grey.shade300,
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -278,25 +306,33 @@ class _HomePageState extends State<HomePage> {
             if (images.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  images[0],
+                child: CachedNetworkImage(
+                  imageUrl: images[0],
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      height: 200,
-                      color: Colors.grey.shade200,
-                      child: Center(
-                        child: Icon(
-                          Icons.image_outlined,
-                          color: Colors.grey[400],
-                          size: 40,
-                        ),
+                  placeholder: (context, url) => Container(
+                    height: 200,
+                    color: Colors.grey.shade200,
+                    child: Center(
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: Colors.grey[400],
+                        size: 40,
                       ),
-                    );
-                  },
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: 200,
+                    color: Colors.grey.shade200,
+                    child: const Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.grey,
+                        size: 40,
+                      ),
+                    ),
+                  ),
                 ),
               ),
           ],
