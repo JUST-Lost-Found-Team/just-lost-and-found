@@ -46,16 +46,52 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 280,
+                expandedHeight: images.isNotEmpty ? 280 : 60,
                 pinned: true,
                 automaticallyImplyLeading: false,
-                backgroundColor: ThemeManager.primaryBlue,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      images.isNotEmpty
-                          ? PageView.builder(
+                backgroundColor: images.isNotEmpty
+                    ? ThemeManager.primaryBlue
+                    : Colors.white,
+                elevation: 0,
+
+                leading: Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: images.isNotEmpty
+                        ? Colors.white.withOpacity(0.9)
+                        : Colors.grey.shade100,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: ThemeManager.primaryBlue,
+                      size: 18,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.more_horiz_rounded,
+                      color: images.isNotEmpty ? Colors.white : Colors.black87,
+                      size: 28,
+                    ),
+                    onPressed: () {
+                      //will implement it later.
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                ],
+
+                flexibleSpace: images.isNotEmpty
+                    ? FlexibleSpaceBar(
+                        background: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            PageView.builder(
                               itemCount: images.length,
                               onPageChanged: (index) =>
                                   setState(() => _currentImageIndex = index),
@@ -66,37 +102,38 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                   width: double.infinity,
                                 );
                               },
-                            )
-                          : Container(color: Colors.grey[300]),
-
-                      if (images.length > 1)
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: images.asMap().entries.map((entry) {
-                              return AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                width: _currentImageIndex == entry.key
-                                    ? 24.0
-                                    : 12.0,
-                                height: 12.0,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 4.0,
+                            ),
+                            if (images.length > 1)
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: images.asMap().entries.map((entry) {
+                                    return AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      width: _currentImageIndex == entry.key
+                                          ? 24.0
+                                          : 12.0,
+                                      height: 12.0,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: _currentImageIndex == entry.key
+                                            ? ThemeManager.primaryBlue
+                                            : Colors.white,
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: _currentImageIndex == entry.key
-                                      ? ThemeManager.primaryBlue
-                                      : Colors.white,
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                              ),
+                          ],
                         ),
-                    ],
-                  ),
-                ),
+                      )
+                    : null,
               ),
 
               SliverToBoxAdapter(
@@ -170,6 +207,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           ),
                         ),
                       ),
+
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -194,7 +233,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
-
                             SizedBox(
                               width: double.infinity,
                               child: Builder(
@@ -202,10 +240,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                   bool isArabic = RegExp(
                                     r'[\u0600-\u06FF]',
                                   ).hasMatch(description);
-
                                   return Text(
                                     description,
-
                                     textAlign: isArabic
                                         ? TextAlign.right
                                         : TextAlign.left,
@@ -233,35 +269,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
             ],
           ),
 
-          Positioned(
-            top: 50,
-            left: 20,
-            child: CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.9),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: ThemeManager.primaryBlue,
-                  size: 18,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: 25,
-            right: 20,
-            child: IconButton(
-              icon: const Icon(
-                Icons.more_horiz_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () {},
-            ),
-          ),
-
           if (FirebaseAuth.instance.currentUser?.uid != widget.post['userId'])
             Positioned(
               bottom: 30,
@@ -280,9 +287,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   return SizedBox(
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // will implement it later.
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF326182),
                         shape: RoundedRectangleBorder(
@@ -307,6 +312,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     );
   }
 
+  @override
   Widget _buildCustomChip(String label, String value, {bool isStatus = false}) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.28,
@@ -343,7 +349,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 )
               : Text(
                   value,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                 ),

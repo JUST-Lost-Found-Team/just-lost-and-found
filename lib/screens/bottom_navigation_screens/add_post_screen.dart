@@ -132,13 +132,6 @@ class _AddPostState extends State<AddPost> {
   Future<void> _submitPost() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_selectedImages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select at least one image!")),
-      );
-      return;
-    }
-
     setState(() {
       _isLoading = true;
     });
@@ -219,6 +212,18 @@ class _AddPostState extends State<AddPost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionTitle("Add Photos of the item (up to 3)"),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  "⚠️ Security Tip: If you found an item, avoid showing unique marks in the photos to help verify the true owner later. (Photos are optional).",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    height: 1.3,
+                  ),
+                ),
+              ),
               _selectedImages.isEmpty
                   ? GestureDetector(
                       onTap: () => _showImageSourceActionSheet(context),
