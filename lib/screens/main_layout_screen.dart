@@ -16,14 +16,16 @@ class MainLayoutScreen extends StatefulWidget {
 class _MainLayoutScreenState extends State<MainLayoutScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> pages = [
-    HomePage(),
+  String selectedFilter = "Found";
+
+  List<Widget> get pages => [
+    HomePage(filter: selectedFilter),
     ExplorePage(),
     Chat(),
     ProfileScreen(),
   ];
+
   final List pageTitles = ["Home Page", "Explore", "Messages", "Profile"];
-  String selectedFilter = "All";
 
   Widget _buildNavItem(IconData icon, String label, int index) {
     return Expanded(

@@ -7,7 +7,9 @@ import 'package:just_lost_and_found/helpers/date_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String filter;
+
+  const HomePage({Key? key, required this.filter}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,19 +17,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Map<String, Future<DocumentSnapshot>> _userFuturesCache = {};
+
   @override
   Widget build(BuildContext context) {
+    Query postsQuery = FirebaseFirestore.instance
+        .collection("posts")
+        .where("isResolved", isEqualTo: false);
+
+    if (widget.filter != 'All') {
+      postsQuery = postsQuery.where("status", isEqualTo: widget.filter);
+    }
+
+    postsQuery = postsQuery.orderBy("createdAt", descending: true);
+
     return Scaffold(
       backgroundColor: const Color(0xFFD5D5D5),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("posts")
-                  .where("isResolved", isEqualTo: false)
-                  .orderBy("createdAt", descending: true)
-                  .snapshots(),
+              stream: postsQuery.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
