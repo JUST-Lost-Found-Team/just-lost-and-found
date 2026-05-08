@@ -2,13 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/helpers/date_helper.dart';
 
 class PostDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> post;
-
-  const PostDetailsScreen({super.key, required this.post});
+  final String postId;
+  const PostDetailsScreen({
+    super.key,
+    required this.post,
+    required this.postId,
+  });
 
   @override
   State<PostDetailsScreen> createState() => _PostDetailsScreenState();
@@ -71,20 +76,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.more_horiz_rounded,
-                      color: images.isNotEmpty ? Colors.white : Colors.black87,
-                      size: 28,
-                    ),
-                    onPressed: () {
-                      //will implement it later.
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                ],
 
                 flexibleSpace: images.isNotEmpty
                     ? FlexibleSpaceBar(
@@ -157,40 +148,126 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 22,
-                                    backgroundImage: sImage.isNotEmpty
-                                        ? CachedNetworkImageProvider(sImage)
-                                        : null,
-                                    child: sImage.isEmpty
-                                        ? const Icon(Icons.person)
-                                        : null,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(
-                                        sName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: ThemeManager.primaryBlue,
-                                          fontSize: 16,
-                                        ),
+                                      CircleAvatar(
+                                        radius: 22,
+                                        backgroundImage: sImage.isNotEmpty
+                                            ? CachedNetworkImageProvider(sImage)
+                                            : null,
+                                        child: sImage.isEmpty
+                                            ? const Icon(Icons.person)
+                                            : null,
                                       ),
-                                      Text(
-                                        timeAgo,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                        ),
+                                      const SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            sName,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: ThemeManager.primaryBlue,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Text(
+                                            timeAgo,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
+                              if (FirebaseAuth.instance.currentUser?.uid ==
+                                  widget.post['userId'])
+                                Row(
+                                  children: [
+                                    PopupMenuButton<String>(
+                                      color: Colors.white,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.more_horiz_rounded,
+                                            color: Colors.grey[700],
+                                            size: 28,
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ],
+                                      ),
+                                      onSelected: (value) {
+                                        if (value == 'resolved') {
+                                          PostActionsHelper.markAsResolved(
+                                            context,
+                                            widget.postId,
+
+                                            onSuccess: () =>
+                                                Navigator.pop(context),
+                                          );
+                                        } else if (value == 'edit') {
+                                          PostActionsHelper.editPost(
+                                            context,
+                                            widget.postId,
+                                            data,
+                                          );
+                                        } else if (value == 'delete') {
+                                          PostActionsHelper.deletePost(
+                                            context,
+                                            widget.postId,
+
+                                            onSuccess: () =>
+                                                Navigator.pop(context),
+                                          );
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext context) => [
+                                        const PopupMenuItem(
+                                          value: 'resolved',
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.check_circle_outline,
+                                              color: Colors.green,
+                                            ),
+                                            title: Text('Mark as resolved'),
+                                          ),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 'edit',
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.edit,
+                                              color: Colors.blue,
+                                            ),
+                                            title: Text('Edit'),
+                                          ),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 'delete',
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            title: Text('Delete'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                             ],
                           );
                         },
@@ -312,7 +389,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     );
   }
 
-  @override
   Widget _buildCustomChip(String label, String value, {bool isStatus = false}) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.28,

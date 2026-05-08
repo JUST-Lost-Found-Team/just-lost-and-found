@@ -5,6 +5,7 @@ import 'package:just_lost_and_found/screens/bottom_navigation_screens/post_detai
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/helpers/date_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
 
 class HomePage extends StatefulWidget {
   final String filter;
@@ -68,8 +69,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                    final post = posts[index].data() as Map<String, dynamic>;
-
+                    final postDoc = posts[index];
+                    final docId = postDoc.id;
+                    final post = postDoc.data() as Map<String, dynamic>;
                     final title = post['title'] ?? 'No Title';
                     final description = post['description'] ?? 'No Description';
                     final location = post['location'] ?? 'Unknown Location';
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage> {
 
                     return _buildPostCard(
                       post: post,
+                      docId: docId,
                       title: title,
                       description: description,
                       location: location,
@@ -101,6 +104,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildPostCard({
     required Map<String, dynamic> post,
+    required String docId,
     required String title,
     required String description,
     required String location,
@@ -122,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostDetailsScreen(post: post),
+            builder: (context) => PostDetailsScreen(post: post, postId: docId),
           ),
         );
       },
@@ -244,13 +248,67 @@ class _HomePageState extends State<HomePage> {
                           currentUserId == userId
                               ? SizedBox(
                                   height: 22,
-                                  child: IconButton(
+
+                                  child: PopupMenuButton<String>(
+                                    color: Colors.white,
+
                                     padding: EdgeInsets.zero,
-                                    onPressed: () {},
+                                    constraints: const BoxConstraints(),
                                     icon: const Icon(
-                                      Icons.more_horiz_rounded,
-                                      color: Colors.grey,
+                                      Icons.more_horiz,
+                                      size: 24,
                                     ),
+                                    onSelected: (value) {
+                                      if (value == 'resolved') {
+                                        PostActionsHelper.markAsResolved(
+                                          context,
+                                          docId,
+                                        );
+                                      } else if (value == 'edit') {
+                                        PostActionsHelper.editPost(
+                                          context,
+                                          docId,
+                                          post,
+                                        );
+                                      } else if (value == 'delete') {
+                                        PostActionsHelper.deletePost(
+                                          context,
+                                          docId,
+                                        );
+                                      }
+                                    },
+                                    itemBuilder: (BuildContext context) => [
+                                      const PopupMenuItem(
+                                        value: 'resolved',
+                                        child: ListTile(
+                                          leading: Icon(
+                                            Icons.check_circle_outline,
+                                            color: Colors.green,
+                                          ),
+                                          title: Text('Mark as resolved'),
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'edit',
+                                        child: ListTile(
+                                          leading: Icon(
+                                            Icons.edit,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text('Edit'),
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'delete',
+                                        child: ListTile(
+                                          leading: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                          title: Text('Delete'),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 )
                               : const SizedBox(height: 22),
