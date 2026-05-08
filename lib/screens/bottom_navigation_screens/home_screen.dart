@@ -62,37 +62,51 @@ class _HomePageState extends State<HomePage> {
 
                 final posts = snapshot.data!.docs;
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final postDoc = posts[index];
-                    final docId = postDoc.id;
-                    final post = postDoc.data() as Map<String, dynamic>;
-                    final title = post['title'] ?? 'No Title';
-                    final description = post['description'] ?? 'No Description';
-                    final location = post['location'] ?? 'Unknown Location';
-                    final status = post['status'] ?? 'Found';
-                    final createdAt = post['createdAt'];
-                    final images = post['images'] as List<dynamic>? ?? [];
+                return RefreshIndicator(
+                  color: ThemeManager.primaryBlue,
+                  backgroundColor: Colors.white,
 
-                    final postUserId = post['userId'];
+                  onRefresh: () async {
+                    setState(() {
+                      _userFuturesCache.clear();
+                    });
 
-                    return _buildPostCard(
-                      post: post,
-                      docId: docId,
-                      title: title,
-                      description: description,
-                      location: location,
-                      status: status,
-                      createdAt: createdAt,
-                      images: images,
-                      userId: postUserId,
-                    );
+                    await Future.delayed(const Duration(seconds: 1));
                   },
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      final postDoc = posts[index];
+                      final docId = postDoc.id;
+                      final post = postDoc.data() as Map<String, dynamic>;
+                      final title = post['title'] ?? 'No Title';
+                      final description =
+                          post['description'] ?? 'No Description';
+                      final location = post['location'] ?? 'Unknown Location';
+                      final status = post['status'] ?? 'Found';
+                      final createdAt = post['createdAt'];
+                      final images = post['images'] as List<dynamic>? ?? [];
+
+                      final postUserId = post['userId'];
+
+                      return _buildPostCard(
+                        post: post,
+                        docId: docId,
+                        title: title,
+                        description: description,
+                        location: location,
+                        status: status,
+                        createdAt: createdAt,
+                        images: images,
+                        userId: postUserId,
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -220,24 +234,46 @@ class _HomePageState extends State<HomePage> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              location.split("-").last,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_pin,
+                                  size: 12,
+                                  color: Colors.grey[700],
+                                ),
+
+                                Text(
+                                  location.split("-").last,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
+
                             const SizedBox(height: 2),
-                            Text(
-                              DateHelper.getTimeAgo(createdAt),
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey,
-                              ),
+
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.access_time_rounded,
+                                  size: 12,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  DateHelper.getTimeAgo(createdAt),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

@@ -51,28 +51,21 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: images.isNotEmpty ? 280 : 60,
+                expandedHeight: images.isNotEmpty ? 280.0 : null,
                 pinned: true,
                 automaticallyImplyLeading: false,
-                backgroundColor: images.isNotEmpty
-                    ? ThemeManager.primaryBlue
-                    : Colors.white,
+                backgroundColor: ThemeManager.primaryBlue,
                 elevation: 0,
 
                 leading: Container(
                   margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: images.isNotEmpty
-                        ? Colors.white.withOpacity(0.9)
-                        : Colors.grey.shade100,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: ThemeManager.primaryBlue,
-                      size: 18,
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.black12.withOpacity(0.42),
                     ),
+
+                    icon: Icon(Icons.arrow_back, color: Colors.white, size: 24),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -128,219 +121,274 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               ),
 
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      FutureBuilder<DocumentSnapshot>(
-                        future: _postUserFuture,
-                        builder: (context, snapshot) {
-                          String sName = "Loading...";
-                          String sImage = "";
-                          if (snapshot.hasData && snapshot.data!.exists) {
-                            final userData =
-                                snapshot.data!.data() as Map<String, dynamic>;
-                            sName = userData['name'] ?? "User";
-                            sImage = userData['profileImage'] ?? "";
-                          }
+                child: Stack(
+                  children: [
+                    if (images.isEmpty)
+                      Container(
+                        height: 70,
+                        width: double.infinity,
+                        color: ThemeManager.primaryBlue,
+                      ),
 
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 22,
-                                        backgroundImage: sImage.isNotEmpty
-                                            ? CachedNetworkImageProvider(sImage)
-                                            : null,
-                                        child: sImage.isEmpty
-                                            ? const Icon(Icons.person)
-                                            : null,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            sName,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: ThemeManager.primaryBlue,
-                                              fontSize: 16,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          SizedBox(height: images.isEmpty ? 25 : 20),
+
+                          FutureBuilder<DocumentSnapshot>(
+                            future: _postUserFuture,
+                            builder: (context, snapshot) {
+                              String sName = "Loading...";
+                              String sImage = "";
+                              if (snapshot.hasData && snapshot.data!.exists) {
+                                final userData =
+                                    snapshot.data!.data()
+                                        as Map<String, dynamic>;
+                                sName = userData['name'] ?? "User";
+                                sImage = userData['profileImage'] ?? "";
+                              }
+
+                              return Container(
+                                padding: images.isEmpty
+                                    ? const EdgeInsets.all(16)
+                                    : EdgeInsets.zero,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+
+                                  boxShadow: images.isEmpty
+                                      ? [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.08,
                                             ),
+                                            blurRadius: 15,
+                                            offset: const Offset(0, 5),
                                           ),
-                                          Text(
-                                            timeAgo,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              if (FirebaseAuth.instance.currentUser?.uid ==
-                                  widget.post['userId'])
-                                Row(
+                                        ]
+                                      : [],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    PopupMenuButton<String>(
-                                      color: Colors.white,
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.more_horiz_rounded,
-                                            color: Colors.grey[700],
-                                            size: 28,
-                                          ),
-                                          const SizedBox(width: 4),
-                                        ],
-                                      ),
-                                      onSelected: (value) {
-                                        if (value == 'resolved') {
-                                          PostActionsHelper.markAsResolved(
-                                            context,
-                                            widget.postId,
-
-                                            onSuccess: () =>
-                                                Navigator.pop(context),
-                                          );
-                                        } else if (value == 'edit') {
-                                          PostActionsHelper.editPost(
-                                            context,
-                                            widget.postId,
-                                            data,
-                                          );
-                                        } else if (value == 'delete') {
-                                          PostActionsHelper.deletePost(
-                                            context,
-                                            widget.postId,
-
-                                            onSuccess: () =>
-                                                Navigator.pop(context),
-                                          );
-                                        }
-                                      },
-                                      itemBuilder: (BuildContext context) => [
-                                        const PopupMenuItem(
-                                          value: 'resolved',
-                                          child: ListTile(
-                                            leading: Icon(
-                                              Icons.check_circle_outline,
-                                              color: Colors.green,
-                                            ),
-                                            title: Text('Mark as resolved'),
-                                          ),
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 24,
+                                          backgroundImage: sImage.isNotEmpty
+                                              ? CachedNetworkImageProvider(
+                                                  sImage,
+                                                )
+                                              : null,
+                                          child: sImage.isEmpty
+                                              ? const Icon(Icons.person)
+                                              : null,
                                         ),
-                                        const PopupMenuItem(
-                                          value: 'edit',
-                                          child: ListTile(
-                                            leading: Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
+                                        const SizedBox(width: 12),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              sName,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: ThemeManager.primaryBlue,
+                                                fontSize: 16,
+                                              ),
                                             ),
-                                            title: Text('Edit'),
-                                          ),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 'delete',
-                                          child: ListTile(
-                                            leading: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.access_time_rounded,
+                                                  size: 14,
+                                                  color: Colors.grey,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  timeAgo,
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            title: Text('Delete'),
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
+                                    if (FirebaseAuth
+                                            .instance
+                                            .currentUser
+                                            ?.uid ==
+                                        widget.post['userId'])
+                                      PopupMenuButton<String>(
+                                        color: Colors.white,
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.more_horiz_rounded,
+                                              color: Colors.grey[700],
+                                              size: 28,
+                                            ),
+                                          ],
+                                        ),
+                                        onSelected: (value) {
+                                          if (value == 'resolved') {
+                                            PostActionsHelper.markAsResolved(
+                                              context,
+                                              widget.postId,
+                                              onSuccess: () =>
+                                                  Navigator.pop(context),
+                                            );
+                                          } else if (value == 'edit') {
+                                            PostActionsHelper.editPost(
+                                              context,
+                                              widget.postId,
+                                              data,
+                                            );
+                                          } else if (value == 'delete') {
+                                            PostActionsHelper.deletePost(
+                                              context,
+                                              widget.postId,
+                                              onSuccess: () =>
+                                                  Navigator.pop(context),
+                                            );
+                                          }
+                                        },
+                                        itemBuilder: (BuildContext context) => [
+                                          const PopupMenuItem(
+                                            value: 'resolved',
+                                            child: ListTile(
+                                              leading: Icon(
+                                                Icons.check_circle_outline,
+                                                color: Colors.green,
+                                              ),
+                                              title: Text('Mark as resolved'),
+                                            ),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'edit',
+                                            child: ListTile(
+                                              leading: Icon(
+                                                Icons.edit,
+                                                color: Colors.blue,
+                                              ),
+                                              title: Text('Edit'),
+                                            ),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'delete',
+                                            child: ListTile(
+                                              leading: Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                              title: Text('Delete'),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                   ],
                                 ),
-                            ],
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                              );
+                            },
                           ),
-                        ),
-                      ),
 
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildCustomChip("status", status, isStatus: true),
-                          _buildCustomChip("Location", location),
-                          _buildCustomChip("Category", category),
-                        ],
-                      ),
+                          const SizedBox(height: 24),
 
-                      const SizedBox(height: 30),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Description",
-                              style: TextStyle(
-                                fontSize: 20,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: double.infinity,
-                              child: Builder(
-                                builder: (context) {
-                                  bool isArabic = RegExp(
-                                    r'[\u0600-\u06FF]',
-                                  ).hasMatch(description);
-                                  return Text(
-                                    description,
-                                    textAlign: isArabic
-                                        ? TextAlign.right
-                                        : TextAlign.left,
-                                    textDirection: isArabic
-                                        ? TextDirection.rtl
-                                        : TextDirection.ltr,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                      height: 1.4,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
 
-                      const SizedBox(height: 120),
-                    ],
-                  ),
+                          const SizedBox(height: 16),
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildCustomChip(
+                                  Icons.verified_outlined,
+                                  "status",
+                                  status,
+                                  isStatus: true,
+                                ),
+                                _buildCustomChip(
+                                  Icons.location_pin,
+                                  "Location",
+                                  location,
+                                ),
+                                _buildCustomChip(
+                                  Icons.category,
+                                  "Category",
+                                  category,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Description",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Builder(
+                                    builder: (context) {
+                                      bool isArabic = RegExp(
+                                        r'[\u0600-\u06FF]',
+                                      ).hasMatch(description);
+                                      return Text(
+                                        description,
+                                        textAlign: isArabic
+                                            ? TextAlign.right
+                                            : TextAlign.left,
+                                        textDirection: isArabic
+                                            ? TextDirection.rtl
+                                            : TextDirection.ltr,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                          height: 1.4,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 120),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -389,7 +437,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     );
   }
 
-  Widget _buildCustomChip(String label, String value, {bool isStatus = false}) {
+  Widget _buildCustomChip(
+    IconData icon,
+    String label,
+    String value, {
+    bool isStatus = false,
+  }) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.28,
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
@@ -398,7 +451,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
         borderRadius: BorderRadius.circular(25),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(icon, color: Colors.grey[700]),
           Text(
             label,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
