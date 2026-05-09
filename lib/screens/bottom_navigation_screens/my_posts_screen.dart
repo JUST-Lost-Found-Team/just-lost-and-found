@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/add_post_screen.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/edit_post_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
+//import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
 
 class MyPostsScreen extends StatelessWidget {
   const MyPostsScreen({super.key});
@@ -15,7 +16,9 @@ class MyPostsScreen extends StatelessWidget {
     backgroundColor: Colors.white,
     appBar: AppBar(
       backgroundColor: ThemeManager.primaryBlue,
+      iconTheme: const IconThemeData(color:Colors.white),
       title: const Text("My Posts",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+      
       centerTitle: true,
       elevation: 0,
     ),
@@ -63,7 +66,7 @@ class MyPostsScreen extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.6,
           ),
           itemCount: docs.length,
           itemBuilder: (context,index){
@@ -204,8 +207,13 @@ class MyPostsScreen extends StatelessWidget {
                               builder:(context)=>EditPostScreen(
                                 postData: data,
                                postId: docId), ));
-                           }else if(value=='delete'){
-                           _deletePost(docId,context);
+                            }else if(value=='delete'){
+                           
+                              _deletePost(docId, context);
+                            
+                        
+                           
+                           
                           }
                         },
 
@@ -307,6 +315,7 @@ class MyPostsScreen extends StatelessWidget {
 //   );
 // }
   void _deletePost(String docId, BuildContext context) async {
+    
     try {
       await FirebaseFirestore.instance.collection('posts').doc(docId).delete();
       if (context.mounted) {
@@ -318,3 +327,4 @@ class MyPostsScreen extends StatelessWidget {
   }
 
 }
+
