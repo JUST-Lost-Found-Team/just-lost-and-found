@@ -71,6 +71,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFDFBFF),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFDFBFF),
+       // backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: (){Navigator.pop(context);}, 
+          icon: const Icon(
+             Icons.arrow_back_ios_new,
+            color:ThemeManager.primaryBlue,
+            size:20,
+          ),),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
