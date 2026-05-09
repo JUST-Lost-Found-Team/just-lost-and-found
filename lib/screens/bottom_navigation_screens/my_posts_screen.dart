@@ -222,7 +222,9 @@ class MyPostsScreen extends StatelessWidget {
                     Navigator.pop(dialogContext);
                     _deletePost(docId, context);
                   },
-                  child: const Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: const Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
                 ),
               ),
             ),

@@ -397,12 +397,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             print("Erroe:$e");
                                           }
                                         },
-                                         child: const Text(
-                                          "Log Out",
-                                          style: TextStyle(
-                                            color:Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                         child: const FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                           child: Text(
+                                            "Log Out",
+                                            style: TextStyle(
+                                              color:Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                           ),
                                          ),
                                          ),
                                     ),
