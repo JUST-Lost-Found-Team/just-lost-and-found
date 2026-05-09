@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 
@@ -15,7 +16,21 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool loader = false;
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
+      backgroundColor: const Color(0xFFFDFBFF),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFDFBFF),
+        leading: IconButton(
+          icon:const Icon(
+            Icons.arrow_back_ios_new,
+            color:ThemeManager.primaryBlue,
+            size:20,
+
+          ),
+          onPressed:(){Navigator.pop(context);} 
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(24.0),
