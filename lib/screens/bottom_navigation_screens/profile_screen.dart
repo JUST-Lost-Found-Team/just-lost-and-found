@@ -349,20 +349,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Icons.arrow_forward_ios,
                             color: ThemeManager.primaryYellow,
                           ),
-                          onTap: () async {
-                            try {
-                              await FirebaseAuth.instance.signOut();
-                              if (!mounted) return;
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
+                          onTap: () {
+                           showDialog(
+                            context: context,
+                             builder: (BuildContext context){
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                backgroundColor: Colors.white,
+                                title: Row(
+                                  children: [
+                                     Icon(Icons.logout,color: ThemeManager.errorRed,),
+                                     SizedBox(width: 9,),
+                                    const Text('Log Out',style: TextStyle(fontWeight: FontWeight.bold,),),
+                                   
+                                  ],
                                 ),
-                                (route) => false,
+                                
+                                content: const Text("Are you sure you want to log out?"),
+                                actions: [
+                                  TextButton
+                                  (onPressed:()=> Navigator.pop(context),
+                                   child: const Text('Cancel',style: TextStyle(color:Colors.grey,fontWeight: FontWeight.bold),),
+                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0,bottom:8.0),
+                                    child: SizedBox(
+                                      width:100,
+                                      height:40,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: ThemeManager.errorRed,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          elevation: 0,
+                                        ),
+                                        onPressed: ()async{
+                                          try {
+                                            await FirebaseAuth.instance.signOut();
+                                            if(!context.mounted)return;
+                                            Navigator.pushAndRemoveUntil(
+                                              context, 
+                                              MaterialPageRoute(builder: (context) => const LoginScreen(),),
+                                              (route)=>false,
+                                              );
+                                          } catch (e) {
+                                            print("Erroe:$e");
+                                          }
+                                        },
+                                         child: const Text(
+                                          "Log Out",
+                                          style: TextStyle(
+                                            color:Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                         ),
+                                         ),
+                                    ),
+                                    ),
+                                  
+                                ],
                               );
-                            } catch (e) {
-                              print("Log Out Error: $e");
-                            }
+                             },
+                             );
                           },
                         ),
                       ],
