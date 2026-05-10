@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/chat_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/helpers/date_helper.dart';
 
@@ -322,7 +323,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 _buildCustomChip(
-                                  Icons.verified_outlined,
+                                  Icons.verified_rounded,
                                   "status",
                                   status,
                                   isStatus: true,
@@ -412,7 +413,24 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   return SizedBox(
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Map<String, dynamic> postDataWithId = Map.from(
+                          widget.post,
+                        );
+                        postDataWithId['postId'] = widget.postId;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                              receiverId: widget.post['userId'],
+                              receiverName: name,
+                              postData: postDataWithId,
+                            ),
+                          ),
+                        );
+                      },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF326182),
                         shape: RoundedRectangleBorder(

@@ -238,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.location_pin,
+                                  Icons.location_on_outlined,
                                   size: 12,
                                   color: Colors.grey[700],
                                 ),
@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                   height: 22,
 
                                   child: PopupMenuButton<String>(
-                                    color: Colors.white,
+                                    color: Colors.grey[100],
 
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
