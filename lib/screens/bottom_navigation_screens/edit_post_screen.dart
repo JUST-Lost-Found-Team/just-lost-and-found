@@ -98,6 +98,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 items: LocationData.locations
                     .map(
                       (item) => DropdownMenuItem<String>(
+                        
                         value: item,
                         child: Text(
                           item,
