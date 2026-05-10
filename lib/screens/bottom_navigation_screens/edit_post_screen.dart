@@ -173,7 +173,22 @@ class _EditPostScreenState extends State<EditPostScreen> {
         value:value,
         items: items,
          onChanged: onChanged,
-         decoration: InputDecoration(filled: true,fillColor: _fillColor,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),borderSide: BorderSide.none)),
+         isExpanded: true,
+         alignment: AlignmentDirectional.bottomStart,
+         menuMaxHeight: 350,
+         borderRadius: BorderRadius.circular(15),
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: _fillColor,
+      
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+    ),
+         
+        // decoration: InputDecoration(filled: true,fillColor: _fillColor,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),borderSide: BorderSide.none)),
          );
     }
     Widget _buildStatusSwitch(){
