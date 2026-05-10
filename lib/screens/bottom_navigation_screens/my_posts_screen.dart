@@ -218,7 +218,7 @@ class MyPostsScreen extends StatelessWidget {
          
         
           
-          content: const Text("Are you sure you want to delete this post?\nthis action cannot be undone."),
+          content: const Text("Are you sure you want to delete this post?\nThis action cannot be undone."),
           actions: [
             TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text("Cancel", style: TextStyle(color: Colors.grey))),
             Padding(
