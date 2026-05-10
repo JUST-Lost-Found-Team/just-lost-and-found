@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'bottom_navigation_screens/home_screen.dart';
-import 'bottom_navigation_screens/chats_screen.dart';
+import 'bottom_navigation_screens/chat_list_screen.dart';
 import 'bottom_navigation_screens/explore_screen.dart';
 import 'bottom_navigation_screens/profile_screen.dart';
 import 'bottom_navigation_screens/add_post_screen.dart';
@@ -21,7 +21,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
   List<Widget> get pages => [
     HomePage(filter: selectedFilter),
     ExplorePage(),
-    Chat(),
+    ChatListScreen(),
     ProfileScreen(),
   ];
 
