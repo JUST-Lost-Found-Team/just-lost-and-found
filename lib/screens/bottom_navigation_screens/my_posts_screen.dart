@@ -6,6 +6,8 @@ import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class MyPostsScreen extends StatelessWidget {
   const MyPostsScreen({super.key});
+  
+  
 
   @override
   Widget build(BuildContext context) {
@@ -208,8 +210,15 @@ class MyPostsScreen extends StatelessWidget {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text("Delete Post"),
-          content: const Text("Are you sure you want to delete this post?"),
+          title:Row(children: [
+            Icon(Icons.warning_amber_rounded,color: ThemeManager.errorRed,),
+            SizedBox(width: 9,),
+            Text("Delete Post",style: TextStyle(fontWeight: FontWeight.bold),),
+          ],),
+         
+        
+          
+          content: const Text("Are you sure you want to delete this post?\nThis action cannot be undone."),
           actions: [
             TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text("Cancel", style: TextStyle(color: Colors.grey))),
             Padding(
