@@ -295,7 +295,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                           height: 45,
                                           color: Colors.grey[300],
                                           child: const Icon(
-                                            Icons.inventory_2_outlined,
+                                            Icons.image_not_supported_outlined,
                                             size: 24,
                                             color: Colors.grey,
                                           ),

@@ -24,7 +24,9 @@ class _AddPostState extends State<AddPost> {
   bool _isLost = true;
   bool _isLoading = false;
   String? _selectedCategory;
-  String? _selectedLocation;
+
+  List<String> _selectedLocations = [];
+
   final Color _fillColor = Colors.grey.shade200;
 
   Future<void> _pickImagesFromGallery() async {
@@ -132,6 +134,16 @@ class _AddPostState extends State<AddPost> {
   Future<void> _submitPost() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (_selectedLocations.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select at least one location"),
+          backgroundColor: ThemeManager.errorRed,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -150,7 +162,7 @@ class _AddPostState extends State<AddPost> {
       await FirebaseFirestore.instance.collection('posts').add({
         'title': _titleController.text.trim(),
         'description': _descController.text.trim(),
-        'location': _selectedLocation,
+        'location': _selectedLocations,
         'category': _selectedCategory,
         'status': _isLost ? 'Lost' : 'Found',
         'images': imageUrls,
@@ -189,6 +201,8 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
+    int maxLocations = _isLost ? 3 : 1;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -211,19 +225,103 @@ class _AddPostState extends State<AddPost> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle("Add Photos of the item (up to 3)"),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12.0),
-                child: Text(
-                  "⚠️ Security Tip: If you found an item, avoid showing unique marks in the photos to help verify the true owner later. (Photos are optional).",
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    height: 1.3,
+              _buildSectionTitle("What are you reporting?"),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _isLost = true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: _isLost
+                              ? ThemeManager.primaryBlue
+                              : Colors.white,
+                          border: Border.all(
+                            color: _isLost
+                                ? ThemeManager.primaryBlue
+                                : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "I Lost an Item",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: _isLost
+                                  ? Colors.white
+                                  : Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isLost = false;
+
+                          if (_selectedLocations.length > 1) {
+                            _selectedLocations = [_selectedLocations.first];
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: !_isLost
+                              ? ThemeManager.primaryBlue
+                              : Colors.white,
+                          border: Border.all(
+                            color: !_isLost
+                                ? ThemeManager.primaryBlue
+                                : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "I Found an Item",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: !_isLost
+                                  ? Colors.white
+                                  : Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              _buildSectionTitle("Add Photos up to 3 (photos are optional)"),
+
+              if (!_isLost)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12.0),
+                  child: Text(
+                    "⚠️ Security Tip: Avoid showing unique marks in the photos to help verify the true owner later.",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      height: 1.3,
+                    ),
                   ),
                 ),
-              ),
+
               _selectedImages.isEmpty
                   ? GestureDetector(
                       onTap: () => _showImageSourceActionSheet(context),
@@ -234,7 +332,7 @@ class _AddPostState extends State<AddPost> {
                     )
                   : _buildImagePreviewList(),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               _buildSectionTitle("Title:"),
               _buildTextField(
@@ -253,27 +351,72 @@ class _AddPostState extends State<AddPost> {
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle("Location:"),
-              _buildDropdown(
-                hint: "Select Campus Location...",
-                value: _selectedLocation,
+              _buildSectionTitle(
+                _isLost ? "Possible Locations (Up to 3):" : "Location:",
+              ),
 
-                items: LocationData.locations
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
+              if (_selectedLocations.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: _selectedLocations.map((loc) {
+                      return InputChip(
+                        label: Text(
+                          loc,
                           style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => _selectedLocation = val),
-              ),
+                        // backgroundColor: Colors.grey.shade400,
+                        backgroundColor: ThemeManager.primaryYellow.withOpacity(
+                          0.65,
+                        ),
+                        deleteIconColor: ThemeManager.errorRed,
+                        onDeleted: () {
+                          setState(() {
+                            _selectedLocations.remove(loc);
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+              if (_selectedLocations.length < maxLocations)
+                _buildDropdown(
+                  key: UniqueKey(),
+                  hint: _selectedLocations.isEmpty
+                      ? "Select Campus Location..."
+                      : "Add another possible location...",
+                  value: null,
+                  validator: (val) =>
+                      _selectedLocations.isEmpty ? "Required" : null,
+                  items: LocationData.locations
+                      .where((loc) => !_selectedLocations.contains(loc))
+                      .map(
+                        (item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null) {
+                      setState(() {
+                        _selectedLocations.add(val);
+                      });
+                    }
+                  },
+                ),
 
               const SizedBox(height: 16),
 
@@ -281,6 +424,7 @@ class _AddPostState extends State<AddPost> {
               _buildDropdown(
                 hint: "Select Item Category...",
                 value: _selectedCategory,
+                validator: (value) => value == null ? "Required" : null,
                 items: Categories.categories
                     .map(
                       (item) => DropdownMenuItem<String>(
@@ -296,80 +440,6 @@ class _AddPostState extends State<AddPost> {
                     )
                     .toList(),
                 onChanged: (val) => setState(() => _selectedCategory = val),
-              ),
-
-              const SizedBox(height: 20),
-
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: _fillColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Item Status",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "is this item Lost or Found?",
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Lost",
-                          style: TextStyle(
-                            fontWeight: _isLost
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: _isLost ? Colors.black : Colors.grey,
-                          ),
-                        ),
-                        Switch(
-                          value: !_isLost,
-                          onChanged: (val) {
-                            setState(() {
-                              _isLost = !val;
-                            });
-                          },
-                          activeColor: ThemeManager.primaryYellow,
-                          activeTrackColor: ThemeManager.primaryYellow
-                              .withOpacity(0.2),
-                          inactiveThumbColor: ThemeManager.primaryYellow,
-                          inactiveTrackColor: ThemeManager.primaryYellow
-                              .withOpacity(0.2),
-                        ),
-                        Text(
-                          "Found",
-                          style: TextStyle(
-                            fontWeight: !_isLost
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: !_isLost ? Colors.black : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               ),
 
               const SizedBox(height: 30),
@@ -444,12 +514,15 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildDropdown({
+    Key? key,
     required String hint,
     required String? value,
     required List<DropdownMenuItem<String>> items,
     required Function(String?) onChanged,
+    String? Function(String?)? validator,
   }) {
     return DropdownButtonFormField<String>(
+      key: key,
       isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
@@ -457,7 +530,7 @@ class _AddPostState extends State<AddPost> {
       borderRadius: BorderRadius.circular(15),
       items: items,
       onChanged: onChanged,
-      validator: (value) => value == null ? "Required" : null,
+      validator: validator,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
@@ -491,6 +564,7 @@ class _AddPostState extends State<AddPost> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
           Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
           const SizedBox(height: 10),
           Text(

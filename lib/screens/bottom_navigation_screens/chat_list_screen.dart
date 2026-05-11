@@ -173,9 +173,7 @@ class ChatListScreen extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: hasUnreadMessages
-                          ? ThemeManager.primaryBlue.withOpacity(0.08)
-                          : Colors.white,
+                      color: hasUnreadMessages ? Colors.white : Colors.white60,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(

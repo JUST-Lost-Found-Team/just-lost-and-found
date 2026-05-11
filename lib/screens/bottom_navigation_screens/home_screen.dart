@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
     required String docId,
     required String title,
     required String description,
-    required String location,
+    required dynamic location,
     required String status,
     required dynamic createdAt,
     required List<dynamic> images,
@@ -135,6 +135,33 @@ class _HomePageState extends State<HomePage> {
           .doc(userId)
           .get();
     }
+
+    final rawLocation = post['location'];
+    List<dynamic> locationsList = [];
+
+    if (rawLocation is List) {
+      locationsList = rawLocation;
+    } else if (rawLocation is String) {
+      locationsList = [rawLocation];
+    }
+
+    String displayLocation = "Unknown Location";
+    if (locationsList.isNotEmpty) {
+      List<String> processedLocs = locationsList.map((loc) {
+        String s = loc.toString().trim();
+
+        if (s.contains('-')) {
+          s = s.split('-').last.trim();
+        }
+        if (s.toLowerCase().startsWith('the ')) {
+          s = s.substring(4).trim();
+        }
+
+        return s;
+      }).toList();
+
+      displayLocation = processedLocs.join(', ');
+    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -144,6 +171,7 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       },
+
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         width: double.infinity,
@@ -242,16 +270,16 @@ class _HomePageState extends State<HomePage> {
                                   size: 12,
                                   color: Colors.grey[700],
                                 ),
-
-                                Text(
-                                  location.split("-").last,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w500,
+                                Expanded(
+                                  child: Text(
+                                    displayLocation,
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.grey[600],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -358,10 +386,10 @@ class _HomePageState extends State<HomePage> {
                               color: status == 'Lost'
                                   ? ThemeManager.errorRed
                                   : ThemeManager.successGreen,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              status,
+                              status.toUpperCase(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 11,

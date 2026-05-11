@@ -39,7 +39,15 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     final data = widget.post;
     final List<dynamic> images = data['images'] ?? [];
     final String title = data['title'] ?? 'No Title';
-    final String location = data['location'] ?? 'Unknown Location';
+    final rawLocation = data['location'];
+    List<String> locationsList = [];
+
+    if (rawLocation is List) {
+      locationsList = rawLocation.map((e) => e.toString().trim()).toList();
+    } else if (rawLocation is String) {
+      locationsList = [rawLocation];
+    }
+    locationsList.sort((a, b) => b.length.compareTo(a.length));
     final String category = data['category'] ?? 'General';
     final String status = data['status'] ?? 'Found';
     final String description = data['description'] ?? 'No Description';
@@ -200,7 +208,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                 fontSize: 16,
                                               ),
                                             ),
-                                            const SizedBox(height: 4),
+                                            const SizedBox(height: 2),
                                             Row(
                                               children: [
                                                 const Icon(
@@ -208,9 +216,26 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                   size: 14,
                                                   color: Colors.grey,
                                                 ),
-                                                const SizedBox(width: 4),
+                                                const SizedBox(width: 2),
                                                 Text(
                                                   timeAgo,
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.category_outlined,
+                                                  size: 14,
+                                                  color: Colors.grey,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  category,
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 13,
@@ -222,81 +247,112 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                         ),
                                       ],
                                     ),
-                                    if (FirebaseAuth
-                                            .instance
-                                            .currentUser
-                                            ?.uid ==
-                                        widget.post['userId'])
-                                      PopupMenuButton<String>(
-                                        color: Colors.white,
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
+
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        if (FirebaseAuth
+                                                .instance
+                                                .currentUser
+                                                ?.uid ==
+                                            widget.post['userId'])
+                                          PopupMenuButton<String>(
+                                            color: Colors.white,
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            child: Icon(
                                               Icons.more_horiz_rounded,
                                               color: Colors.grey[700],
                                               size: 28,
                                             ),
-                                          ],
+                                            onSelected: (value) {
+                                              if (value == 'resolved') {
+                                                PostActionsHelper.markAsResolved(
+                                                  context,
+                                                  widget.postId,
+                                                  onSuccess: () =>
+                                                      Navigator.pop(context),
+                                                );
+                                              } else if (value == 'edit') {
+                                                PostActionsHelper.editPost(
+                                                  context,
+                                                  widget.postId,
+                                                  data,
+                                                );
+                                              } else if (value == 'delete') {
+                                                PostActionsHelper.deletePost(
+                                                  context,
+                                                  widget.postId,
+                                                  onSuccess: () =>
+                                                      Navigator.pop(context),
+                                                );
+                                              }
+                                            },
+                                            itemBuilder:
+                                                (BuildContext context) => [
+                                                  const PopupMenuItem(
+                                                    value: 'resolved',
+                                                    child: ListTile(
+                                                      leading: Icon(
+                                                        Icons
+                                                            .check_circle_outline,
+                                                        color: Colors.green,
+                                                      ),
+                                                      title: Text(
+                                                        'Mark as resolved',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const PopupMenuItem(
+                                                    value: 'edit',
+                                                    child: ListTile(
+                                                      leading: Icon(
+                                                        Icons.edit,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      title: Text('Edit'),
+                                                    ),
+                                                  ),
+                                                  const PopupMenuItem(
+                                                    value: 'delete',
+                                                    child: ListTile(
+                                                      leading: Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      ),
+                                                      title: Text('Delete'),
+                                                    ),
+                                                  ),
+                                                ],
+                                          )
+                                        else
+                                          const SizedBox(height: 28),
+                                        const SizedBox(height: 4),
+
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: status == 'Found'
+                                                ? Colors.green
+                                                : ThemeManager.errorRed,
+                                            borderRadius: BorderRadius.circular(10,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            status.toUpperCase(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
-                                        onSelected: (value) {
-                                          if (value == 'resolved') {
-                                            PostActionsHelper.markAsResolved(
-                                              context,
-                                              widget.postId,
-                                              onSuccess: () =>
-                                                  Navigator.pop(context),
-                                            );
-                                          } else if (value == 'edit') {
-                                            PostActionsHelper.editPost(
-                                              context,
-                                              widget.postId,
-                                              data,
-                                            );
-                                          } else if (value == 'delete') {
-                                            PostActionsHelper.deletePost(
-                                              context,
-                                              widget.postId,
-                                              onSuccess: () =>
-                                                  Navigator.pop(context),
-                                            );
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext context) => [
-                                          const PopupMenuItem(
-                                            value: 'resolved',
-                                            child: ListTile(
-                                              leading: Icon(
-                                                Icons.check_circle_outline,
-                                                color: Colors.green,
-                                              ),
-                                              title: Text('Mark as resolved'),
-                                            ),
-                                          ),
-                                          const PopupMenuItem(
-                                            value: 'edit',
-                                            child: ListTile(
-                                              leading: Icon(
-                                                Icons.edit,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text('Edit'),
-                                            ),
-                                          ),
-                                          const PopupMenuItem(
-                                            value: 'delete',
-                                            child: ListTile(
-                                              leading: Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                              title: Text('Delete'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               );
@@ -317,29 +373,87 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           ),
 
                           const SizedBox(height: 16),
-                          IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildCustomChip(
-                                  Icons.verified_rounded,
-                                  "status",
-                                  status,
-                                  isStatus: true,
+
+                          const SizedBox(height: 16),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_pin,
+                                    color: ThemeManager.primaryBlue,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "Location",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
                                 ),
-                                _buildCustomChip(
-                                  Icons.location_pin,
-                                  "Location",
-                                  location,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: locationsList.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    int index = entry.key;
+                                    String loc = entry.value;
+
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 18.0,
+                                            horizontal: 16.0,
+                                          ),
+                                          child: Text(
+                                            loc,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+
+                                        if (index < locationsList.length - 1)
+                                          Divider(
+                                            height: 1,
+                                            thickness: 1,
+                                            color: Colors.grey.shade300,
+                                            indent: 20,
+                                            endIndent: 20,
+                                          ),
+                                      ],
+                                    );
+                                  }).toList(),
                                 ),
-                                _buildCustomChip(
-                                  Icons.category,
-                                  "Category",
-                                  category,
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
 
                           const SizedBox(height: 30),
@@ -450,58 +564,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 },
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCustomChip(
-    IconData icon,
-    String label,
-    String value, {
-    bool isStatus = false,
-  }) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.28,
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0E0E0),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.grey[700]),
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(height: 5),
-          isStatus
-              ? Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: value == 'Found' ? Colors.green : Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              : Text(
-                  value,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
         ],
       ),
     );
