@@ -30,6 +30,7 @@ class MyPostsScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('posts')
             .where('userId', isEqualTo: currentUserId)
+            .orderBy('isResolved',descending: false)
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
