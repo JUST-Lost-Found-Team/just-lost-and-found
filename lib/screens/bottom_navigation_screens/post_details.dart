@@ -339,7 +339,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                             color: status == 'Found'
                                                 ? Colors.green
                                                 : ThemeManager.errorRed,
-                                            borderRadius: BorderRadius.circular(10,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
                                             ),
                                           ),
                                           child: Text(
@@ -372,9 +373,33 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                             ),
                           ),
 
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 12),
 
-                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Builder(
+                              builder: (context) {
+                                bool isArabic = RegExp(
+                                  r'[\u0600-\u06FF]',
+                                ).hasMatch(description);
+                                return Text(
+                                  description,
+                                  textAlign: isArabic
+                                      ? TextAlign.right
+                                      : TextAlign.left,
+                                  textDirection: isArabic
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                    height: 1.4,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 24),
 
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -462,40 +487,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                             alignment: Alignment.centerLeft,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Description",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Builder(
-                                    builder: (context) {
-                                      bool isArabic = RegExp(
-                                        r'[\u0600-\u06FF]',
-                                      ).hasMatch(description);
-                                      return Text(
-                                        description,
-                                        textAlign: isArabic
-                                            ? TextAlign.right
-                                            : TextAlign.left,
-                                        textDirection: isArabic
-                                            ? TextDirection.rtl
-                                            : TextDirection.ltr,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black87,
-                                          height: 1.4,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
+                              children: [const SizedBox(height: 8)],
                             ),
                           ),
 
