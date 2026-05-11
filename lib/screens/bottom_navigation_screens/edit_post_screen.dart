@@ -77,6 +77,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
         backgroundColor: ThemeManager.primaryBlue,
         title: Text('Edit Post',style: TextStyle(fontWeight: FontWeight.bold,color:Colors.white),),
         centerTitle: true,
+        leading: Icon(Icons.arrow_back,color:Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
