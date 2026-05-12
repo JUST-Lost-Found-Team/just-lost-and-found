@@ -34,14 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
           loader = false;
         });
         if (isSuccess == true) {
-          // إذا نجح (true)، دخله عالتطبيق
+          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainLayoutScreen()),
           );
         } else {
-          // إذا فشل (false)، ما تعمل إشي!
-          // هو أصلاً رح يطلع الـ SnackBar البرتقالي اللي بالصورة ويضل مكانه
+         
           print("Login failed, staying on login screen.");
         }
         //     Navigator.pushReplacement(
@@ -67,153 +66,170 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.only(top:0),
 
             child: Form(
               key: _formKey,
 
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  Image.asset(
-                    'assets/images/logo.png',
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                  const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      color: ThemeManager.primaryBlue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    Image.asset(
+                      'assets/images/logo.png',
+                      height: 200,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: emailCTRL,
-                    decoration: InputDecoration(
-                      hintText: 'Email (@just.edu.jo)',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.email),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return 'Enter email';
-
-                      if (!value.endsWith('just.edu.jo')) {
-                        return 'Use your JUST university email only';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: passwordCTRL,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isObsure = !_isObsure;
-                          });
-                        },
-                        child: Icon(
-                          _isObsure ? Icons.visibility_off : Icons.visibility,
-                        ),
+                    const Text(
+                      'Welcome Back!',
+                      style: TextStyle(
+                        color: ThemeManager.primaryBlue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 35,
                       ),
                     ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: _isObsure,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (context) =>
-                                  const ForgetPasswordScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Forget your password?',
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      onPressed: loader ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeManager.primaryYellow,
-                        shape: RoundedRectangleBorder(
+                   // SizedBox(height: 10,),
+                    Text('Log in to continue',style: TextStyle(
+                        color: Color.fromARGB(159, 23, 20, 20),
+                        fontSize: 18,
+                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: emailCTRL,
+                      decoration: InputDecoration(
+                        hintText: 'Email (@just.edu.jo)',
+                        filled: true,
+                        fillColor: Colors.grey.withOpacity(0.24),
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
                         ),
+                        prefixIcon: const Icon(Icons.email),
                       ),
-
-                      child: loader
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              'Sign In',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Enter email';
+                
+                        if (!value.endsWith('just.edu.jo')) {
+                          return 'Use your JUST university email only';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account? ",
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (context) => const CreateAccountScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 17,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w600,
-                            decorationColor:ThemeManager.primaryYellow,
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: passwordCTRL,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        filled: true,
+                        fillColor: Colors.grey.withOpacity(0.24),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObsure = !_isObsure;
+                            });
+                          },
+                          child: Icon(
+                            _isObsure ? Icons.visibility_off : Icons.visibility,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: _isObsure,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Enter password';
+                        if (value.length < 6) return 'Password too short';
+                
+                        
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (context) =>
+                                    const ForgetPasswordScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Forget your password?',
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: loader ? null : _submit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeManager.primaryYellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                
+                        child: loader
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                'Log in',
+                                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+                              ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (context) => const CreateAccountScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Create account',
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 17,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w600,
+                              decorationColor:ThemeManager.primaryYellow,
+                              decorationThickness: 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
