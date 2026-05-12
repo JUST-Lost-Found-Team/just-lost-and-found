@@ -227,10 +227,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       const Text("Already have an Account?"),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.pushAndRemoveUntil(
+                            context,
                             MaterialPageRoute(
                               builder: (context) => const LoginScreen(),
                             ),
+                            (Route<dynamic> route) => false,
                           );
                         },
 
