@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.white,
                             child: Column(
                               children: [
-                                const SizedBox(height: 110), 
+                                const SizedBox(height: 95), 
                                 Text(userName,
                                     style: const TextStyle(
                                         fontSize: 24,
@@ -157,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                    
                     Positioned(
-                      top: 180 - 85,
+                      top: 180 - 100,
                       left: 0,
                       right: 0,
                       child: Center(

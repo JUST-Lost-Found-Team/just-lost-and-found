@@ -338,6 +338,7 @@ class _AddPostState extends State<AddPost> {
               _buildTextField(
                 controller: _titleController,
                 hint: "Title of the item...",
+                maxLines: 1,
               ),
 
               const SizedBox(height: 16),
@@ -564,7 +565,6 @@ class _AddPostState extends State<AddPost> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
           Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
           const SizedBox(height: 10),
           Text(

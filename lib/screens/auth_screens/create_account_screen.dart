@@ -19,9 +19,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   TextEditingController confirmPasswordCTRL = TextEditingController();
 
   bool loader = false;
-  bool _isObsure=true;
-  bool obscureText=false;
-  bool _ObscureConfirm=true;
+  bool _isObsure = true;
+  bool _ObscureConfirm = true;
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -76,35 +75,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBFF),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFDFBFF),
-       // backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: (){Navigator.pop(context);}, 
-          icon: const Icon(
-             Icons.arrow_back_ios_new,
-            color:ThemeManager.primaryBlue,
-            size:20,
-          ),),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top:0),
+            padding: const EdgeInsets.only(top: 0),
             child: Form(
               key: _formKey,
               child: Column(
-                
                 children: [
-                 // const SizedBox(height: 15),
                   Image.asset(
                     'assets/images/logo.png',
                     height: 200,
                     fit: BoxFit.cover,
                   ),
                   const Text(
-                    'Creat Account',
+                    'Create Account',
                     style: TextStyle(
                       color: Color.fromARGB(255, 60, 118, 172),
                       fontWeight: FontWeight.bold,
@@ -116,143 +101,106 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     style: TextStyle(
                       color: Color.fromARGB(159, 23, 20, 20),
                       fontSize: 18,
-                     // fontStyle: FontStyle.italic,
                     ),
                   ),
-                  // const Text(
-                  //   'JOIN US NOW !',
-                  //   style: TextStyle(
-                  //     color: Color(0xFFE4973F),
-                  //     fontWeight: FontWeight.bold,
-                  //     fontSize: 20,
-                  //   ),
-                  // ),
-
                   const SizedBox(height: 10),
-                 // Padding(padding: EdgeInsets.all(24.0)),
-                 Padding(
-                  padding: EdgeInsets.all(24.0),
-                 child:  Column(
-                   children: [
-                     TextFormField(
-                        controller: nameCTRL,
-                        decoration: InputDecoration(
-                          hintText: 'Full Name',
-                          filled: true,
-                          fillColor: Colors.grey.withOpacity(0.24),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: nameCTRL,
+                          decoration: InputDecoration(
+                            hintText: 'Full Name',
+                            filled: true,
+                            fillColor: Colors.grey.withOpacity(0.24),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            prefixIcon: const Icon(Icons.person),
                           ),
-                          prefixIcon: const Icon(Icons.person),
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                          validator: (value) => (value == null || value.isEmpty) ? "Please Enter Your Name" : null,
                         ),
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.words,
-                        validator: (value) {
-                          if (value == null || value.isEmpty)
-                            return "Please Enter Your Name";
-                          else {
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: emailCTRL,
+                          decoration: InputDecoration(
+                            hintText: 'Email (@just.edu.jo)',
+                            filled: true,
+                            fillColor: Colors.grey.withOpacity(0.24),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            prefixIcon: const Icon(Icons.email),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Enter email';
+                            if (!value.endsWith('just.edu.jo')) return 'Use your JUST university email only';
                             return null;
-                          }
-                        },
-                      ),
-                   
-              
-
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: emailCTRL,
-                    decoration: InputDecoration(
-                      hintText: 'Email (@just.edu.jo)',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.email),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return 'Enter email';
-                      if (!value.endsWith('just.edu.jo')) {
-                        return 'Use your JUST university email only';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: passwordCTRL,
-                    //obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: GestureDetector(
-                        onTap:(){
-                        setState(() {
-                          _isObsure=!_isObsure;
-                        });
-                        },
-                         child: Icon(
-                          _isObsure ? Icons.visibility_off : Icons.visibility,
+                          },
                         ),
-                      )
-                     // suffixIcon: const Icon(Icons.remove_red_eye_outlined),
-                    ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText:_isObsure,
-                    validator: (value) {
-                      if (value == null || value.isEmpty)
-                        return 'Enter password';
-                      if (value.length < 6) return 'Password too short';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: confirmPasswordCTRL,
-                   // obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Confirm Password',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            _ObscureConfirm=!_ObscureConfirm;
-                          });
-                        },
-                        child: Icon(
-                           _ObscureConfirm ? Icons.visibility_off : Icons.visibility,
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: passwordCTRL,
+                          decoration: InputDecoration(
+                            hintText: 'Password',
+                            filled: true,
+                            fillColor: Colors.grey.withOpacity(0.24),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() { _isObsure = !_isObsure; });
+                              },
+                              child: Icon(_isObsure ? Icons.visibility_off : Icons.visibility),
+                            ),
+                          ),
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: _isObsure,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Enter password';
+                            if (value.length < 6) return 'Password too short';
+                            return null;
+                          },
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: confirmPasswordCTRL,
+                          decoration: InputDecoration(
+                            hintText: 'Confirm Password',
+                            filled: true,
+                            fillColor: Colors.grey.withOpacity(0.24),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() { _ObscureConfirm = !_ObscureConfirm; });
+                              },
+                              child: Icon(_ObscureConfirm ? Icons.visibility_off : Icons.visibility),
+                            ),
+                          ),
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: _ObscureConfirm,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Please confirm your password';
+                            if (value != passwordCTRL.text) return 'Passwords do not match!';
+                            return null;
+                          },
+                        ),
+                      ],
                     ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText:_ObscureConfirm,
-                    validator: (value) {
-                      if (value == null || value.isEmpty)
-                        return 'Please confirm your password';
-                      if (value != passwordCTRL.text)
-                        return 'Passwords do not match!';
-                      return null;
-                    },
                   ),
-                   ],
-                 ),
-                 ),
-                  //const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: SizedBox(
@@ -270,40 +218,40 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             ? const CircularProgressIndicator(color: Colors.white)
                             : const Text(
                                 'Create Account',
-                                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Already have an account?",
-                         style: TextStyle(color: Colors.black, fontSize: 15),
+                        style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5),
                       GestureDetector(
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
-  context, 
-  MaterialPageRoute(builder: (context) => const LoginScreen()), 
-  (route) => false, 
-);
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            (route) => false,
+                          );
                         },
-                        child: Text('log in',
-                        style: TextStyle(
-                          color:Colors.orange,
-                          fontSize: 17,
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.w600,
-                          //decorationStyle: TextDecorationStyle.solid,
-                          decorationColor: ThemeManager.primaryYellow,
-                          decorationThickness: 2,
+                        child: Text(
+                          'log in',
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 17,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w600,
+                            decorationColor: ThemeManager.primaryYellow,
+                            decorationThickness: 2,
                           ),
-                          ),
-                      )
+                        ),
+                      ),
                     ],
                   ),
                 ],
