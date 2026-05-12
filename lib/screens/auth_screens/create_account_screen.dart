@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
@@ -219,6 +220,30 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               style: TextStyle(color: Colors.white),
                             ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Already have an Account?"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+
+                        child: const Text(
+                          "Log in",
+                          style: TextStyle(
+                            color: ThemeManager.primaryYellow,
+
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
