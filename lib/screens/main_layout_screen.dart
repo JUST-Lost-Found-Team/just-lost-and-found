@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'bottom_navigation_screens/home_screen.dart';
@@ -27,35 +29,78 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
 
   final List pageTitles = ["Home Page", "Explore", "Messages", "Profile"];
 
-  Widget _buildNavItem(IconData icon, String label, int index) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _currentIndex = index),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 28,
+  Widget _buildNavItem(
+    IconData icon,
+    String label,
+    int index, {
+    bool hasUnread = false,
+  }) {
+    Widget iconWidget = Icon(
+      icon,
+      size: 28,
+      color: _currentIndex == index
+          ? ThemeManager.primaryYellow
+          : ThemeManager.primaryBlue,
+    );
+
+    if (hasUnread) {
+      iconWidget = Badge(
+        backgroundColor: Colors.redAccent,
+        smallSize: 10,
+        offset: const Offset(2, -2),
+        child: iconWidget,
+      );
+    }
+
+    return GestureDetector(
+      onTap: () => setState(() => _currentIndex = index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          iconWidget,
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
               color: _currentIndex == index
                   ? ThemeManager.primaryYellow
                   : ThemeManager.primaryBlue,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: _currentIndex == index
-                    ? ThemeManager.primaryYellow
-                    : ThemeManager.primaryBlue,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+  // Widget _buildNavItem(IconData icon, String label, int index) {
+  //   return Expanded(
+  //     child: GestureDetector(
+  //       onTap: () => setState(() => _currentIndex = index),
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Icon(
+  //             icon,
+  //             size: 28,
+  //             color: _currentIndex == index
+  //                 ? ThemeManager.primaryYellow
+  //                 : ThemeManager.primaryBlue,
+  //           ),
+  //           Text(
+  //             label,
+  //             style: TextStyle(
+  //               fontSize: 12,
+  //               color: _currentIndex == index
+  //                   ? ThemeManager.primaryYellow
+  //                   : ThemeManager.primaryBlue,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -241,13 +286,63 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
             height: 70,
             child: Row(
               children: [
-                _buildNavItem(Icons.home, "Home", 0),
-                _buildNavItem(Icons.manage_search_outlined, "Explore", 1),
+                Expanded(child: _buildNavItem(Icons.home, "Home", 0)),
+                Expanded(
+                  child: _buildNavItem(
+                    Icons.manage_search_outlined,
+                    "Explore",
+                    1,
+                  ),
+                ),
                 const SizedBox(width: 60),
-                _buildNavItem(Icons.chat, "Messages", 2),
-                _buildNavItem(Icons.person, "Profile", 3),
+
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('chat_rooms')
+                        .where(
+                          'users',
+                          arrayContains: FirebaseAuth.instance.currentUser?.uid,
+                        )
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      bool hasUnread = false;
+
+                      if (snapshot.hasData) {
+                        final currentUserId =
+                            FirebaseAuth.instance.currentUser?.uid;
+                        for (var doc in snapshot.data!.docs) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          if (data['isRead'] == false &&
+                              data['lastMessageSenderId'] != currentUserId) {
+                            hasUnread = true;
+                            break;
+                          }
+                        }
+                      }
+
+                      return _buildNavItem(
+                        Icons.chat,
+                        "Messages",
+                        2,
+                        hasUnread: hasUnread,
+                      );
+                    },
+                  ),
+                ),
+
+                Expanded(child: _buildNavItem(Icons.person, "Profile", 3)),
               ],
             ),
+            // Row(
+            //   children: [
+            //     _buildNavItem(Icons.home, "Home", 0),
+            //     _buildNavItem(Icons.manage_search_outlined, "Explore", 1),
+            //     const SizedBox(width: 60),
+            //     _buildNavItem(Icons.chat, "Messages", 2),
+            //     _buildNavItem(Icons.person, "Profile", 3),
+            //   ],
+            // ),
           ),
         ),
       ),
