@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
@@ -285,7 +286,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       SizedBox(width: 5,),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
                         },
                         child: Text('log in',
                         style: TextStyle(
