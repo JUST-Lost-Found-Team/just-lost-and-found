@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:just_lost_and_found/Screens/auth_screens/create_account_screen.dart';
+
 import 'package:just_lost_and_found/screens/onboarding_screens/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,17 +15,22 @@ void main() async {
   } catch (e) {
     debugPrint("Firebase is already initialized");
   }
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool seenOnboarding = prefs.getBool('seenOnboarding') ?? false;
 
-  runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen()),
-  );
+  runApp(MyApp(seenOnboarding: seenOnboarding));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool seenOnboarding;
+
+  const MyApp({super.key, required this.seenOnboarding});
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(seenOnboarding: seenOnboarding),
+    );
   }
 }

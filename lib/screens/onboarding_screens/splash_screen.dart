@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:just_lost_and_found/Screens/auth_screens/create_account_screen.dart';
 import 'package:just_lost_and_found/screens/main_layout_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'on_boarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final bool seenOnboarding;
+  const SplashScreen({super.key, required this.seenOnboarding});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -28,6 +30,11 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MainLayoutScreen()),
+        );
+      } else if (widget.seenOnboarding) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
         );
       } else {
         Navigator.pushReplacement(
