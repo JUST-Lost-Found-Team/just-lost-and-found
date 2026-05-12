@@ -186,6 +186,7 @@ class _AddPostState extends State<AddPost> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to upload post: $e'),
+            behavior: SnackBarBehavior.floating,
             backgroundColor: ThemeManager.errorRed,
           ),
         );
