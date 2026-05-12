@@ -4,6 +4,8 @@ import 'package:just_lost_and_found/helpers/date_helper.dart';
 import 'package:just_lost_and_found/helpers/explore_options.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
+import 'post_details.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -49,7 +51,9 @@ class _ExplorePageState extends State<ExplorePage> {
         .get();
 
     allPosts = snapshot.docs.map((doc) {
-      return doc.data() as Map<String, dynamic>;
+      final data = doc.data() as Map<String, dynamic>;
+      data['docId'] = doc.id;
+      return data;
     }).toList();
 
     applyFilters();
@@ -367,25 +371,26 @@ class _ExplorePageState extends State<ExplorePage> {
                   itemCount: filteredPosts.length,
                   itemBuilder: (context, index) {
                     final post = filteredPosts[index];
-
                     final title = post['title'] ?? 'No Title';
+                    final docId = post['docId'];
                     final status = post['status'] ?? 'Found';
-                    final location = post['location'] ?? 'Unknown Location';
                     final description = post['description'] ?? 'No Description';
-
                     final createdAt = post['createdAt'];
                     final images = post['images'] as List<dynamic>? ?? [];
-
                     final postUserId = post['userId'];
+                    final String category = post['category'] ?? 'General';
+
                     return _buildPostCard(
+                      context: context,
+                      post: post,
+                      docId: docId,
                       title: title,
                       status: status,
-                      location: location,
                       createdAt: createdAt,
                       description: description,
-
                       images: images,
                       userId: postUserId,
+                      category: category,
                     );
                   },
                 ),
@@ -666,16 +671,27 @@ class LocationSelectionSheet extends StatelessWidget {
 }
 
 Widget _buildPostCard({
+  required BuildContext context,
+  required Map<String, dynamic> post,
+  required docId,
   required String title,
   required String status,
-  required String location,
   required String description,
   required dynamic createdAt,
   required List<dynamic> images,
   required String? userId,
+  required String category,
 }) {
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
   return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PostDetailsScreen(post: post, postId: docId),
+        ),
+      );
+    },
     child: Container(
       margin: const EdgeInsets.only(bottom: 16),
       width: double.infinity,
@@ -683,138 +699,340 @@ Widget _buildPostCard({
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            if (images.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  images[0],
-                  height: 90,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      height: 90,
-                      color: Colors.grey.shade200,
-                      child: Center(
-                        child: Icon(
-                          Icons.image_outlined,
-                          color: Colors.grey[400],
-                          size: 20,
+      child: images.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  if (images.isNotEmpty)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        images[0],
+                        height: 90,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 90,
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                color: Colors.grey[400],
+                                size: 20,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                  SizedBox(height: 4),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+
+                        SizedBox(height: 2),
+
+                        Text(
+                          DateHelper.getTimeAgo(createdAt),
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black87,
+                            height: 1.4,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: description.length > 28
+                                  ? "${description.substring(0, 28)}... "
+                                  : description,
+                            ),
+                            if (description.length > 28)
+                              const TextSpan(
+                                text: "see more",
+                                style: TextStyle(
+                                  color: ThemeManager.primaryBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-
-            SizedBox(height: 4),
-
-            Align(
-              alignment: Alignment.centerRight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
                     ),
                   ),
 
-                  SizedBox(height: 3),
+                  const Spacer(),
 
-                  Text(
-                    DateHelper.getTimeAgo(createdAt),
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 5),
-
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Center(
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.black87,
-                      height: 1.4,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextSpan(
-                        text: description.length > 28
-                            ? "${description.substring(0, 28)}... "
-                            : description,
-                      ),
-                      if (description.length > 28)
-                        const TextSpan(
-                          text: "see more",
-                          style: TextStyle(
-                            color: ThemeManager.primaryBlue,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: status == 'Lost'
+                              ? ThemeManager.errorRed
+                              : ThemeManager.successGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          status,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 3),
+
+                      if (currentUserId == userId)
+                        SizedBox(
+                          height: 22,
+
+                          child: PopupMenuButton<String>(
+                            color: Colors.grey[100],
+
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: const Icon(Icons.more_horiz, size: 24),
+                            onSelected: (value) {
+                              if (value == 'resolved') {
+                                PostActionsHelper.markAsResolved(
+                                  context,
+                                  docId,
+                                );
+                              } else if (value == 'edit') {
+                                PostActionsHelper.editPost(
+                                  context,
+                                  docId,
+                                  post,
+                                );
+                              } else if (value == 'delete') {
+                                PostActionsHelper.deletePost(context, docId);
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => [
+                              const PopupMenuItem(
+                                value: 'resolved',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.green,
+                                  ),
+                                  title: Text('Mark as resolved'),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit, color: Colors.blue),
+                                  title: Text('Edit'),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text('Delete'),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                     ],
                   ),
-                ),
+                ],
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+
+                        SizedBox(height: 2),
+
+                        Text(
+                          DateHelper.getTimeAgo(createdAt),
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black87,
+                            height: 1.4,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: description.length > 95
+                                  ? "${description.substring(0, 95)}... "
+                                  : description,
+                            ),
+                            if (description.length > 95)
+                              const TextSpan(
+                                text: "see more",
+                                style: TextStyle(
+                                  color: ThemeManager.primaryBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: status == 'Lost'
+                              ? ThemeManager.errorRed
+                              : ThemeManager.successGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          status,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 3),
+
+                      if (currentUserId == userId)
+                        SizedBox(
+                          height: 22,
+
+                          child: PopupMenuButton<String>(
+                            color: Colors.grey[100],
+
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: const Icon(Icons.more_horiz, size: 24),
+                            onSelected: (value) {
+                              if (value == 'resolved') {
+                                PostActionsHelper.markAsResolved(
+                                  context,
+                                  docId,
+                                );
+                              } else if (value == 'edit') {
+                                PostActionsHelper.editPost(
+                                  context,
+                                  docId,
+                                  post,
+                                );
+                              } else if (value == 'delete') {
+                                PostActionsHelper.deletePost(context, docId);
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => [
+                              const PopupMenuItem(
+                                value: 'resolved',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.green,
+                                  ),
+                                  title: Text('Mark as resolved'),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit, color: Colors.blue),
+                                  title: Text('Edit'),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text('Delete'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ),
             ),
-
-            const Spacer(),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: status == 'Lost'
-                        ? ThemeManager.errorRed
-                        : ThemeManager.successGreen,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    status,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                SizedBox(width: 3),
-
-                Flexible(
-                  child: Text(
-                    location.split("-").last,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     ),
   );
 }
