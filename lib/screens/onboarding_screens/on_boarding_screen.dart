@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
+
 import 'package:just_lost_and_found/services/theme_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:just_lost_and_found/screens/auth_screens/create_account_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,6 +16,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final Color subtitleColor = Colors.grey.shade600;
+
+  void _completeOnboarding(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('seenOnboarding', true);
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       {
         "title": "Found Something?",
         "subtitle":
-            "Share where you found it and where you kept it—return it to its owner.",
+            "Share where you found it, connect with the owner, and return it safely.",
         "image": "assets/images/onboarding3.png",
       },
     ];
@@ -172,12 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: ElevatedButton(
                               onPressed: () {
                                 if (_currentPage == onboardingData.length - 1) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LoginScreen(),
-                                    ),
-                                  );
+                                  _completeOnboarding(context);
                                 } else {
                                   _pageController.nextPage(
                                     duration: const Duration(milliseconds: 300),
@@ -223,12 +233,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
+                    _completeOnboarding(context);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.8),
