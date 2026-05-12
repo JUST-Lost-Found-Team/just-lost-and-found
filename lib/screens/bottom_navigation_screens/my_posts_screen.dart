@@ -15,7 +15,7 @@ class MyPostsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFD5D5D5),
       appBar: AppBar(
         backgroundColor: ThemeManager.primaryBlue,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -91,7 +91,7 @@ class MyPostsScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
