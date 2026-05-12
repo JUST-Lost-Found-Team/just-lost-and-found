@@ -286,7 +286,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       SizedBox(width: 5,),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                          Navigator.pushAndRemoveUntil(
+  context, 
+  MaterialPageRoute(builder: (context) => const LoginScreen()), 
+  (route) => false, 
+);
                         },
                         child: Text('log in',
                         style: TextStyle(
