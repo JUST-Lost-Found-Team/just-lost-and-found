@@ -18,6 +18,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   TextEditingController confirmPasswordCTRL = TextEditingController();
 
   bool loader = false;
+  bool _isObsure=true;
+  bool obscureText=false;
+  bool _ObscureConfirm=true;
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -87,67 +90,75 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.only(top:0),
             child: Form(
               key: _formKey,
               child: Column(
+                
                 children: [
-                  const SizedBox(height: 30),
+                 // const SizedBox(height: 15),
                   Image.asset(
                     'assets/images/logo.png',
                     height: 200,
                     fit: BoxFit.cover,
                   ),
                   const Text(
-                    'Sign Up',
+                    'Creat Account',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 68, 118, 164),
+                      color: Color.fromARGB(255, 60, 118, 172),
                       fontWeight: FontWeight.bold,
-                      fontSize: 40,
+                      fontSize: 35,
                     ),
                   ),
                   const Text(
-                    'Because losing things is hard,\n finding them should be easy.',
+                    'Join to find your belongings,\nor help return someone else\'s.',
                     style: TextStyle(
-                      color: Color(0xFFE4973F),
+                      color: Color.fromARGB(159, 23, 20, 20),
                       fontSize: 18,
-                      fontStyle: FontStyle.italic,
+                     // fontStyle: FontStyle.italic,
                     ),
                   ),
-                  const Text(
-                    'JOIN US NOW !',
-                    style: TextStyle(
-                      color: Color(0xFFE4973F),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
+                  // const Text(
+                  //   'JOIN US NOW !',
+                  //   style: TextStyle(
+                  //     color: Color(0xFFE4973F),
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 20,
+                  //   ),
+                  // ),
 
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: nameCTRL,
-                    decoration: InputDecoration(
-                      hintText: 'Full Name',
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                  const SizedBox(height: 10),
+                 // Padding(padding: EdgeInsets.all(24.0)),
+                 Padding(
+                  padding: EdgeInsets.all(24.0),
+                 child:  Column(
+                   children: [
+                     TextFormField(
+                        controller: nameCTRL,
+                        decoration: InputDecoration(
+                          hintText: 'Full Name',
+                          filled: true,
+                          fillColor: Colors.grey.withOpacity(0.24),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: const Icon(Icons.person),
+                        ),
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return "Please Enter Your Name";
+                          else {
+                            return null;
+                          }
+                        },
                       ),
-                      prefixIcon: const Icon(Icons.person),
-                    ),
-                    keyboardType: TextInputType.name,
-                    textCapitalization: TextCapitalization.words,
-                    validator: (value) {
-                      if (value == null || value.isEmpty)
-                        return "Please Enter Your Name";
-                      else {
-                        return null;
-                      }
-                    },
-                  ),
+                   
+              
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: emailCTRL,
                     decoration: InputDecoration(
@@ -169,10 +180,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: passwordCTRL,
-                    obscureText: true,
+                    //obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Password',
                       filled: true,
@@ -182,7 +193,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         borderSide: BorderSide.none,
                       ),
                       prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: GestureDetector(
+                        onTap:(){
+                        setState(() {
+                          _isObsure=!_isObsure;
+                        });
+                        },
+                         child: Icon(
+                          _isObsure ? Icons.visibility_off : Icons.visibility,
+                        ),
+                      )
+                     // suffixIcon: const Icon(Icons.remove_red_eye_outlined),
                     ),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText:_isObsure,
                     validator: (value) {
                       if (value == null || value.isEmpty)
                         return 'Enter password';
@@ -190,10 +214,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: confirmPasswordCTRL,
-                    obscureText: true,
+                   // obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Confirm Password',
                       filled: true,
@@ -202,8 +226,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: const Icon(Icons.lock_outline),
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            _ObscureConfirm=!_ObscureConfirm;
+                          });
+                        },
+                        child: Icon(
+                           _ObscureConfirm ? Icons.visibility_off : Icons.visibility,
+                        ),
+                      ),
                     ),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText:_ObscureConfirm,
                     validator: (value) {
                       if (value == null || value.isEmpty)
                         return 'Please confirm your password';
@@ -212,25 +248,58 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      onPressed: loader ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeManager.primaryYellow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                   ],
+                 ),
+                 ),
+                  //const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: loader ? null : _submit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeManager.primaryYellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
+                        child: loader
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                'Create Account',
+                                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+                              ),
                       ),
-                      child: loader
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              'Sign Up',
-                              style: TextStyle(color: Colors.white),
-                            ),
                     ),
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already have an account?",
+                         style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      SizedBox(width: 5,),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('log in',
+                        style: TextStyle(
+                          color:Colors.orange,
+                          fontSize: 17,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600,
+                          //decorationStyle: TextDecorationStyle.solid,
+                          decorationColor: ThemeManager.primaryYellow,
+                          decorationThickness: 2,
+                          ),
+                          ),
+                      )
+                    ],
                   ),
                 ],
               ),

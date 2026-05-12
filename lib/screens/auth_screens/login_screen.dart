@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 17,
                             decoration: TextDecoration.underline,
                             fontWeight: FontWeight.w600,
-                            decorationColor: Colors.orange,
+                            decorationColor:ThemeManager.primaryYellow,
                           ),
                         ),
                       ),
