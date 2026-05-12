@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'Forget your password?',
                             style: TextStyle(
-                              color: Colors.orange,
+                              color:ThemeManager.primaryYellow,
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                             ),
@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'Create account',
                             style: TextStyle(
-                              color: Colors.orange,
+                              color: ThemeManager.primaryYellow,
                               fontSize: 17,
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w600,
