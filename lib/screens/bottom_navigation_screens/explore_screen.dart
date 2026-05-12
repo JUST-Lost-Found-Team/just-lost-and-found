@@ -82,6 +82,8 @@ class _ExplorePageState extends State<ExplorePage> {
           focusNode: _focusNode,
           onChanged: (value) {
             applyFilters();
+            selectedLocationFilter = null;
+            selectedCategory = 0;
           },
           decoration: InputDecoration(
             isDense: true,
@@ -298,7 +300,9 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Widget _buildPosts() {
-    if (selectedType == "Location" && selectedLocationFilter == null) {
+    if (selectedType == "Location" &&
+        selectedLocationFilter == null &&
+        searchController.text.isEmpty) {
       return Expanded(
         child: Center(
           child: Padding(
