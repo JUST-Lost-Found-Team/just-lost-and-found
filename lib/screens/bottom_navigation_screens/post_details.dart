@@ -362,14 +362,27 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
 
                           const SizedBox(height: 24),
 
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              title,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Builder(
+                              builder: (context) {
+                                bool isArabic = RegExp(
+                                  r'[\u0600-\u06FF]',
+                                ).hasMatch(description);
+                                return Text(
+                                  title,
+                                  textAlign: isArabic
+                                      ? TextAlign.right
+                                      : TextAlign.left,
+                                  textDirection: isArabic
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              },
                             ),
                           ),
 
