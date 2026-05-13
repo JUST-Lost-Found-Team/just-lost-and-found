@@ -219,185 +219,221 @@ class _AddPostState extends State<AddPost> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionTitle("What are you reporting?"),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _isLost = true),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: _isLost
-                              ? ThemeManager.primaryBlue
-                              : Colors.white,
-                          border: Border.all(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionTitle("What are you reporting?"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _isLost = true),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
                             color: _isLost
                                 ? ThemeManager.primaryBlue
-                                : Colors.grey.shade300,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "I Lost an Item",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                                : Colors.white,
+                            border: Border.all(
                               color: _isLost
-                                  ? Colors.white
-                                  : Colors.grey.shade600,
+                                  ? ThemeManager.primaryBlue
+                                  : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "I Lost an Item",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: _isLost
+                                    ? Colors.white
+                                    : Colors.grey.shade600,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isLost = false;
-
-                          if (_selectedLocations.length > 1) {
-                            _selectedLocations = [_selectedLocations.first];
-                          }
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: !_isLost
-                              ? ThemeManager.primaryBlue
-                              : Colors.white,
-                          border: Border.all(
-                            color: !_isLost
-                                ? ThemeManager.primaryBlue
-                                : Colors.grey.shade300,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "I Found an Item",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: !_isLost
-                                  ? Colors.white
-                                  : Colors.grey.shade600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              _buildSectionTitle("Add Photos up to 3 (photos are optional)"),
-
-              if (!_isLost)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
-                  child: Text(
-                    "⚠️ Security Tip: Avoid showing unique marks in the photos to help verify the true owner later.",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
-
-              _selectedImages.isEmpty
-                  ? GestureDetector(
-                      onTap: () => _showImageSourceActionSheet(context),
-                      child: _buildImagePickerBox(
-                        height: 180,
-                        width: double.infinity,
-                      ),
-                    )
-                  : _buildImagePreviewList(),
-
-              const SizedBox(height: 24),
-
-              _buildSectionTitle("Title:"),
-              _buildTextField(
-                controller: _titleController,
-                hint: "Title of the item...",
-                maxLines: 1,
-              ),
-
-              const SizedBox(height: 16),
-
-              _buildSectionTitle("Description:"),
-              _buildTextField(
-                controller: _descController,
-                hint: "Description of the item...",
-                maxLines: 4,
-              ),
-
-              const SizedBox(height: 16),
-
-              _buildSectionTitle(
-                _isLost ? "Possible Locations (Up to 3):" : "Location:",
-              ),
-
-              if (_selectedLocations.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: _selectedLocations.map((loc) {
-                      return InputChip(
-                        label: Text(
-                          loc,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                        // backgroundColor: Colors.grey.shade400,
-                        backgroundColor: ThemeManager.primaryYellow.withOpacity(
-                          0.65,
-                        ),
-                        deleteIconColor: ThemeManager.errorRed,
-                        onDeleted: () {
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
                           setState(() {
-                            _selectedLocations.remove(loc);
+                            _isLost = false;
+
+                            if (_selectedLocations.length > 1) {
+                              _selectedLocations = [_selectedLocations.first];
+                            }
                           });
                         },
-                      );
-                    }).toList(),
-                  ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: !_isLost
+                                ? ThemeManager.primaryBlue
+                                : Colors.white,
+                            border: Border.all(
+                              color: !_isLost
+                                  ? ThemeManager.primaryBlue
+                                  : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "I Found an Item",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: !_isLost
+                                    ? Colors.white
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
-              if (_selectedLocations.length < maxLocations)
+                const SizedBox(height: 24),
+
+                _buildSectionTitle("Add Photos up to 3 (photos are optional)"),
+
+                if (!_isLost)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12.0),
+                    child: Text(
+                      "⚠️ Security Tip: Avoid showing unique marks in the photos to help verify the true owner later.",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+
+                _selectedImages.isEmpty
+                    ? GestureDetector(
+                        onTap: () => _showImageSourceActionSheet(context),
+                        child: _buildImagePickerBox(
+                          height: 180,
+                          width: double.infinity,
+                        ),
+                      )
+                    : _buildImagePreviewList(),
+
+                const SizedBox(height: 24),
+
+                _buildSectionTitle("Title:"),
+                _buildTextField(
+                  controller: _titleController,
+                  hint: "Title of the item...",
+                  maxLines: 1,
+                ),
+
+                const SizedBox(height: 16),
+
+                _buildSectionTitle("Description:"),
+                _buildTextField(
+                  controller: _descController,
+                  hint: "Description of the item...",
+                  maxLines: 4,
+                ),
+
+                const SizedBox(height: 16),
+
+                _buildSectionTitle(
+                  _isLost ? "Possible Locations (Up to 3):" : "Location:",
+                ),
+
+                if (_selectedLocations.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: _selectedLocations.map((loc) {
+                        return InputChip(
+                          label: Text(
+                            loc,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          // backgroundColor: Colors.grey.shade400,
+                          backgroundColor: Colors.white,
+
+                          deleteIconColor: ThemeManager.errorRed,
+                          onDeleted: () {
+                            setState(() {
+                              _selectedLocations.remove(loc);
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                if (_selectedLocations.length < maxLocations)
+                  _buildDropdown(
+                    hint: _selectedLocations.isEmpty
+                        ? "Select Campus Location..."
+                        : "Add another possible location...",
+                    value: null,
+                    validator: (val) =>
+                        _selectedLocations.isEmpty ? "Required" : null,
+
+                    items: LocationData.locations.map((loc) {
+                      bool isSelected = _selectedLocations.contains(loc);
+
+                      return DropdownMenuItem<String>(
+                        value: loc,
+                        enabled: !isSelected,
+                        child: Text(
+                          loc,
+                          style: TextStyle(
+                            fontSize: 16,
+
+                            color: isSelected
+                                ? Colors.grey.shade400
+                                : Colors.black87,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+
+                    onChanged: (val) {
+                      if (val != null) {
+                        FocusScope.of(context).unfocus();
+                        setState(() {
+                          _selectedLocations.add(val);
+                        });
+                      }
+                    },
+                  ),
+
+                const SizedBox(height: 16),
+
+                _buildSectionTitle("Category:"),
                 _buildDropdown(
-                  key: UniqueKey(),
-                  hint: _selectedLocations.isEmpty
-                      ? "Select Campus Location..."
-                      : "Add another possible location...",
-                  value: null,
-                  validator: (val) =>
-                      _selectedLocations.isEmpty ? "Required" : null,
-                  items: LocationData.locations
-                      .where((loc) => !_selectedLocations.contains(loc))
+                  hint: "Select Item Category...",
+                  value: _selectedCategory,
+                  validator: (value) => value == null ? "Required" : null,
+                  items: Categories.categories
                       .map(
                         (item) => DropdownMenuItem<String>(
                           value: item,
@@ -412,66 +448,43 @@ class _AddPostState extends State<AddPost> {
                       )
                       .toList(),
                   onChanged: (val) {
-                    if (val != null) {
-                      setState(() {
-                        _selectedLocations.add(val);
-                      });
-                    }
+                    FocusScope.of(context).unfocus();
+
+                    setState(() {
+                      _selectedCategory = val;
+                    });
                   },
                 ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 30),
 
-              _buildSectionTitle("Category:"),
-              _buildDropdown(
-                hint: "Select Item Category...",
-                value: _selectedCategory,
-                validator: (value) => value == null ? "Required" : null,
-                items: Categories.categories
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                          ),
-                        ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submitPost,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ThemeManager.primaryBlue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => _selectedCategory = val),
-              ),
-
-              const SizedBox(height: 30),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitPost,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ThemeManager.primaryBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      elevation: 0,
                     ),
-                    elevation: 0,
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Add Post",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            "Add Post",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -516,7 +529,6 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildDropdown({
-    Key? key,
     required String hint,
     required String? value,
     required List<DropdownMenuItem<String>> items,
@@ -524,7 +536,6 @@ class _AddPostState extends State<AddPost> {
     String? Function(String?)? validator,
   }) {
     return DropdownButtonFormField<String>(
-      key: key,
       isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
