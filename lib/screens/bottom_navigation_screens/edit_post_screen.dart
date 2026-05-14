@@ -327,6 +327,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
       isExpanded: true,
       value: value,
       menuMaxHeight: 300,
+      icon: const Icon(Icons.arrow_drop_down),
+    iconEnabledColor: ThemeManager.primaryYellow,
       items: items,
       onChanged: onChanged,
       validator: validator,
