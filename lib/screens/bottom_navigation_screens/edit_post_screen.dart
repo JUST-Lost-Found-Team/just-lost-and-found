@@ -36,7 +36,12 @@ class _EditPostScreenState extends State<EditPostScreen> {
     _selectedCategory = widget.postData['category'];
     
     if (widget.postData['location'] != null) {
+      if(widget.postData['location']is List){ 
       _selectedLocations = List<String>.from(widget.postData['location']);
+      }else if (widget.postData['location'] is String) {
+    
+    _selectedLocations = [widget.postData['location']];
+  }
     }
   }
 
