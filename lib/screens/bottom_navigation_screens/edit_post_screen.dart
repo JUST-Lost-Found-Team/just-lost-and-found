@@ -7,15 +7,7 @@ class EditPostScreen extends StatefulWidget {
   final Map<String, dynamic> postData;
   final String postId;
 
-
   const EditPostScreen({super.key, required this.postId, required this.postData});
-
-  const EditPostScreen({
-    super.key,
-    required this.postData,
-    required this.postId,
-  });
-
 
   @override
   State<EditPostScreen> createState() => _EditPostScreenState();
@@ -23,28 +15,20 @@ class EditPostScreen extends StatefulWidget {
 
 class _EditPostScreenState extends State<EditPostScreen> {
   final _formKey = GlobalKey<FormState>();
-
   
-
   late TextEditingController _titleController;
   late TextEditingController _descController;
   
   bool _isLost = true;
   bool _isLoading = false;
-  String? _selectedCategory
-    
+  String? _selectedCategory;
   List<String> _selectedLocations = [];
-
-
-  String? _selectedLocation;
-  bool _isLoading = false;
 
   final Color _fillColor = Colors.grey.shade200;
 
   @override
   void initState() {
     super.initState();
-
     
     _titleController = TextEditingController(text: widget.postData['title']);
     _descController = TextEditingController(text: widget.postData['description']);
@@ -76,12 +60,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
-      
       await FirebaseFirestore.instance.collection('posts').doc(widget.postId).update({
         'title': _titleController.text.trim(),
         'description': _descController.text.trim(),
@@ -90,38 +71,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
         'status': _isLost ? 'Lost' : 'Found',
         'updatedAt': FieldValue.serverTimestamp(),
       });
-
-
-    _titleController = TextEditingController(text: widget.postData['title']);
-    _descController = TextEditingController(
-      text: widget.postData['description'],
-    );
-    _selectedCategory =
-        Categories.categories.contains(widget.postData['category'])
-        ? widget.postData['category']
-        : null;
-    _selectedLocation =
-        LocationData.locations.contains(widget.postData['location'])
-        ? widget.postData['location']
-        : null;
-    _isLost = widget.postData['status'] == 'Lost';
-  }
-
-  Future<void> _updatePost() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-
-    try {
-      await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .update({
-            'title': _titleController.text.trim(),
-            'description': _descController.text.trim(),
-            'location': _selectedLocation,
-            'category': _selectedCategory,
-            'status': _isLost ? 'Lost' : 'Found',
-          });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -137,32 +86,17 @@ class _EditPostScreenState extends State<EditPostScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-
-            content: Text('Failed to update post: $e'),
-
-            content: Text('Update failed:$e'),
-
+            content: Text('Update failed: $e'),
             backgroundColor: ThemeManager.errorRed,
           ),
         );
       }
     } finally {
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  @override
-
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-
+  @override
   Widget build(BuildContext context) {
     int maxLocations = _isLost ? 3 : 1;
 
@@ -170,25 +104,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: ThemeManager.primaryBlue,
-
         elevation: 0,
-        title: const Text(
-          "Edit Post",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        title: const Text("Edit Post", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-
-        title: Text(
-          'Edit Post',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        centerTitle: true,
-        leading: Icon(Icons.arrow_back, color: Colors.white),
-
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -222,134 +144,54 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 24),
-
               _buildSectionTitle("Title:"),
-              _buildTextField(
-                controller: _titleController,
-                hint: "Title of the item...",
-              ),
-
-
+              _buildTextField(controller: _titleController, hint: "Title..."),
               const SizedBox(height: 16),
-
-
-              const SizedBox(height: 16),
-
               _buildSectionTitle("Description:"),
-              _buildTextField(
-                controller: _descController,
-                hint: "Description of the item...",
-                maxLines: 4,
-              ),
-
-
+              _buildTextField(controller: _descController, hint: "Description...", maxLines: 4),
               const SizedBox(height: 16),
-
-              _buildSectionTitle(
-                _isLost ? "Possible Locations (Up to 3):" : "Location:",
-              ),
-
+              _buildSectionTitle(_isLost ? "Possible Locations (Up to 3):" : "Location:"),
+              
               if (_selectedLocations.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: _selectedLocations.map((loc) {
-                      return InputChip(
-                        label: Text(
-                          loc,
-
-              const SizedBox(height: 16),
-              _buildSectionTitle("Location:"),
-              _buildDropdown(
-                hint: "Select Campus Location...",
-                value: _selectedLocation,
-                items: LocationData.locations
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            //color: Colors.white,
-                          ),
-                        ),
-
-                        backgroundColor: ThemeManager.primaryYellow.withOpacity(
-                          0.65,
-                        ),
-                        deleteIconColor: ThemeManager.errorRed,
-                      //  deleteIcon: const Icon(Icons.close, size: 18),
-                       // shape: StadiumBorder(side: BorderSide(color: ThemeManager.primaryYellow)),
-                        onDeleted: () {
-                          setState(() {
-                            _selectedLocations.remove(loc);
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
+                Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: _selectedLocations.map((loc) => InputChip(
+                    label: Text(loc, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF333333))),
+                    backgroundColor: const Color(0xFFF3C08E),
+                    deleteIconColor: Colors.red.shade700,
+                    deleteIcon: const Icon(Icons.close, size: 18),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    onDeleted: () => setState(() => _selectedLocations.remove(loc)),
+                  )).toList(),
                 ),
+                
+              const SizedBox(height: 10),
 
               if (_selectedLocations.length < maxLocations)
                 _buildDropdown(
-                  key: UniqueKey(),
                   hint: "Add location...",
                   value: null,
                   items: LocationData.locations
                       .where((loc) => !_selectedLocations.contains(loc))
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item, style: const TextStyle(fontSize: 14)),
-                          ))
+                      .map((item) => DropdownMenuItem<String>(value: item, child: Text(item, style: const TextStyle(fontSize: 14))))
                       .toList(),
                   onChanged: (val) {
-                    if (val != null) {
-                      setState(() {
-                        _selectedLocations.add(val);
-                      });
-                    }
+                    if (val != null) setState(() => _selectedLocations.add(val));
                   },
                 ),
 
               const SizedBox(height: 16),
-
-
-                      ),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => _selectedLocation = val),
-              ),
-              const SizedBox(height: 16),
-
               _buildSectionTitle("Category:"),
               _buildDropdown(
-                hint: "Select Item Category...",
+                hint: "Select Category...",
                 value: _selectedCategory,
-                validator: (value) => value == null ? "Required" : null,
-                items: Categories.categories
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        ))
-                    .toList(),
+                items: Categories.categories.map((item) => DropdownMenuItem<String>(value: item, child: Text(item))).toList(),
                 onChanged: (val) => setState(() => _selectedCategory = val),
               ),
 
-
               const SizedBox(height: 40),
-
-
-              const SizedBox(height: 20),
-              _buildStatusSwitch(),
-              const SizedBox(height: 30),
-
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -357,57 +199,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   onPressed: _isLoading ? null : _updatePost,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ThemeManager.primaryBlue,
-
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Update Post",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  
-  
-  Widget _buildToggleButton(String text, bool isActive) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: isActive ? ThemeManager.primaryBlue : Colors.white,
-        border: Border.all(color: isActive ? ThemeManager.primaryBlue : Colors.grey.shade600, width: 2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: isActive ? Colors.white : Colors.grey.shade600,
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Update post",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  child: _isLoading 
+                      ? const CircularProgressIndicator(color: Colors.white) 
+                      : const Text("Update Post", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ),
             ],
@@ -418,150 +214,42 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   Widget _buildSectionTitle(String title) => Padding(
-    padding: const EdgeInsets.only(bottom: 0.8),
-    child: Text(
-      title,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+  );
+
+  Widget _buildToggleButton(String text, bool isActive) => Container(
+    padding: const EdgeInsets.symmetric(vertical: 14),
+    decoration: BoxDecoration(
+      color: isActive ? ThemeManager.primaryBlue : Colors.white,
+      border: Border.all(color: isActive ? ThemeManager.primaryBlue : Colors.grey.shade300, width: 2),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Center(
+      child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: isActive ? Colors.white : Colors.grey.shade600)),
     ),
   );
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hint,
-    int maxLines = 1,
-  }) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      validator: (v) => v!.isEmpty ? "Required" : null,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: _fillColor,
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
+  Widget _buildTextField({required TextEditingController controller, required String hint, int maxLines = 1}) => TextFormField(
+    controller: controller,
+    maxLines: maxLines,
+    validator: (v) => v!.isEmpty ? "Required" : null,
+    decoration: InputDecoration(
+      filled: true, fillColor: _fillColor, hintText: hint,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+    ),
+  );
 
-  Widget _buildDropdown({
-    required String hint,
-    required String? value,
-    required List<DropdownMenuItem<String>> items,
-    required Function(String?) onChanged,
-  }) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      items: items,
-      onChanged: onChanged,
-      isExpanded: true,
-      alignment: AlignmentDirectional.bottomStart,
-      menuMaxHeight: 350,
-      borderRadius: BorderRadius.circular(15),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: _fillColor,
-
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 15,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-      ),
-
-      // decoration: InputDecoration(filled: true,fillColor: _fillColor,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),borderSide: BorderSide.none)),
-    );
-  }
-
-  Widget _buildStatusSwitch() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _fillColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "Item Status",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Row(
-            children: [
-              Text(
-                "Lost",
-                style: TextStyle(color: _isLost ? Colors.black : Colors.grey),
-              ),
-              Switch(
-                value: !_isLost,
-                onChanged: (v) => setState(() => _isLost = !v),
-                activeColor: ThemeManager.primaryYellow,
-              ),
-              Text(
-                "Found",
-                style: TextStyle(color: !_isLost ? Colors.black : Colors.grey),
-              ),
-            ],
-
-          ),
-        ),
-      ),
-    );
-  }
-
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      ),
-    );
-  }
-
-  Widget _buildTextField({required TextEditingController controller, required String hint, int maxLines = 1}) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      validator: (value) => value == null || value.trim().isEmpty ? "Required field" : null,
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: _fillColor,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    );
-  }
-
-  Widget _buildDropdown({Key? key, required String hint, required String? value, required List<DropdownMenuItem<String>> items, required Function(String?) onChanged, String? Function(String?)? validator}) {
-    return DropdownButtonFormField<String>(
-      key: key,
-      isExpanded: true,
-      value: value,
-      menuMaxHeight: 300,
-      icon: const Icon(Icons.arrow_drop_down),
-    iconEnabledColor: ThemeManager.primaryYellow,
-      items: items,
-      onChanged: onChanged,
-      validator: validator,
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: _fillColor,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    );
-  }
+  Widget _buildDropdown({required String hint, required String? value, required List<DropdownMenuItem<String>> items, required Function(String?) onChanged}) => DropdownButtonFormField<String>(
+    value: value,
+    items: items,
+    onChanged: onChanged,
+    isExpanded: true,
+    menuMaxHeight: 300,
+    iconEnabledColor: const Color(0xFFF3C08E),
+    decoration: InputDecoration(
+      filled: true, fillColor: _fillColor, hintText: hint,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+    ),
+  );
 }
-
-}
-
