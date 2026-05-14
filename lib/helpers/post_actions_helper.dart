@@ -58,6 +58,7 @@ class PostActionsHelper {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Post marked as resolved!'),
+                        behavior: SnackBarBehavior.floating,
                         backgroundColor: ThemeManager.successGreen,
                       ),
                     );
@@ -144,6 +145,7 @@ class PostActionsHelper {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Post deleted successfully"),
+                        behavior: SnackBarBehavior.floating,
                         backgroundColor: ThemeManager.errorRed,
                       ),
                     );

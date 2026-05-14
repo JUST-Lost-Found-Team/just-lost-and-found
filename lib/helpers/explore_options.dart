@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class Categories {
   static const List<String> categories = [
     "Electronics",
-    "IDs & Documents",
-    "Books",
+    "IDs & Cards",
+    "Books & Documents",
+    "Cash",
     "Bags",
     "Accessories",
     "Keys & Wallets",
@@ -16,8 +17,9 @@ class Categories {
 class categoryIcons {
   static const Map<String, IconData> icons = {
     "Electronics": Icons.devices,
-    "IDs & Documents": Icons.badge,
-    "Books": Icons.menu_book_outlined,
+    "IDs & Cards": Icons.badge,
+    "Books & Documents": Icons.menu_book_outlined,
+    "Cash": Icons.money_rounded,
     "Bags": Icons.work,
     "Accessories": Icons.diamond_outlined,
     "Keys & Wallets": Icons.wallet,

@@ -405,22 +405,43 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 12),
-
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+              SizedBox(
+                width: double.infinity,
+                child: Builder(
+                  builder: (context) {
+                    bool isArabic = RegExp(
+                      r'[\u0600-\u06FF]',
+                    ).hasMatch(description);
+                    return Text(
                       title,
-                      style: const TextStyle(
+                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      textDirection: isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 4),
+
+              SizedBox(
+                width: double.infinity,
+                child: Builder(
+                  builder: (context) {
+                    bool isArabic = RegExp(
+                      r'[\u0600-\u06FF]',
+                    ).hasMatch(description);
+
+                    return RichText(
+                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      textDirection: isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
                       text: TextSpan(
                         style: const TextStyle(
                           fontSize: 14,
@@ -434,20 +455,61 @@ class _HomePageState extends State<HomePage> {
                                 : description,
                           ),
                           if (description.length > 80)
-                            const TextSpan(
+                            TextSpan(
                               text: "see more",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: ThemeManager.primaryBlue,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                         ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
 
+              // Directionality(
+              //   textDirection: TextDirection.rtl,
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         title,
+              //         style: const TextStyle(
+              //           fontSize: 18,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.black87,
+              //         ),
+              //       ),
+              //       const SizedBox(height: 4),
+              //       RichText(
+              //         text: TextSpan(
+              //           style: const TextStyle(
+              //             fontSize: 14,
+              //             color: Colors.black87,
+              //             height: 1.4,
+              //           ),
+              //           children: [
+              //             TextSpan(
+              //               text: description.length > 80
+              //                   ? "${description.substring(0, 80)}... "
+              //                   : description,
+              //             ),
+              //             if (description.length > 80)
+              //               const TextSpan(
+              //                 text: "see more",
+              //                 style: TextStyle(
+              //                   color: ThemeManager.primaryBlue,
+              //                   fontWeight: FontWeight.bold,
+              //                 ),
+              //               ),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(height: 12),
 
               if (images.isNotEmpty)

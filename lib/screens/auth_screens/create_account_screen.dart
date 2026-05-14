@@ -91,7 +91,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   const Text(
                     'Create Account',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 60, 118, 172),
+                      color:ThemeManager.primaryBlue,
                       fontWeight: FontWeight.bold,
                       fontSize: 35,
                     ),
