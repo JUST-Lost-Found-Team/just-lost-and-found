@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:just_lost_and_found/Screens/auth_screens/create_account_screen.dart';
@@ -55,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Image.asset("assets/images/logo.png", height: 200, width: 200),
             const SizedBox(height: 16),
             Text(
-              "Find what's yours,",
+              "splash.tagline1".tr(),
               style: TextStyle(
                 fontSize: 20,
                 color: ThemeManager.primaryBlue,
@@ -63,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "return what's theirs",
+              "splash.tagline2".tr(),
               style: TextStyle(
                 fontSize: 20,
                 color: ThemeManager.primaryBlue,
