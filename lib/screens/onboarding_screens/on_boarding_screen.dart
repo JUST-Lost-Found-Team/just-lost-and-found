@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -33,21 +34,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, String>> onboardingData = [
       {
-        "title": "Welcome to JUST Lost & Found",
-        "subtitle":
-            "Find your belongings and help others find theirs - easily, and in one place.",
+        "title": "onboarding_screen.title_1".tr(),
+        "subtitle": "onboarding_screen.subtitle_1".tr(),
         "image": "assets/images/onboarding1.png",
       },
       {
-        "title": "Lost something?",
-        "subtitle":
-            "Create a post with details and images, and let the community help you find it.",
+        "title": "onboarding_screen.title_2".tr(),
+        "subtitle": "onboarding_screen.subtitle_2".tr(),
         "image": "assets/images/onboarding2.png",
       },
       {
-        "title": "Found Something?",
-        "subtitle":
-            "Share where you found it, connect with the owner, and return it safely.",
+        "title": "onboarding_screen.title_3".tr(),
+        "subtitle": "onboarding_screen.subtitle_3".tr(),
         "image": "assets/images/onboarding3.png",
       },
     ];
@@ -159,7 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                             ),
                             child: Text(
-                              "Back",
+                              "onboarding_screen.back_button".tr(),
                               style: TextStyle(
                                 color: subtitleColor,
                                 fontSize: 16,
@@ -204,8 +202,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                               child: Text(
                                 _currentPage == onboardingData.length - 1
-                                    ? "Get Started"
-                                    : "Continue",
+                                    ? "onboarding_screen.get_started_button"
+                                          .tr()
+                                    : "onboarding_screen.continue_button".tr(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -242,7 +241,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   child: Text(
-                    "Skip",
+                    "onboarding_screen.skip_button".tr(),
                     style: TextStyle(
                       color: ThemeManager.primaryBlue,
                       fontSize: 15,

@@ -23,8 +23,7 @@ Future<void> main() async {
       child: MyApp(seenOnboarding: seenOnboarding),
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/translations',
-      // will implement them later.
-      //startLocale: const Locale('ar'),
+      startLocale: const Locale('en'),
       //  fallbackLocale: const Locale('en'),
       saveLocale: true,
     ),
