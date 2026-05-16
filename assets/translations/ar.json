@@ -159,5 +159,24 @@
     "snack_failed": "فشل رفع المنشور: ",
     "error_required": "هذا الحقل مطلوب",
     "error_required_dropdown": "يرجى الاختيار"
+  },
+  "main_layout": {
+    "page_titles": {
+      "home": "الرئيسية",
+      "explore": "استكشاف",
+      "messages": "الرسائل",
+      "profile": "الصفحة الشخصية"
+    },
+    "filter": {
+      "all": "الكل",
+      "lost": "مفقود",
+      "found": "موجود"
+    },
+    "nav": {
+      "home": "الرئيسية",
+      "explore": "استكشف",
+      "messages": "الرسائل",
+      "profile": "حسابي"
+    }
   }
 }

@@ -159,5 +159,24 @@
     "snack_failed": "Failed to upload post: ",
     "error_required": "Required field",
     "error_required_dropdown": "Required"
+  },
+  "main_layout": {
+    "page_titles": {
+      "home": "Home Page",
+      "explore": "Explore",
+      "messages": "Messages",
+      "profile": "Profile"
+    },
+    "filter": {
+      "all": "All",
+      "lost": "Lost",
+      "found": "Found"
+    },
+    "nav": {
+      "home": "Home",
+      "explore": "Explore",
+      "messages": "Messages",
+      "profile": "Profile"
+    }
   }
 }

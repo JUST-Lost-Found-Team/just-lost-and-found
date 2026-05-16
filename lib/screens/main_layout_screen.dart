@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -27,7 +28,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     ProfileScreen(),
   ];
 
-  final List pageTitles = ["Home Page", "Explore", "Messages", "Profile"];
+  final List pageTitles = [
+    "main_layout.page_titles.home".tr(),
+    "main_layout.page_titles.explore".tr(),
+    "main_layout.page_titles.messages".tr(),
+    "main_layout.page_titles.profile".tr(),
+  ];
 
   Widget _buildNavItem(
     IconData icon,
@@ -51,7 +57,6 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         child: iconWidget,
       );
     }
-
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       child: Column(
@@ -59,48 +64,29 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           iconWidget,
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: _currentIndex == index
-                  ? ThemeManager.primaryYellow
-                  : ThemeManager.primaryBlue,
+
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: _currentIndex == index
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                  color: _currentIndex == index
+                      ? ThemeManager.primaryYellow
+                      : ThemeManager.primaryBlue,
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
   }
-  // Widget _buildNavItem(IconData icon, String label, int index) {
-  //   return Expanded(
-  //     child: GestureDetector(
-  //       onTap: () => setState(() => _currentIndex = index),
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Icon(
-  //             icon,
-  //             size: 28,
-  //             color: _currentIndex == index
-  //                 ? ThemeManager.primaryYellow
-  //                 : ThemeManager.primaryBlue,
-  //           ),
-  //           Text(
-  //             label,
-  //             style: TextStyle(
-  //               fontSize: 12,
-  //               color: _currentIndex == index
-  //                   ? ThemeManager.primaryYellow
-  //                   : ThemeManager.primaryBlue,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +155,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'All',
+                        "main_layout.filter.all".tr(),
                         style: TextStyle(
                           fontWeight: selectedFilter == 'All'
                               ? FontWeight.bold
@@ -194,7 +180,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Lost',
+                        "main_layout.filter.lost".tr(),
                         style: TextStyle(
                           fontWeight: selectedFilter == 'Lost'
                               ? FontWeight.bold
@@ -219,7 +205,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Found',
+                        "main_layout.filter.found".tr(),
                         style: TextStyle(
                           fontWeight: selectedFilter == 'Found'
                               ? FontWeight.bold
@@ -286,11 +272,17 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
             height: 70,
             child: Row(
               children: [
-                Expanded(child: _buildNavItem(Icons.home, "Home", 0)),
+                Expanded(
+                  child: _buildNavItem(
+                    Icons.home,
+                    "main_layout.nav.home".tr(),
+                    0,
+                  ),
+                ),
                 Expanded(
                   child: _buildNavItem(
                     Icons.manage_search_outlined,
-                    "Explore",
+                    "main_layout.nav.explore".tr(),
                     1,
                   ),
                 ),
@@ -323,7 +315,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
 
                       return _buildNavItem(
                         Icons.chat,
-                        "Messages",
+                        "main_layout.nav.messages".tr(),
                         2,
                         hasUnread: hasUnread,
                       );
@@ -331,18 +323,15 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                   ),
                 ),
 
-                Expanded(child: _buildNavItem(Icons.person, "Profile", 3)),
+                Expanded(
+                  child: _buildNavItem(
+                    Icons.person,
+                    "main_layout.nav.profile".tr(),
+                    3,
+                  ),
+                ),
               ],
             ),
-            // Row(
-            //   children: [
-            //     _buildNavItem(Icons.home, "Home", 0),
-            //     _buildNavItem(Icons.manage_search_outlined, "Explore", 1),
-            //     const SizedBox(width: 60),
-            //     _buildNavItem(Icons.chat, "Messages", 2),
-            //     _buildNavItem(Icons.person, "Profile", 3),
-            //   ],
-            // ),
           ),
         ),
       ),
