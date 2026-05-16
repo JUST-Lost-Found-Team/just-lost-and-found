@@ -158,13 +158,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
               const SizedBox(height: 16),
               _buildSectionTitle(_isLost ? "Possible Locations (Up to 3):" : "Location:"),
               
-              if (_selectedLocations.isNotEmpty)
+              if (_selectedLocations.isNotEmpty)...[ 
                 Wrap(
                   spacing: 8.0,
                   runSpacing: 8.0,
                   children: _selectedLocations.map((loc) => InputChip(
                     label: Text(loc, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF333333))),
-                    backgroundColor: const Color(0xFFF3C08E),
+                    backgroundColor:Colors.white,
                     deleteIconColor: Colors.red.shade700,
                     deleteIcon: const Icon(Icons.close, size: 18),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -173,9 +173,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 ),
                 
               const SizedBox(height: 10),
+            ],
 
-              if (_selectedLocations.length < maxLocations)
+              if (_selectedLocations.length < maxLocations)...[  
                 _buildDropdown(
+                  key:ValueKey(_isLost ? "lost_dropdown" : "found_dropdown"),
                   hint: "Add location...",
                   value: null,
                   items: LocationData.locations
@@ -183,9 +185,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       .map((item) => DropdownMenuItem<String>(value: item, child: Text(item, style: const TextStyle(fontSize: 14))))
                       .toList(),
                   onChanged: (val) {
-                    if (val != null) setState(() => _selectedLocations.add(val));
+                    if (val != null){ 
+                       setState((){ _selectedLocations.add(val);
+                    });
+  }
                   },
                 ),
+              ],
 
               const SizedBox(height: 16),
               _buildSectionTitle("Category:"),
@@ -245,16 +251,49 @@ class _EditPostScreenState extends State<EditPostScreen> {
     ),
   );
 
-  Widget _buildDropdown({required String hint, required String? value, required List<DropdownMenuItem<String>> items, required Function(String?) onChanged}) => DropdownButtonFormField<String>(
-    value: value,
-    items: items,
-    onChanged: onChanged,
-    isExpanded: true,
-    menuMaxHeight: 300,
-    iconEnabledColor: const Color(0xFFF3C08E),
-    decoration: InputDecoration(
-      filled: true, fillColor: _fillColor, hintText: hint,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-    ),
-  );
+  // Widget _buildDropdown({
+  //   Key?key,
+  //   required String hint,
+  //    required String? value,
+  //     required List<DropdownMenuItem<String>> items,
+  //      required Function(String?) onChanged}) => DropdownButtonFormField<String>(
+  //   value: value,
+  //   items: items,
+  //   onChanged: onChanged,
+  //   isExpanded: true,
+  //   menuMaxHeight: 300,
+  //   iconEnabledColor: const Color(0xFFF3C08E),
+  //   decoration: InputDecoration(
+  //     filled: true, fillColor: _fillColor, hintText: hint,
+  //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+  //   ),
+  // );
+  Widget _buildDropdown({
+    Key? key,
+    required String hint,
+    required String? value,
+    required List<DropdownMenuItem<String>> items,
+    required ValueChanged<String?> onChanged, 
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: _fillColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          key: key,
+          value: value,
+          hint: Text(hint, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+          isExpanded: true,
+          menuMaxHeight: 300,
+          iconEnabledColor: const Color(0xFFF3C08E),
+          items: items,
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
 }
