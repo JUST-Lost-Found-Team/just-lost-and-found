@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +25,8 @@ class _AddPostState extends State<AddPost> {
   bool _isLost = true;
   bool _isLoading = false;
   String? _selectedCategory;
-
+  final GlobalKey<FormFieldState> _locationDropdownKey =
+      GlobalKey<FormFieldState>();
   List<String> _selectedLocations = [];
 
   final Color _fillColor = Colors.grey.shade200;
@@ -41,10 +43,8 @@ class _AddPostState extends State<AddPost> {
 
       if (images.length > availableSlots && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "You can only select up to 3 images, Extra images were ignored",
-            ),
+          SnackBar(
+            content: Text("add_post.snack_max_images_ignored".tr()),
             backgroundColor: ThemeManager.errorRed,
           ),
         );
@@ -76,8 +76,8 @@ class _AddPostState extends State<AddPost> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("You can only select up to 3 images"),
+            SnackBar(
+              content: Text("add_post.snack_max_images".tr()),
               backgroundColor: ThemeManager.errorRed,
             ),
           );
@@ -101,7 +101,7 @@ class _AddPostState extends State<AddPost> {
                   Icons.photo_library,
                   color: ThemeManager.primaryBlue,
                 ),
-                title: const Text('Choose from Gallery'),
+                title: Text('add_post.choose_from_gallery'.tr()),
                 onTap: () {
                   Navigator.of(context).pop();
                   _pickImagesFromGallery();
@@ -112,7 +112,7 @@ class _AddPostState extends State<AddPost> {
                   Icons.photo_camera,
                   color: ThemeManager.primaryBlue,
                 ),
-                title: const Text('Take a Photo'),
+                title: Text('add_post.take_a_photo'.tr()),
                 onTap: () {
                   Navigator.of(context).pop();
                   _pickImageFromCamera();
@@ -136,8 +136,8 @@ class _AddPostState extends State<AddPost> {
 
     if (_selectedLocations.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please select at least one location"),
+        SnackBar(
+          content: Text("add_post.snack_location_required".tr()),
           backgroundColor: ThemeManager.errorRed,
         ),
       );
@@ -173,8 +173,8 @@ class _AddPostState extends State<AddPost> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Post added successfully!'),
+          SnackBar(
+            content: Text('add_post.snack_success'.tr()),
             behavior: SnackBarBehavior.floating,
             backgroundColor: ThemeManager.successGreen,
           ),
@@ -185,7 +185,7 @@ class _AddPostState extends State<AddPost> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to upload post: $e'),
+            content: Text('${"add_post.snack_failed".tr()}$e'),
             behavior: SnackBarBehavior.floating,
             backgroundColor: ThemeManager.errorRed,
           ),
@@ -209,8 +209,8 @@ class _AddPostState extends State<AddPost> {
       appBar: AppBar(
         backgroundColor: ThemeManager.primaryBlue,
         elevation: 0,
-        title: const Text(
-          "Add Post",
+        title: Text(
+          "add_post.app_bar_title".tr(),
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
@@ -228,7 +228,7 @@ class _AddPostState extends State<AddPost> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionTitle("What are you reporting?"),
+                _buildSectionTitle("add_post.what_reporting".tr()),
                 Row(
                   children: [
                     Expanded(
@@ -250,7 +250,7 @@ class _AddPostState extends State<AddPost> {
                           ),
                           child: Center(
                             child: Text(
-                              "I Lost an Item",
+                              "add_post.lost_item".tr(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -291,7 +291,7 @@ class _AddPostState extends State<AddPost> {
                           ),
                           child: Center(
                             child: Text(
-                              "I Found an Item",
+                              "add_post.found_item".tr(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -309,14 +309,14 @@ class _AddPostState extends State<AddPost> {
 
                 const SizedBox(height: 24),
 
-                _buildSectionTitle("Add Photos up to 3 (photos are optional)"),
+                _buildSectionTitle("add_post.add_photos".tr()),
 
                 if (!_isLost)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      "⚠️ Security Tip: Avoid showing unique marks in the photos to help verify the true owner later.",
-                      style: TextStyle(
+                      "add_post.security_tip".tr(),
+                      style: const TextStyle(
                         color: Colors.red,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -337,26 +337,28 @@ class _AddPostState extends State<AddPost> {
 
                 const SizedBox(height: 24),
 
-                _buildSectionTitle("Title:"),
+                _buildSectionTitle("add_post.title_label".tr()),
                 _buildTextField(
                   controller: _titleController,
-                  hint: "Title of the item...",
+                  hint: "add_post.title_hint".tr(),
                   maxLines: 1,
                 ),
 
                 const SizedBox(height: 16),
 
-                _buildSectionTitle("Description:"),
+                _buildSectionTitle("add_post.desc_label".tr()),
                 _buildTextField(
                   controller: _descController,
-                  hint: "Description of the item...",
+                  hint: "add_post.desc_hint".tr(),
                   maxLines: 4,
                 ),
 
                 const SizedBox(height: 16),
 
                 _buildSectionTitle(
-                  _isLost ? "Possible Locations (Up to 3):" : "Location:",
+                  _isLost
+                      ? "add_post.possible_locations".tr()
+                      : "add_post.location_label".tr(),
                 ),
 
                 if (_selectedLocations.isNotEmpty)
@@ -368,7 +370,7 @@ class _AddPostState extends State<AddPost> {
                       children: _selectedLocations.map((loc) {
                         return InputChip(
                           label: Text(
-                            loc,
+                            "locations.$loc".tr(),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
@@ -390,24 +392,24 @@ class _AddPostState extends State<AddPost> {
 
                 if (_selectedLocations.length < maxLocations)
                   _buildDropdown(
-                    hint: _selectedLocations.isEmpty
-                        ? "Select Campus Location..."
-                        : "Add another possible location...",
-                    value: null,
-                    validator: (val) =>
-                        _selectedLocations.isEmpty ? "Required" : null,
+                    key: _locationDropdownKey,
 
+                    hint: _selectedLocations.isEmpty
+                        ? "add_post.select_location_hint".tr()
+                        : "add_post.add_another_location_hint".tr(),
+                    value: null,
+                    validator: (val) => _selectedLocations.isEmpty
+                        ? "add_post.error_required_dropdown".tr()
+                        : null,
                     items: LocationData.locations.map((loc) {
                       bool isSelected = _selectedLocations.contains(loc);
-
                       return DropdownMenuItem<String>(
                         value: loc,
                         enabled: !isSelected,
                         child: Text(
-                          loc,
+                          "locations.$loc".tr(),
                           style: TextStyle(
                             fontSize: 16,
-
                             color: isSelected
                                 ? Colors.grey.shade400
                                 : Colors.black87,
@@ -415,30 +417,32 @@ class _AddPostState extends State<AddPost> {
                         ),
                       );
                     }).toList(),
-
                     onChanged: (val) {
                       if (val != null) {
                         FocusScope.of(context).unfocus();
                         setState(() {
                           _selectedLocations.add(val);
                         });
+
+                        _locationDropdownKey.currentState?.reset();
                       }
                     },
                   ),
-
                 const SizedBox(height: 16),
 
-                _buildSectionTitle("Category:"),
+                _buildSectionTitle("add_post.category_label".tr()),
                 _buildDropdown(
-                  hint: "Select Item Category...",
+                  hint: "add_post.select_category_hint".tr(),
                   value: _selectedCategory,
-                  validator: (value) => value == null ? "Required" : null,
+                  validator: (value) => value == null
+                      ? "add_post.error_required_dropdown".tr()
+                      : null,
                   items: Categories.categories
                       .map(
                         (item) => DropdownMenuItem<String>(
                           value: item,
                           child: Text(
-                            item,
+                            "categories.$item".tr(),
                             style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black87,
@@ -472,8 +476,8 @@ class _AddPostState extends State<AddPost> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            "Add Post",
+                        : Text(
+                            "add_post.submit_btn".tr(),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -509,8 +513,9 @@ class _AddPostState extends State<AddPost> {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
-      validator: (value) =>
-          value == null || value.trim().isEmpty ? "Required field" : null,
+      validator: (value) => value == null || value.trim().isEmpty
+          ? "add_post.error_required".tr()
+          : null,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
@@ -529,6 +534,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildDropdown({
+    Key? key,
     required String hint,
     required String? value,
     required List<DropdownMenuItem<String>> items,
@@ -536,6 +542,7 @@ class _AddPostState extends State<AddPost> {
     String? Function(String?)? validator,
   }) {
     return DropdownButtonFormField<String>(
+      key: key,
       isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
@@ -580,7 +587,7 @@ class _AddPostState extends State<AddPost> {
           Icon(Icons.add_a_photo, size: 50, color: ThemeManager.primaryYellow),
           const SizedBox(height: 10),
           Text(
-            "press to add the photos",
+            "add_post.press_to_add_photos".tr(),
             style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           ),
         ],
