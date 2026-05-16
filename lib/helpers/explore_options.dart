@@ -109,6 +109,6 @@ class LocationData {
     "General - International Relations Office",
     "General - Nanotechnology Institute",
     "General - University Presidency",
-    "General - Prof. Sa'ad Hijazi Hall",
+    "General - Prof Sa'ad Hijazi Hall",
   ];
 }
