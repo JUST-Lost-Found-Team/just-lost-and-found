@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,13 +49,17 @@ class _HomePageState extends State<HomePage> {
                 }
 
                 if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
+                  return Center(
+                    child: Text(
+                      "home_page.error_msg".tr() + snapshot.error.toString(),
+                    ),
+                  );
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
-                      "No posts available yet.",
+                      "home_page.no_posts".tr(),
                       style: TextStyle(color: Colors.grey),
                     ),
                   );
@@ -84,11 +89,14 @@ class _HomePageState extends State<HomePage> {
                       final postDoc = posts[index];
                       final docId = postDoc.id;
                       final post = postDoc.data() as Map<String, dynamic>;
-                      final title = post['title'] ?? 'No Title';
+                      final title = post['title'] ?? 'home_page.no_title'.tr();
                       final description =
-                          post['description'] ?? 'No Description';
-                      final location = post['location'] ?? 'Unknown Location';
-                      final status = post['status'] ?? 'Found';
+                          post['description'] ??
+                          'home_page.no_description'.tr();
+                      final location =
+                          post['location'] ?? 'home_page.unknown_location'.tr();
+                      final status =
+                          post['status'] ?? 'main_layout.filter.lost".tr()';
                       final createdAt = post['createdAt'];
                       final images = post['images'] as List<dynamic>? ?? [];
 
@@ -144,15 +152,16 @@ class _HomePageState extends State<HomePage> {
     } else if (rawLocation is String) {
       locationsList = [rawLocation];
     }
+    String displayLocation = "home_page.unknown_location".tr();
 
-    String displayLocation = "Unknown Location";
     if (locationsList.isNotEmpty) {
       List<String> processedLocs = locationsList.map((loc) {
-        String s = loc.toString().trim();
+        String s = "locations.${loc.toString().trim()}".tr();
 
         if (s.contains('-')) {
           s = s.split('-').last.trim();
         }
+
         if (s.toLowerCase().startsWith('the ')) {
           s = s.substring(4).trim();
         }
@@ -162,6 +171,7 @@ class _HomePageState extends State<HomePage> {
 
       displayLocation = processedLocs.join(', ');
     }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -193,11 +203,12 @@ class _HomePageState extends State<HomePage> {
                   if (userSnapshot.hasData && userSnapshot.data!.exists) {
                     final userData =
                         userSnapshot.data!.data() as Map<String, dynamic>;
-                    postUserName = userData['name'] ?? "Unknown User";
+                    postUserName =
+                        userData['name'] ?? "home_page.unknown_user".tr();
                     postAvatarUrl = userData['profileImage'];
                   } else if (userSnapshot.connectionState ==
                       ConnectionState.done) {
-                    postUserName = "Unknown User";
+                    postUserName = "home_page.unknown_user".tr();
                   }
 
                   return Row(
@@ -342,34 +353,36 @@ class _HomePageState extends State<HomePage> {
                                       }
                                     },
                                     itemBuilder: (BuildContext context) => [
-                                      const PopupMenuItem(
+                                      PopupMenuItem(
                                         value: 'resolved',
                                         child: ListTile(
                                           leading: Icon(
                                             Icons.check_circle_outline,
                                             color: Colors.green,
                                           ),
-                                          title: Text('Mark as resolved'),
+                                          title: Text(
+                                            'home_page.mark_resolved'.tr(),
+                                          ),
                                         ),
                                       ),
-                                      const PopupMenuItem(
+                                      PopupMenuItem(
                                         value: 'edit',
                                         child: ListTile(
                                           leading: Icon(
                                             Icons.edit,
                                             color: Colors.blue,
                                           ),
-                                          title: Text('Edit'),
+                                          title: Text('home_page.edit'.tr()),
                                         ),
                                       ),
-                                      const PopupMenuItem(
+                                      PopupMenuItem(
                                         value: 'delete',
                                         child: ListTile(
                                           leading: Icon(
                                             Icons.delete,
                                             color: Colors.red,
                                           ),
-                                          title: Text('Delete'),
+                                          title: Text('home_page.delete'.tr()),
                                         ),
                                       ),
                                     ],
@@ -389,7 +402,11 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              status.toUpperCase(),
+                              status == 'Lost'
+                                  ? "main_layout.filter.lost".tr().toUpperCase()
+                                  : "main_layout.filter.found"
+                                        .tr()
+                                        .toUpperCase(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 11,
@@ -456,7 +473,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           if (description.length > 80)
                             TextSpan(
-                              text: "see more",
+                              text: "home_page.see_more".tr(),
                               style: const TextStyle(
                                 color: ThemeManager.primaryBlue,
                                 fontWeight: FontWeight.bold,
@@ -469,47 +486,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              // Directionality(
-              //   textDirection: TextDirection.rtl,
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         title,
-              //         style: const TextStyle(
-              //           fontSize: 18,
-              //           fontWeight: FontWeight.bold,
-              //           color: Colors.black87,
-              //         ),
-              //       ),
-              //       const SizedBox(height: 4),
-              //       RichText(
-              //         text: TextSpan(
-              //           style: const TextStyle(
-              //             fontSize: 14,
-              //             color: Colors.black87,
-              //             height: 1.4,
-              //           ),
-              //           children: [
-              //             TextSpan(
-              //               text: description.length > 80
-              //                   ? "${description.substring(0, 80)}... "
-              //                   : description,
-              //             ),
-              //             if (description.length > 80)
-              //               const TextSpan(
-              //                 text: "see more",
-              //                 style: TextStyle(
-              //                   color: ThemeManager.primaryBlue,
-              //                   fontWeight: FontWeight.bold,
-              //                 ),
-              //               ),
-              //           ],
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               const SizedBox(height: 12),
 
               if (images.isNotEmpty)

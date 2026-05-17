@@ -169,8 +169,8 @@
     },
     "filter": {
       "all": "الكل",
-      "lost": "مفقود",
-      "found": "موجود"
+      "lost": "مفقودات",
+      "found": "معثورات"
     },
     "nav": {
       "home": "الرئيسية",
@@ -178,5 +178,26 @@
       "messages": "الرسائل",
       "profile": "حسابي"
     }
+  },
+  "home_page": {
+    "error_msg": "حدث خطأ: ",
+    "no_posts": "لا توجد منشورات متاحة بعد.",
+    "no_title": "بدون عنوان",
+    "no_description": "بدون وصف",
+    "unknown_location": "مكان غير معروف",
+    "unknown_user": "مستخدم غير معروف",
+    "mark_resolved": "تحديد كـ 'تم الحل'",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "see_more": "قراءة المزيد"
+  },
+  "date_helper": {
+    "just_now": "الآن",
+    "one_day_ago": "منذ يوم",
+    "days_ago": "منذ {} يوم",
+    "one_hour_ago": "منذ ساعة",
+    "hours_ago": "منذ {} ساعة",
+    "one_minute_ago": "منذ دقيقة",
+    "minutes_ago": "منذ {} دقيقة"
   }
 }
