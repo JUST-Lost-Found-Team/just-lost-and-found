@@ -218,5 +218,16 @@
     "user": "User",
     "location_title": "Location",
     "chat_with": "Chat with {}"
+  },
+  "profile_screen": {
+    "student_name": "Student Name",
+    "my_posts": "My Posts",
+    "view_all": "View All",
+    "settings": "Settings",
+    "language": "Language",
+    "light_mode": "Light Mode",
+    "log_out": "Log Out",
+    "logout_confirmation": "Are you sure you want to log out?",
+    "cancel": "Cancel"
   }
 }

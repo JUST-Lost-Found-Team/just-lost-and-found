@@ -218,5 +218,16 @@
     "user": "مستخدم",
     "location_title": "المكان",
     "chat_with": "تحدث مع {}"
+  },
+  "profile_screen": {
+    "student_name": "اسم الطالب",
+    "my_posts": "منشوراتي",
+    "view_all": "عرض الكل",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "light_mode": "الوضع الفاتح",
+    "log_out": "تسجيل الخروج",
+    "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    "cancel": "إلغاء"
   }
 }
