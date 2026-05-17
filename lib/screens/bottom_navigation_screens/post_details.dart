@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,7 +39,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
   Widget build(BuildContext context) {
     final data = widget.post;
     final List<dynamic> images = data['images'] ?? [];
-    final String title = data['title'] ?? 'No Title';
+    final String title = data['title'] ?? "post_details.no_title".tr();
     final rawLocation = data['location'];
     List<String> locationsList = [];
 
@@ -50,7 +51,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     locationsList.sort((a, b) => b.length.compareTo(a.length));
     final String category = data['category'] ?? 'General';
     final String status = data['status'] ?? 'Found';
-    final String description = data['description'] ?? 'No Description';
+    final String description =
+        data['description'] ?? "post_details.no_description".tr();
     final timeAgo = DateHelper.getTimeAgo(data['createdAt']);
 
     return Scaffold(
@@ -148,13 +150,15 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           FutureBuilder<DocumentSnapshot>(
                             future: _postUserFuture,
                             builder: (context, snapshot) {
-                              String sName = "Loading...";
+                              String sName = "post_details.loading".tr();
                               String sImage = "";
                               if (snapshot.hasData && snapshot.data!.exists) {
                                 final userData =
                                     snapshot.data!.data()
                                         as Map<String, dynamic>;
-                                sName = userData['name'] ?? "User";
+                                sName =
+                                    userData['name'] ??
+                                    "post_details.user".tr();
                                 sImage = userData['profileImage'] ?? "";
                               }
 
@@ -235,7 +239,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                 ),
                                                 const SizedBox(width: 4),
                                                 Text(
-                                                  category,
+                                                  "categories.$category".tr(),
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 13,
@@ -289,42 +293,46 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                 );
                                               }
                                             },
-                                            itemBuilder:
-                                                (BuildContext context) => [
-                                                  const PopupMenuItem(
-                                                    value: 'resolved',
-                                                    child: ListTile(
-                                                      leading: Icon(
-                                                        Icons
-                                                            .check_circle_outline,
-                                                        color: Colors.green,
-                                                      ),
-                                                      title: Text(
-                                                        'Mark as resolved',
-                                                      ),
-                                                    ),
+                                            itemBuilder: (BuildContext context) => [
+                                              PopupMenuItem(
+                                                value: 'resolved',
+                                                child: ListTile(
+                                                  leading: Icon(
+                                                    Icons.check_circle_outline,
+                                                    color: Colors.green,
                                                   ),
-                                                  const PopupMenuItem(
-                                                    value: 'edit',
-                                                    child: ListTile(
-                                                      leading: Icon(
-                                                        Icons.edit,
-                                                        color: Colors.blue,
-                                                      ),
-                                                      title: Text('Edit'),
-                                                    ),
+                                                  title: Text(
+                                                    "post_actions.mark_resolved_title"
+                                                        .tr(),
                                                   ),
-                                                  const PopupMenuItem(
-                                                    value: 'delete',
-                                                    child: ListTile(
-                                                      leading: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red,
-                                                      ),
-                                                      title: Text('Delete'),
-                                                    ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 'edit',
+                                                child: ListTile(
+                                                  leading: Icon(
+                                                    Icons.edit,
+                                                    color: Colors.blue,
                                                   ),
-                                                ],
+                                                  title: Text(
+                                                    "home_page.edit".tr(),
+                                                  ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 'delete',
+                                                child: ListTile(
+                                                  leading: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red,
+                                                  ),
+                                                  title: Text(
+                                                    "post_actions.delete_title"
+                                                        .tr(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           )
                                         else
                                           const SizedBox(height: 28),
@@ -344,7 +352,13 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                             ),
                                           ),
                                           child: Text(
-                                            status.toUpperCase(),
+                                            status == 'Found'
+                                                ? "main_layout.filter.found"
+                                                      .tr()
+                                                      .toUpperCase()
+                                                : "main_layout.filter.lost"
+                                                      .tr()
+                                                      .toUpperCase(),
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -425,8 +439,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                     size: 20,
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text(
-                                    "Location",
+                                  Text(
+                                    "post_details.location_title".tr(),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -459,7 +473,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                   ) {
                                     int index = entry.key;
                                     String loc = entry.value;
-
                                     return Column(
                                       children: [
                                         Padding(
@@ -468,7 +481,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                             horizontal: 16.0,
                                           ),
                                           child: Text(
-                                            loc,
+                                            "locations.$loc".tr(),
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               color: Colors.black87,
@@ -522,12 +535,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               child: FutureBuilder<DocumentSnapshot>(
                 future: _postUserFuture,
                 builder: (context, snapshot) {
-                  String name = "User";
+                  String name = "post_details.user".tr();
                   if (snapshot.hasData && snapshot.data!.exists) {
                     name =
                         (snapshot.data!.data() as Map<String, dynamic>)['name']
                             ?.split(' ')[0] ??
-                        "User";
+                        "post_details.user".tr();
                   }
                   return SizedBox(
                     height: 60,
@@ -557,7 +570,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                         ),
                       ),
                       child: Text(
-                        "Chat with $name",
+                        "post_details.chat_with".tr(args: [name]),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
