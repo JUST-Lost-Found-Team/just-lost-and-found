@@ -210,5 +210,13 @@
     "delete_content": "هل أنت متأكد أنك تريد حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.",
     "delete_btn": "حذف",
     "snack_deleted": "تم حذف المنشور بنجاح"
+  },
+  "post_details": {
+    "no_title": "بدون عنوان",
+    "no_description": "بدون وصف",
+    "loading": "جاري التحميل...",
+    "user": "مستخدم",
+    "location_title": "المكان",
+    "chat_with": "تحدث مع {}"
   }
 }
