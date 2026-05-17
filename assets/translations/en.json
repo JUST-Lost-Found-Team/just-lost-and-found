@@ -178,5 +178,26 @@
       "messages": "Messages",
       "profile": "Profile"
     }
+  },
+  "home_page": {
+    "error_msg": "حدث خطأ: ",
+    "no_posts": "لا توجد منشورات متاحة بعد.",
+    "no_title": "بدون عنوان",
+    "no_description": "بدون وصف",
+    "unknown_location": "مكان غير معروف",
+    "unknown_user": "مستخدم غير معروف",
+    "mark_resolved": "تحديد كـ 'تم الحل'",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "see_more": "قراءة المزيد"
+  },
+  "date_helper": {
+    "just_now": "Just now",
+    "one_day_ago": "1 day ago",
+    "days_ago": "{} days ago",
+    "one_hour_ago": "1 hour ago",
+    "hours_ago": "{} hours ago",
+    "one_minute_ago": "1 minute ago",
+    "minutes_ago": "{} minutes ago"
   }
 }
