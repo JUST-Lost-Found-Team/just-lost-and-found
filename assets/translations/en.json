@@ -199,5 +199,16 @@
     "hours_ago": "{} hours ago",
     "one_minute_ago": "1 minute ago",
     "minutes_ago": "{} minutes ago"
+  },
+  "post_actions": {
+    "mark_resolved_title": "Mark as Resolved",
+    "mark_resolved_content": "Are you sure you want to mark this post as resolved?",
+    "cancel_btn": "Cancel",
+    "confirm_btn": "Confirm",
+    "snack_resolved": "Post marked as resolved!",
+    "delete_title": "Delete Post",
+    "delete_content": "Are you sure you want to delete this post? This action cannot be undone.",
+    "delete_btn": "Delete",
+    "snack_deleted": "Post deleted successfully"
   }
 }

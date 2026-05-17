@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/edit_post_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -17,28 +18,29 @@ class PostActionsHelper {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle_outline,
                 color: ThemeManager.successGreen,
                 size: 28,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
-                "Mark as Resolved",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                "post_actions.mark_resolved_title".tr(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
-          content: const Text(
-            "Are you sure you want to mark this post as resolved?",
-          ),
+          content: Text("post_actions.mark_resolved_content".tr()),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
-                "Cancel",
+              child: Text(
+                "post_actions.cancel_btn".tr(),
                 style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
@@ -56,8 +58,8 @@ class PostActionsHelper {
                       .update({'isResolved': true});
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Post marked as resolved!'),
+                      SnackBar(
+                        content: Text("post_actions.snack_resolved".tr()),
                         behavior: SnackBarBehavior.floating,
                         backgroundColor: ThemeManager.successGreen,
                       ),
@@ -77,8 +79,8 @@ class PostActionsHelper {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
-                "Confirm",
+              child: Text(
+                "post_actions.confirm_btn".tr(),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -104,7 +106,7 @@ class PostActionsHelper {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Row(
+          title: Row(
             children: [
               Icon(
                 Icons.warning_amber_rounded,
@@ -113,19 +115,17 @@ class PostActionsHelper {
               ),
               SizedBox(width: 10),
               Text(
-                "Delete Post",
+                "post_actions.delete_title".tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          content: const Text(
-            "Are you sure you want to delete this post? This action cannot be undone.",
-          ),
+          content: Text("post_actions.delete_content".tr()),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
-                "Cancel",
+              child: Text(
+                "post_actions.cancel_btn".tr(),
                 style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
@@ -164,8 +164,8 @@ class PostActionsHelper {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
-                "Delete",
+              child: Text(
+                "post_actions.delete_btn".tr(),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

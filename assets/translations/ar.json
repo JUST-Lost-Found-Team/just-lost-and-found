@@ -199,5 +199,16 @@
     "hours_ago": "منذ {} ساعة",
     "one_minute_ago": "منذ دقيقة",
     "minutes_ago": "منذ {} دقيقة"
+  },
+  "post_actions": {
+    "mark_resolved_title": "تحديد كـ 'تم الحل'",
+    "mark_resolved_content": "هل أنت متأكد من تحديد هذا المنشور على أنه تم حله؟",
+    "cancel_btn": "إلغاء",
+    "confirm_btn": "تأكيد",
+    "snack_resolved": "تم تحديد المنشور على أنه تم حله.",
+    "delete_title": "حذف المنشور",
+    "delete_content": "هل أنت متأكد أنك تريد حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.",
+    "delete_btn": "حذف",
+    "snack_deleted": "تم حذف المنشور بنجاح"
   }
 }
