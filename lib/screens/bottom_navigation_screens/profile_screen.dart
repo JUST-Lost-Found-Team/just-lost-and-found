@@ -298,7 +298,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
-    bool isRtl = Directionality.of(context) == TextDirection.rtl;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -316,7 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           leading: Icon(icon, color: Colors.black),
           trailing: Icon(
-            isRtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            Icons.arrow_forward_ios,
             color: ThemeManager.primaryYellow,
             size: 18,
           ),
@@ -340,7 +339,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context,
               "profile_screen.language".tr(),
               Icons.language,
-              () {},
+              () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Theme.of(context).cardColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) {
+                    return SafeArea(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 40,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          ListTile(
+                            title: const Text(
+                              "English",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onTap: () {
+                              context.setLocale(const Locale('en'));
+
+                              Navigator.pop(context);
+                            },
+                            trailing: context.locale.languageCode == 'en'
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: ThemeManager.primaryBlue,
+                                  )
+                                : null,
+                          ),
+                          ListTile(
+                            title: const Text(
+                              "العربية",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            trailing: context.locale.languageCode == 'ar'
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: ThemeManager.primaryBlue,
+                                  )
+                                : null,
+                            onTap: () {
+                              context.setLocale(const Locale('ar'));
+
+                              Navigator.pop(context);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             const Divider(height: 0, thickness: 0.5, endIndent: 20, indent: 20),
             ListTile(
@@ -376,7 +439,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     VoidCallback onTap, {
     bool isRed = false,
   }) {
-    bool isRtl = Directionality.of(context) == TextDirection.rtl;
     return ListTile(
       title: Text(
         title,
@@ -387,7 +449,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       leading: Icon(icon, color: isRed ? Colors.red : Colors.black),
       trailing: Icon(
-        isRtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+        Icons.arrow_forward_ios,
         color: ThemeManager.primaryYellow,
         size: 18,
       ),
