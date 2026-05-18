@@ -28,7 +28,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     ProfileScreen(),
   ];
 
-  final List pageTitles = [
+  List<String> get pageTitles => [
     "main_layout.page_titles.home".tr(),
     "main_layout.page_titles.explore".tr(),
     "main_layout.page_titles.messages".tr(),
@@ -90,6 +90,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
