@@ -220,7 +220,11 @@
     "loading": "Loading...",
     "user": "User",
     "location_title": "Location",
-    "chat_with": "Chat with {}"
+    "chat_with": "Chat with {}",
+    "did_you_find_prompt": "Did you find your item?",
+    "was_returned_prompt": "Was this item returned?",
+    "resolve_btn": "Resolve",
+    "snack_resolved_success": "Post marked as resolved successfully!"
   },
   "profile_screen": {
     "student_name": "Student Name",
@@ -332,5 +336,12 @@
     "delete_btn": "Delete",
     "snack_resolved": "Post marked as resolved!",
     "snack_deleted": "Post deleted successfully"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "lost_prompt": "It's been 5 days since you lost '{}'. Did you find it?",
+    "found_prompt": "It's been 5 days since you found '{}'. Was it returned to its owner?",
+    "just_now": "Just now"
   }
 }

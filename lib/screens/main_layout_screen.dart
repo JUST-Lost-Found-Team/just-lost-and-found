@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/screens/bottom_navigation_screens/notification_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import '../services/notifications-handler.dart';
 import 'bottom_navigation_screens/home_screen.dart';
@@ -90,6 +91,13 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
   }
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _generatePeriodicNotifications(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     NotificationHandler.setup(context);
     context.locale;
@@ -133,12 +141,6 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         centerTitle: _currentIndex == 0 ? false : true,
         actions: [
           if (_currentIndex == 0) ...[
-            IconButton(
-              icon: const Icon(Icons.notifications_rounded),
-              color: Colors.white,
-              onPressed: () {},
-            ),
-
             PopupMenuButton<String>(
               color: Colors.white,
               icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
@@ -228,6 +230,48 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                   ),
                 ),
               ],
+            ),
+
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('notifications')
+                  .where(
+                    'userId',
+                    isEqualTo: FirebaseAuth.instance.currentUser?.uid,
+                  )
+                  .where('isRead', isEqualTo: false)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                int unreadCount = 0;
+                if (snapshot.hasData) {
+                  unreadCount = snapshot.data!.docs.length;
+                }
+
+                return IconButton(
+                  icon: unreadCount > 0
+                      ? Badge(
+                          backgroundColor: Colors.redAccent,
+                          label: Text(
+                            unreadCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                          child: const Icon(Icons.notifications_rounded),
+                        )
+                      : const Icon(Icons.notifications_rounded),
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationsScreen(),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ],
         ],
@@ -339,5 +383,54 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _generatePeriodicNotifications(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isEqualTo: user.uid)
+          .where('isResolved', isEqualTo: false)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        final createdAt =
+            (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now();
+        final lastNotifiedAt = (data['lastNotifiedAt'] as Timestamp?)?.toDate();
+
+        final checkDate = lastNotifiedAt ?? createdAt;
+        final difference = DateTime.now().difference(checkDate).inDays;
+
+        if (difference >= 5) {
+          String title = data['title'] ?? 'عنصر';
+          String status = data['status'] ?? 'Lost';
+
+          String msg = status == 'Lost'
+              ? "notifications.lost_prompt".tr(args: [title])
+              : "notifications.found_prompt".tr(args: [title]);
+
+          await FirebaseFirestore.instance.collection('notifications').add({
+            'userId': user.uid,
+            'postId': doc.id,
+            'type': status == 'Lost' ? 'lost' : 'found',
+            'itemName': title,
+            'isRead': false,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+
+          await FirebaseFirestore.instance
+              .collection('posts')
+              .doc(doc.id)
+              .update({'lastNotifiedAt': FieldValue.serverTimestamp()});
+        }
+      }
+    } catch (e) {
+      debugPrint("Error generating notifications: $e");
+    }
   }
 }
