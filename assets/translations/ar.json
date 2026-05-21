@@ -318,5 +318,19 @@
     "no_title": "بدون عنوان",
     "no_description": "بدون وصف",
     "see_more": "عرض المزيد"
+  },
+  "my_posts": {
+    "title": "منشوراتي",
+    "no_posts_yet": "لا توجد منشورات حتى الآن!",
+    "status_lost": "مفقود",
+    "status_resolved": "تم الحل",
+    "untitled": "بدون عنوان",
+    "no_description": "بدون وصف",
+    "delete_title": "حذف المنشور",
+    "delete_content": "هل أنت متأكد أنك تريد حذف هذا المنشور؟\nلا يمكن التراجع عن هذا الإجراء.",
+    "cancel_btn": "إلغاء",
+    "delete_btn": "حذف",
+    "snack_resolved": "تم تحديد المنشور كـ 'تم الحل'!",
+    "snack_deleted": "تم حذف المنشور بنجاح"
   }
 }

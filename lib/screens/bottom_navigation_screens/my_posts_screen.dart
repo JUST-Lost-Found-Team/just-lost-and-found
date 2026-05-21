@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/edit_post_screen.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/post_details.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class MyPostsScreen extends StatelessWidget {
   const MyPostsScreen({super.key});
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +17,8 @@ class MyPostsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: ThemeManager.primaryBlue,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          "My Posts",
+        title: Text(
+          "my_posts.title".tr(),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -30,7 +28,7 @@ class MyPostsScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('posts')
             .where('userId', isEqualTo: currentUserId)
-            .orderBy('isResolved',descending: false)
+            .orderBy('isResolved', descending: false)
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -44,9 +42,20 @@ class MyPostsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.post_add_rounded, size: 100, color: Colors.grey[300]),
+                  Icon(
+                    Icons.post_add_rounded,
+                    size: 100,
+                    color: Colors.grey[300],
+                  ),
                   const SizedBox(height: 15),
-                  const Text("No posts yet!", style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(
+                    "my_posts.no_posts_yet".tr(),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -74,14 +83,19 @@ class MyPostsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPostCard(Map<String, dynamic> data, String docId, BuildContext context) {
-    bool hasImage = data['images'] != null && (data['images'] as List).isNotEmpty;
+  Widget _buildPostCard(
+    Map<String, dynamic> data,
+    String docId,
+    BuildContext context,
+  ) {
+    bool hasImage =
+        data['images'] != null && (data['images'] as List).isNotEmpty;
     String? imageURL = hasImage ? data['images'][0] : null;
     bool isLost = data['status'] == 'Lost';
     bool resolved = data['isResolved'] ?? false;
 
     return GestureDetector(
-        onTap: () {
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -102,14 +116,17 @@ class MyPostsScreen extends StatelessWidget {
                 Opacity(
                   opacity: resolved ? 0.5 : 1.0,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: hasImage
                         ? Image.network(
                             imageURL!,
                             height: 120,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
+                            errorBuilder: (context, error, stackTrace) =>
+                                _buildImagePlaceholder(),
                           )
                         : _buildImagePlaceholder(),
                   ),
@@ -121,13 +138,26 @@ class MyPostsScreen extends StatelessWidget {
                     right: 0,
                     child: Center(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: isLost ? Colors.red.withOpacity(0.9) : Colors.green.withOpacity(0.9),
+                          color: isLost
+                              ? Colors.red.withOpacity(0.9)
+                              : Colors.green.withOpacity(0.9),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        child: Text(data["status"] ?? "Lost",
-                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          data["status"] == 'Found'
+                              ? "main_layout.filter.found".tr().toUpperCase()
+                              : "main_layout.filter.lost".tr().toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -136,13 +166,28 @@ class MyPostsScreen extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.3),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
                       ),
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(10)),
-                          child: const Text("RESOLVED", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "my_posts.status_resolved".tr(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -159,8 +204,12 @@ class MyPostsScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          data['title'] ?? "Untitled",
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: ThemeManager.primaryBlue),
+                          data['title'] ?? "my_posts.untitled".tr(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: ThemeManager.primaryBlue,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -168,19 +217,64 @@ class MyPostsScreen extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         icon: const Icon(Icons.more_horiz, size: 18),
                         onSelected: (value) {
-                          if (value == 'resolved') _markAsResolved(docId, context);
-                          if (value == 'edit') Navigator.push(context, MaterialPageRoute(builder: (context) => EditPostScreen(postData: data, postId: docId)));
-                          if (value == 'delete') _showDeleteConfirmation(docId, context); 
+                          if (value == 'resolved')
+                            _markAsResolved(docId, context);
+                          if (value == 'edit')
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditPostScreen(
+                                  postData: data,
+                                  postId: docId,
+                                ),
+                              ),
+                            );
+                          if (value == 'delete')
+                            _showDeleteConfirmation(docId, context);
                         },
                         itemBuilder: (context) => [
-                          const PopupMenuItem(value: 'resolved', child: ListTile(leading: Icon(Icons.check_circle_outline, color: Colors.green), title: Text("Resolved"))),
-                          const PopupMenuItem(value: 'edit', child: ListTile(leading: Icon(Icons.edit, color: Colors.blue), title: Text("Edit"))),
-                          const PopupMenuItem(value: 'delete', child: ListTile(leading: Icon(Icons.delete, color: Colors.red), title: Text("Delete"))),
+                          PopupMenuItem(
+                            value: 'resolved',
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.green,
+                              ),
+                              title: Text(
+                                "post_actions.mark_resolved_title".tr(),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                              ),
+                              title: Text("home_page.edit".tr()),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              title: Text("post_actions.delete_title".tr()),
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  Text(data['description'] ?? "No description", style: TextStyle(color: Colors.grey[700], fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    data['description'] ?? "my_posts.no_description".tr(),
+                    style: TextStyle(color: Colors.grey[700], fontSize: 10),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   //const Divider(height: 10, thickness: 0.5),
                   // Row(
                   //   children: [
@@ -211,42 +305,69 @@ class MyPostsScreen extends StatelessWidget {
       height: 120,
       width: double.infinity,
       color: Colors.grey[300],
-      child: const Icon(Icons.image_not_supported_outlined, size: 40, color: Colors.grey),
+      child: const Icon(
+        Icons.image_not_supported_outlined,
+        size: 40,
+        color: Colors.grey,
+      ),
     );
   }
 
-  
   void _showDeleteConfirmation(String docId, BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title:Row(children: [
-            Icon(Icons.warning_amber_rounded,color: ThemeManager.errorRed,),
-            SizedBox(width: 9,),
-            Text("Delete Post",style: TextStyle(fontWeight: FontWeight.bold),),
-          ],),
-         
-        
-          
-          content: const Text("Are you sure you want to delete this post?\nThis action cannot be undone."),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: ThemeManager.errorRed),
+              SizedBox(width: 9),
+              Text(
+                "my_posts.delete_title".tr(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+
+          content: Text("my_posts.delete_content".tr()),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text("Cancel", style: TextStyle(color: Colors.grey))),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                "my_posts.cancel_btn".tr(),
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 8, bottom: 8),
               child: SizedBox(
-                width: 90, height: 40,
+                width: 90,
+                height: 40,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
                     _deletePost(docId, context);
                   },
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: const Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                    child: Text(
+                      "my_posts.delete_btn".tr(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -258,15 +379,31 @@ class MyPostsScreen extends StatelessWidget {
 
   void _markAsResolved(String docId, BuildContext context) async {
     try {
-      await FirebaseFirestore.instance.collection('posts').doc(docId).update({'isResolved': true});
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post marked as resolved!')));
-    } catch (e) { debugPrint("Error: $e"); }
+      await FirebaseFirestore.instance.collection('posts').doc(docId).update({
+        'isResolved': true,
+      });
+      if (context.mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("my_posts.snack_resolved".tr())));
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
   }
 
   void _deletePost(String docId, BuildContext context) async {
     try {
       await FirebaseFirestore.instance.collection('posts').doc(docId).delete();
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Post deleted successfully"), backgroundColor: Colors.red));
-    } catch (e) { debugPrint("Error: $e"); }
+      if (context.mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("my_posts.snack_deleted".tr()),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: ThemeManager.errorRed,
+          ),
+        );
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
   }
 }
