@@ -277,5 +277,25 @@
     "default_item_title": "Item",
     "resolved_status": "Resolved",
     "type_message_hint": "Type a message..."
+  },
+  "edit_post": {
+    "title": "Edit Post",
+    "err_location": "Please select at least one location",
+    "snack_success": "Post updated successfully!",
+    "snack_failed": "Update failed: ",
+    "what_reporting": "What are you reporting?",
+    "lost_item": "I Lost an Item",
+    "found_item": "I Found an Item",
+    "post_title_label": "Title:",
+    "post_title_hint": "Title...",
+    "post_desc_label": "Description:",
+    "post_desc_hint": "Description...",
+    "lost_locations_label": "Possible Locations (Up to 3):",
+    "found_location_label": "Location:",
+    "add_location_hint": "Add location...",
+    "category_label": "Category:",
+    "category_hint": "Select Category...",
+    "update_btn": "Update Post",
+    "required_field": "Required"
   }
 }

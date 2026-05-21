@@ -277,5 +277,25 @@
     "default_item_title": "غرض",
     "resolved_status": "تم الحل",
     "type_message_hint": "اكتب رسالة..."
+  },
+  "edit_post": {
+    "title": "تعديل المنشور",
+    "err_location": "يرجى اختيار مكان واحد على الأقل",
+    "snack_success": "تم تحديث المنشور بنجاح!",
+    "snack_failed": "فشل التحديث: ",
+    "what_reporting": "ما الذي تريد الإبلاغ عنه؟",
+    "lost_item": "فقدت غرضاً",
+    "found_item":"وجدت غرضاً",
+    "post_title_label": "العنوان:",
+    "post_title_hint": "عنوان الغرض...",
+    "post_desc_label": "الوصف:",
+    "post_desc_hint": "وصف الغرض (لونه، شكله، إلخ)...",
+    "lost_locations_label": "الأماكن المحتملة (حتى 3):",
+    "found_location_label": "المكان:",
+    "add_location_hint": "إضافة مكان...",
+    "category_label": "الفئة:",
+    "category_hint": "اختر الفئة...",
+    "update_btn": "تحديث المنشور",
+    "required_field": "مطلوب"
   }
 }
