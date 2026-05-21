@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_localization/easy_localization.dart'
+    hide TextDirection; // 🌟 ضفنا المكتبة
 import 'package:just_lost_and_found/helpers/date_helper.dart';
 import 'package:just_lost_and_found/helpers/explore_options.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -81,9 +83,9 @@ class _ExplorePageState extends State<ExplorePage> {
             isDense: true,
             filled: true,
             fillColor: const Color.fromARGB(192, 255, 255, 255),
-            hintText: "Search for items...",
-            hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-            prefixIcon: Icon(
+            hintText: "explore_page.search_hint".tr(), // 🌟 ترجمة
+            hintStyle: const TextStyle(fontSize: 15, color: Colors.grey),
+            prefixIcon: const Icon(
               Icons.search,
               color: ThemeManager.primaryBlue,
               size: 25,
@@ -163,10 +165,12 @@ class _ExplorePageState extends State<ExplorePage> {
       height: 55,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 5),
         itemCount: Categories.categories.length,
         itemBuilder: (context, index) {
           final isSelected = selectedCategory == index;
+          final catName =
+              Categories.categories[index]; // الاسم الأصلي للإنجليزي
 
           return GestureDetector(
             onTap: () {
@@ -191,21 +195,19 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
                 color: isSelected
                     ? ThemeManager.primaryYellow
-                    : Color.fromARGB(236, 255, 255, 255),
+                    : const Color.fromARGB(236, 255, 255, 255),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 children: [
                   Icon(
-                    categoryIcons.icons[Categories.categories[index]],
+                    categoryIcons.icons[catName],
                     size: 18,
                     color: isSelected ? Colors.white : ThemeManager.primaryBlue,
                   ),
-
-                  SizedBox(width: 6),
-
+                  const SizedBox(width: 6),
                   Text(
-                    Categories.categories[index],
+                    "categories.$catName".tr(), // 🌟 ترجمة اسم الفئة
                     style: TextStyle(
                       color: isSelected
                           ? Colors.white
@@ -232,6 +234,15 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Widget _buildLocationList() {
+    // 🌟 استخراج اسم المكان بشكل نظيف حسب اللغة
+    String displayLocation = "explore_page.campus_facilities".tr();
+    if (selectedLocationFilter != null) {
+      String translatedLoc = "locations.$selectedLocationFilter".tr();
+      displayLocation = translatedLoc.contains("-")
+          ? translatedLoc.split("-").last.trim()
+          : translatedLoc;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
@@ -261,7 +272,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.map_outlined,
                 color: ThemeManager.primaryYellow,
                 size: 30,
@@ -273,7 +284,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      selectedLocationFilter ?? "Campus facilities",
+                      displayLocation, // 🌟 عرض المكان المترجم
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -283,8 +294,10 @@ class _ExplorePageState extends State<ExplorePage> {
                     const SizedBox(height: 4),
                     Text(
                       selectedLocationFilter == null
-                          ? "find items by specific building"
-                          : "Tap to change building",
+                          ? "explore_page.find_items_by_building"
+                                .tr() // 🌟 ترجمة
+                          : "explore_page.tap_to_change_building"
+                                .tr(), // 🌟 ترجمة
                       style: TextStyle(
                         color: Colors.grey.shade500,
                         fontSize: 12,
@@ -316,29 +329,25 @@ class _ExplorePageState extends State<ExplorePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                const SizedBox(
                   height: 70,
                   width: 120,
                   child: Icon(
                     Icons.location_on_outlined,
                     size: 60,
-                    color: const Color.fromARGB(97, 228, 151, 63),
+                    color: Color.fromARGB(97, 228, 151, 63),
                   ),
                 ),
-
-                // Title
                 Text(
-                  "Select a location to continue",
+                  "explore_page.select_location_continue".tr(), // 🌟 ترجمة
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                 ),
-
-                SizedBox(height: 2),
-
-                Container(
+                const SizedBox(height: 2),
+                SizedBox(
                   width: 200,
                   child: Text(
-                    "Choose a campus facility above to explore available items in that area",
+                    "explore_page.choose_campus_facility".tr(), // 🌟 ترجمة
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,
@@ -355,8 +364,11 @@ class _ExplorePageState extends State<ExplorePage> {
     } else {
       return Expanded(
         child: filteredPosts.isEmpty
-            ? const Center(
-                child: Text("No posts", style: TextStyle(color: Colors.grey)),
+            ? Center(
+                child: Text(
+                  "explore_page.no_posts".tr(),
+                  style: const TextStyle(color: Colors.grey),
+                ), // 🌟 ترجمة
               )
             : RefreshIndicator(
                 onRefresh: loadPosts,
@@ -373,10 +385,14 @@ class _ExplorePageState extends State<ExplorePage> {
                   itemCount: filteredPosts.length,
                   itemBuilder: (context, index) {
                     final post = filteredPosts[index];
-                    final title = post['title'] ?? 'No Title';
+                    final title =
+                        post['title'] ??
+                        "explore_page.no_title".tr(); // 🌟 ترجمة
                     final docId = post['docId'];
                     final status = post['status'] ?? 'Found';
-                    final description = post['description'] ?? 'No Description';
+                    final description =
+                        post['description'] ??
+                        "explore_page.no_description".tr(); // 🌟 ترجمة
                     final createdAt = post['createdAt'];
                     final images = post['images'] as List<dynamic>? ?? [];
                     final postUserId = post['userId'];
@@ -412,21 +428,20 @@ class _ExplorePageState extends State<ExplorePage> {
         resizeToAvoidBottomInset: false,
         body: Column(
           children: [
-            SizedBox(height: 20),
-
+            const SizedBox(height: 20),
             _buildSearch(),
-
-            SizedBox(height: 15),
-
+            const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  const Text(
-                    "Browse by  ",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  Text(
+                    "explore_page.browse_by".tr(), // 🌟 ترجمة
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-
                   PopupMenuButton<String>(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -454,30 +469,33 @@ class _ExplorePageState extends State<ExplorePage> {
                         <PopupMenuEntry<String>>[
                           PopupMenuItem<String>(
                             value: 'Categories',
-                            child: selectedType == 'Categories'
-                                ? Text(
-                                    'Categories',
-                                    style: TextStyle(
-                                      color: ThemeManager.primaryYellow,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                : Text("Categories"),
+                            child: Text(
+                              "explore_page.categories_type".tr(), // 🌟 ترجمة
+                              style: TextStyle(
+                                color: selectedType == 'Categories'
+                                    ? ThemeManager.primaryYellow
+                                    : Colors.black87,
+                                fontWeight: selectedType == 'Categories'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
                           ),
                           PopupMenuItem<String>(
                             value: 'Location',
-                            child: selectedType == 'Location'
-                                ? Text(
-                                    'Location',
-                                    style: TextStyle(
-                                      color: ThemeManager.primaryYellow,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                : Text('Location'),
+                            child: Text(
+                              "explore_page.location_type".tr(), // 🌟 ترجمة
+                              style: TextStyle(
+                                color: selectedType == 'Location'
+                                    ? ThemeManager.primaryYellow
+                                    : Colors.black87,
+                                fontWeight: selectedType == 'Location'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
                           ),
                         ],
-
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
@@ -491,15 +509,18 @@ class _ExplorePageState extends State<ExplorePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            selectedType,
-                            style: TextStyle(
+                            selectedType == 'Categories'
+                                ? "explore_page.categories_type".tr()
+                                : "explore_page.location_type"
+                                      .tr(), // 🌟 ترجمة العرض الحالي
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(width: 5),
-                          Icon(
+                          const SizedBox(width: 5),
+                          const Icon(
                             Icons.arrow_drop_down,
                             size: 18,
                             color: Colors.white,
@@ -511,9 +532,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
             ),
-
-            SizedBox(height: 10),
-
+            const SizedBox(height: 10),
             SizedBox(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
@@ -522,9 +541,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     : _buildLocationList(),
               ),
             ),
-
-            SizedBox(height: 15),
-
+            const SizedBox(height: 15),
             isLoading
                 ? const Center(
                     child: CircularProgressIndicator(
@@ -564,7 +581,6 @@ class LocationSelectionSheet extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 10),
-
           Container(
             width: 40,
             height: 5,
@@ -574,13 +590,11 @@ class LocationSelectionSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-
-          const Text(
-            "Select Location",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            "explore_page.select_location_sheet_title".tr(), // 🌟 ترجمة
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 15),
-
           Expanded(
             child: ListView.builder(
               itemCount: locations.length,
@@ -589,11 +603,19 @@ class LocationSelectionSheet extends StatelessWidget {
 
                 final parts = location.split(" - ");
                 final category = parts[0];
-                final building = parts.length > 1 ? parts[1] : "";
+
+                // 🌟 ترجمة المكان وعرض القسم الأخير فقط (اسم المبنى)
+                String translatedLoc = "locations.$location".tr();
+                String building = translatedLoc.contains("-")
+                    ? translatedLoc.split("-").last.trim()
+                    : translatedLoc;
 
                 final fullCategoryName = category == "General"
-                    ? "General Facilities"
-                    : "$category Buildings";
+                    ? "explore_page.general_facilities"
+                          .tr() // 🌟 ترجمة
+                    : "explore_page.buildings_format".tr(
+                        args: ["categories.$category".tr()],
+                      ); // 🌟 ترجمة بـ args لتركيب الجملة صح بالعربي
 
                 bool showHeader = false;
                 if (index == 0) {
@@ -626,7 +648,7 @@ class LocationSelectionSheet extends StatelessWidget {
                             const SizedBox(width: 8),
                             Text(
                               fullCategoryName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: ThemeManager.primaryBlue,
@@ -635,7 +657,6 @@ class LocationSelectionSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-
                     ListTile(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 25,
@@ -664,8 +685,7 @@ class LocationSelectionSheet extends StatelessWidget {
               },
             ),
           ),
-
-          Row(children: [Column(children: [])]),
+          const Row(children: []),
         ],
       ),
     );
@@ -685,6 +705,10 @@ Widget _buildPostCard({
   required String category,
 }) {
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+  bool isArabicDesc = RegExp(
+    r'[\u0600-\u06FF]',
+  ).hasMatch(description); // 🌟 فحص ذكي للغة الوصف
+
   return GestureDetector(
     onTap: () {
       Navigator.push(
@@ -734,7 +758,6 @@ Widget _buildPostCard({
                     child: Container(
                       height: 90,
                       color: Colors.grey.shade200,
-
                       child: Center(
                         child: Icon(
                           categoryIcons.icons[category],
@@ -744,9 +767,7 @@ Widget _buildPostCard({
                       ),
                     ),
                   ),
-
-            SizedBox(height: 4),
-
+            const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerRight,
               child: Column(
@@ -760,9 +781,7 @@ Widget _buildPostCard({
                       color: Colors.black87,
                     ),
                   ),
-
-                  SizedBox(height: 2),
-
+                  const SizedBox(height: 2),
                   Text(
                     DateHelper.getTimeAgo(createdAt),
                     style: const TextStyle(fontSize: 9, color: Colors.grey),
@@ -770,11 +789,11 @@ Widget _buildPostCard({
                 ],
               ),
             ),
-
             const SizedBox(height: 5),
-
             Directionality(
-              textDirection: TextDirection.rtl,
+              textDirection: isArabicDesc
+                  ? TextDirection.rtl
+                  : TextDirection.ltr, // 🌟 اتجاه النص ذكي بناءً على المحتوى
               child: Center(
                 child: RichText(
                   text: TextSpan(
@@ -790,9 +809,9 @@ Widget _buildPostCard({
                             : description,
                       ),
                       if (description.length > 28)
-                        const TextSpan(
-                          text: "see more",
-                          style: TextStyle(
+                        TextSpan(
+                          text: "explore_page.see_more".tr(), // 🌟 ترجمة
+                          style: const TextStyle(
                             color: ThemeManager.primaryBlue,
                             fontWeight: FontWeight.bold,
                           ),
@@ -802,9 +821,7 @@ Widget _buildPostCard({
                 ),
               ),
             ),
-
             const Spacer(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -820,7 +837,11 @@ Widget _buildPostCard({
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    status,
+                    status == 'Found'
+                        ? "main_layout.filter.found".tr().toUpperCase()
+                        : "main_layout.filter.lost"
+                              .tr()
+                              .toUpperCase(), // 🌟 ترجمة مأخوذة من الـ layout
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,
@@ -828,16 +849,12 @@ Widget _buildPostCard({
                     ),
                   ),
                 ),
-
-                SizedBox(width: 3),
-
+                const SizedBox(width: 3),
                 if (currentUserId == userId)
                   SizedBox(
                     height: 22,
-
                     child: PopupMenuButton<String>(
                       color: Colors.grey[100],
-
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       icon: const Icon(Icons.more_horiz, size: 24),
@@ -851,28 +868,35 @@ Widget _buildPostCard({
                         }
                       },
                       itemBuilder: (BuildContext context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'resolved',
                           child: ListTile(
-                            leading: Icon(
+                            leading: const Icon(
                               Icons.check_circle_outline,
                               color: Colors.green,
                             ),
-                            title: Text('Mark as resolved'),
+                            title: Text(
+                              "post_actions.mark_resolved_title".tr(),
+                            ), // 🌟 ترجمة من actions
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: ListTile(
-                            leading: Icon(Icons.edit, color: Colors.blue),
-                            title: Text('Edit'),
+                            leading: const Icon(Icons.edit, color: Colors.blue),
+                            title: Text("home_page.edit".tr()), // 🌟 ترجمة
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: ListTile(
-                            leading: Icon(Icons.delete, color: Colors.red),
-                            title: Text('Delete'),
+                            leading: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            title: Text(
+                              "post_actions.delete_title".tr(),
+                            ), // 🌟 ترجمة من actions
                           ),
                         ),
                       ],

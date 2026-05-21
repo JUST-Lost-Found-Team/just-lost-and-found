@@ -49,7 +49,10 @@
     "Accessories": "إكسسوارات",
     "Keys & Wallets": "مفاتيح ومحافظ",
     "Clothing": "ملابس",
-    "Others": "أخرى"
+    "Others": "أخرى",
+    "Medical": "الطبية",
+    "Engineering": "الهندسية",
+    "General": "عامة"
   },
   "locations": {
     "Medical - PH1": "الطبية - PH1",
@@ -297,5 +300,23 @@
     "category_hint": "اختر الفئة...",
     "update_btn": "تحديث المنشور",
     "required_field": "مطلوب"
+  },
+  "explore_page": {
+    "search_hint": "ابحث عن غرض ما...",
+    "categories_type": "التصنيفات",
+    "location_type": "المواقع",
+    "browse_by": "تصفح حسب ",
+    "campus_facilities": "مرافق الحرم الجامعي",
+    "find_items_by_building": "ابحث عن العناصر حسب المبنى",
+    "tap_to_change_building": "اضغط لتغيير المبنى",
+    "select_location_continue": "اختر موقعًا للمتابعة",
+    "choose_campus_facility": "اختر مرفقًا من الأعلى لاستعراض العناصر المتوفرة في تلك المنطقة",
+    "no_posts": "لا توجد منشورات",
+    "select_location_sheet_title": "تحديد الموقع",
+    "general_facilities": "مرافق عامة",
+    "buildings_format": "مباني {}",
+    "no_title": "بدون عنوان",
+    "no_description": "بدون وصف",
+    "see_more": "عرض المزيد"
   }
 }
