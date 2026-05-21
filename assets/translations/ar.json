@@ -26,7 +26,7 @@
     "full_name_error": "يرجى إدخال اسمك",
     "email_hint": "البريد الجامعي (just.edu.jo@)",
     "email_empty_error": "يرجى إدخال البريد الإلكتروني",
-    "email_domain_error": "يرجى استخدام البريد الجامعي الخاص بجامعة العلوم والتكنولوجيا",
+    "email_domain_error": "يرجى استخدام بريدك الجامعي (JUST)",
     "password_hint": "كلمة المرور",
     "password_empty_error": "يرجى إدخال كلمة المرور",
     "password_length_error": "كلمة المرور قصيرة جداً",
@@ -229,5 +229,19 @@
     "log_out": "تسجيل الخروج",
     "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "cancel": "إلغاء"
+  },
+  "login_screen": {
+    "welcome_back": "مرحباً بك مجدداً!",
+    "login_to_continue": "قم بتسجيل الدخول للمتابعة",
+    "email_hint": "البريد الإلكتروني (just.edu.jo@)",
+    "email_empty_error": "أدخل البريد الإلكتروني",
+    "email_invalid_error":"يرجى استخدام بريدك الجامعي (JUST)" ,
+    "password_hint": "كلمة المرور",
+    "password_empty_error": "أدخل كلمة المرور",
+    "password_short_error": "كلمة المرور قصيرة جداً",
+    "forget_password": "نسيت كلمة المرور؟",
+    "login_btn": "تسجيل الدخول",
+    "no_account": "ليس لديك حساب؟ ",
+    "create_account": "إنشاء حساب"
   }
 }

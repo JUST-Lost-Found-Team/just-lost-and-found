@@ -229,5 +229,19 @@
     "log_out": "Log Out",
     "logout_confirmation": "Are you sure you want to log out?",
     "cancel": "Cancel"
+  },
+  "login_screen": {
+    "welcome_back": "Welcome Back!",
+    "login_to_continue": "Log in to continue",
+    "email_hint": "Email (@just.edu.jo)",
+    "email_empty_error": "Enter email",
+    "email_invalid_error": "Use your JUST university email only",
+    "password_hint": "Password",
+    "password_empty_error": "Enter password",
+    "password_short_error": "Password too short",
+    "forget_password": "Forget your password?",
+    "login_btn": "Log in",
+    "no_account": "Don't have an account? ",
+    "create_account": "Create account"
   }
 }

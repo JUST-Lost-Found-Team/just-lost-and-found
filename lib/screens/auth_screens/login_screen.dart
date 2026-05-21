@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/Screens/auth_screens/forget_password_screen.dart';
 import 'package:just_lost_and_found/Screens/auth_screens/create_account_screen.dart';
@@ -34,13 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
           loader = false;
         });
         if (isSuccess == true) {
-          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainLayoutScreen()),
           );
         } else {
-         
           print("Login failed, staying on login screen.");
         }
         //     Navigator.pushReplacement(
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top:0),
+            padding: const EdgeInsets.only(top: 0),
 
             child: Form(
               key: _formKey,
@@ -81,25 +80,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 200,
                       fit: BoxFit.cover,
                     ),
-                    const Text(
-                      'Welcome Back!',
+                    Text(
+                      'login_screen.welcome_back'.tr(),
                       style: TextStyle(
                         color: ThemeManager.primaryBlue,
                         fontWeight: FontWeight.bold,
                         fontSize: 35,
                       ),
                     ),
-                   // SizedBox(height: 10,),
-                    Text('Log in to continue',style: TextStyle(
+                    // SizedBox(height: 10,),
+                    Text(
+                      'login_screen.login_to_continue'.tr(),
+                      style: TextStyle(
                         color: Color.fromARGB(159, 23, 20, 20),
                         fontSize: 18,
-                       ),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: emailCTRL,
                       decoration: InputDecoration(
-                        hintText: 'Email (@just.edu.jo)',
+                        hintText: 'login_screen.email_hint'.tr(),
                         filled: true,
                         fillColor: Colors.grey.withOpacity(0.24),
                         border: OutlineInputBorder(
@@ -110,10 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Enter email';
-                
+                        if (value == null || value.isEmpty)
+                          return 'login_screen.email_empty_error'.tr();
+
                         if (!value.endsWith('just.edu.jo')) {
-                          return 'Use your JUST university email only';
+                          return 'login_screen.email_invalid_error'.tr();
                         }
                         return null;
                       },
@@ -122,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: passwordCTRL,
                       decoration: InputDecoration(
-                        hintText: 'Password',
+                        hintText: 'login_screen.password_hint'.tr(),
                         filled: true,
                         fillColor: Colors.grey.withOpacity(0.24),
                         border: OutlineInputBorder(
@@ -144,10 +146,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: _isObsure,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Enter password';
-                        if (value.length < 6) return 'Password too short';
-                
-                        
+                        if (value == null || value.isEmpty)
+                          return 'login_screen.password_empty_error'.tr();
+                        if (value.length < 6)
+                          return 'login_screen.password_short_error'.tr();
+
                         return null;
                       },
                     ),
@@ -166,9 +169,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           },
                           child: Text(
-                            'Forget your password?',
+                            'login_screen.forget_password'.tr(),
                             style: TextStyle(
-                              color:ThemeManager.primaryYellow,
+                              color: ThemeManager.primaryYellow,
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                             ),
@@ -188,12 +191,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                
+
                         child: loader
-                            ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text(
-                                'Log in',
-                                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'login_screen.login_btn'.tr(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               ),
                       ),
                     ),
@@ -202,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account? ",
+                          "login_screen.no_account".tr(),
                           style: TextStyle(color: Colors.black, fontSize: 15),
                         ),
                         GestureDetector(
@@ -210,18 +219,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                builder: (context) => const CreateAccountScreen(),
+                                builder: (context) =>
+                                    const CreateAccountScreen(),
                               ),
                             );
                           },
                           child: Text(
-                            'Create account',
+                            'login_screen.create_account'.tr(),
                             style: TextStyle(
                               color: ThemeManager.primaryYellow,
                               fontSize: 17,
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w600,
-                              decorationColor:ThemeManager.primaryYellow,
+                              decorationColor: ThemeManager.primaryYellow,
                               decorationThickness: 2,
                             ),
                           ),
