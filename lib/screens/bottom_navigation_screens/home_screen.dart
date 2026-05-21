@@ -361,7 +361,8 @@ class _HomePageState extends State<HomePage> {
                                             color: Colors.green,
                                           ),
                                           title: Text(
-                                            'home_page.mark_resolved'.tr(),
+                                            "post_actions.mark_resolved_title"
+                                                .tr(),
                                           ),
                                         ),
                                       ),
@@ -372,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                                             Icons.edit,
                                             color: Colors.blue,
                                           ),
-                                          title: Text('home_page.edit'.tr()),
+                                          title: Text("home_page.edit".tr()),
                                         ),
                                       ),
                                       PopupMenuItem(
@@ -382,7 +383,9 @@ class _HomePageState extends State<HomePage> {
                                             Icons.delete,
                                             color: Colors.red,
                                           ),
-                                          title: Text('home_page.delete'.tr()),
+                                          title: Text(
+                                            "post_actions.delete_title".tr(),
+                                          ),
                                         ),
                                       ),
                                     ],
