@@ -180,16 +180,16 @@
     }
   },
   "home_page": {
-    "error_msg": "حدث خطأ: ",
-    "no_posts": "لا توجد منشورات متاحة بعد.",
-    "no_title": "بدون عنوان",
-    "no_description": "بدون وصف",
-    "unknown_location": "مكان غير معروف",
-    "unknown_user": "مستخدم غير معروف",
-    "mark_resolved": "تحديد كـ 'تم الحل'",
-    "edit": "تعديل",
-    "delete": "حذف",
-    "see_more": "قراءة المزيد"
+    "error_msg": "Error: ",
+    "no_posts": "No posts available yet.",
+    "no_title": "No Title",
+    "no_description": "No Description",
+    "unknown_location": "Unknown Location",
+    "unknown_user": "Unknown User",
+    "mark_resolved": "Mark as resolved",
+    "edit": "Edit",
+    "delete": "Delete",
+    "see_more": "see more"
   },
   "date_helper": {
     "just_now": "Just now",

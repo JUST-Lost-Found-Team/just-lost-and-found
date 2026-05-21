@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
+import 'package:just_lost_and_found/screens/main_layout_screen.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
@@ -37,17 +39,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Success! Account Created.'),
+            SnackBar(
+              content: Text('create_account.success_msg'.tr()),
               backgroundColor: ThemeManager.successGreen,
             ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainLayoutScreen()),
           );
         }
       } on FirebaseAuthException catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(e.message ?? 'Registration Failed'),
+              content: Text(
+                e.message ?? 'create_account.registration_failed'.tr(),
+              ),
               backgroundColor: ThemeManager.errorRed,
             ),
           );
@@ -55,8 +63,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('An error occurred'),
+            SnackBar(
+              content: Text('create_account.error_default'.tr()),
               backgroundColor: ThemeManager.errorRed,
             ),
           );
@@ -88,16 +96,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     height: 200,
                     fit: BoxFit.cover,
                   ),
-                  const Text(
-                    'Create Account',
+                  Text(
+                    'create_account.title'.tr(),
                     style: TextStyle(
-                      color:ThemeManager.primaryBlue,
+                      color: ThemeManager.primaryBlue,
                       fontWeight: FontWeight.bold,
                       fontSize: 35,
                     ),
                   ),
-                  const Text(
-                    'Join to find your belongings,\nor help return someone else\'s.',
+                  Text(
+                    textAlign: TextAlign.center,
+                    'create_account.subtitle'.tr(),
                     style: TextStyle(
                       color: Color.fromARGB(159, 23, 20, 20),
                       fontSize: 18,
@@ -111,7 +120,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         TextFormField(
                           controller: nameCTRL,
                           decoration: InputDecoration(
-                            hintText: 'Full Name',
+                            hintText: 'create_account.full_name_hint'.tr(),
                             filled: true,
                             fillColor: Colors.grey.withOpacity(0.24),
                             border: OutlineInputBorder(
@@ -122,13 +131,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           keyboardType: TextInputType.name,
                           textCapitalization: TextCapitalization.words,
-                          validator: (value) => (value == null || value.isEmpty) ? "Please Enter Your Name" : null,
+                          validator: (value) => (value == null || value.isEmpty)
+                              ? "create_account.full_name_error".tr()
+                              : null,
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: emailCTRL,
                           decoration: InputDecoration(
-                            hintText: 'Email (@just.edu.jo)',
+                            hintText: 'create_account.email_hint'.tr(),
                             filled: true,
                             fillColor: Colors.grey.withOpacity(0.24),
                             border: OutlineInputBorder(
@@ -139,8 +150,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
-                            if (value == null || value.isEmpty) return 'Enter email';
-                            if (!value.endsWith('just.edu.jo')) return 'Use your JUST university email only';
+                            if (value == null || value.isEmpty)
+                              return 'create_account.email_empty_error'.tr();
+                            if (!value.endsWith('just.edu.jo'))
+                              return 'create_account.email_domain_error'.tr();
                             return null;
                           },
                         ),
@@ -148,7 +161,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         TextFormField(
                           controller: passwordCTRL,
                           decoration: InputDecoration(
-                            hintText: 'Password',
+                            hintText: 'create_account.password_hint'.tr(),
                             filled: true,
                             fillColor: Colors.grey.withOpacity(0.24),
                             border: OutlineInputBorder(
@@ -158,16 +171,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: GestureDetector(
                               onTap: () {
-                                setState(() { _isObsure = !_isObsure; });
+                                setState(() {
+                                  _isObsure = !_isObsure;
+                                });
                               },
-                              child: Icon(_isObsure ? Icons.visibility_off : Icons.visibility),
+                              child: Icon(
+                                _isObsure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
                             ),
                           ),
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: _isObsure,
                           validator: (value) {
-                            if (value == null || value.isEmpty) return 'Enter password';
-                            if (value.length < 6) return 'Password too short';
+                            if (value == null || value.isEmpty)
+                              return 'create_account.password_empty_error'.tr();
+                            if (value.length < 6)
+                              return 'create_account.password_length_error'
+                                  .tr();
                             return null;
                           },
                         ),
@@ -175,7 +197,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         TextFormField(
                           controller: confirmPasswordCTRL,
                           decoration: InputDecoration(
-                            hintText: 'Confirm Password',
+                            hintText: 'create_account.confirm_password_hint'
+                                .tr(),
                             filled: true,
                             fillColor: Colors.grey.withOpacity(0.24),
                             border: OutlineInputBorder(
@@ -185,16 +208,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: GestureDetector(
                               onTap: () {
-                                setState(() { _ObscureConfirm = !_ObscureConfirm; });
+                                setState(() {
+                                  _ObscureConfirm = !_ObscureConfirm;
+                                });
                               },
-                              child: Icon(_ObscureConfirm ? Icons.visibility_off : Icons.visibility),
+                              child: Icon(
+                                _ObscureConfirm
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
                             ),
                           ),
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: _ObscureConfirm,
                           validator: (value) {
-                            if (value == null || value.isEmpty) return 'Please confirm your password';
-                            if (value != passwordCTRL.text) return 'Passwords do not match!';
+                            if (value == null || value.isEmpty)
+                              return 'create_account.confirm_password_empty_error'
+                                  .tr();
+                            if (value != passwordCTRL.text)
+                              return 'create_account.password_match_error'.tr();
                             return null;
                           },
                         ),
@@ -215,10 +247,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                         ),
                         child: loader
-                            ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text(
-                                'Create Account',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'create_account.create_btn'.tr(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               ),
                       ),
                     ),
@@ -227,8 +265,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Already have an account?",
+                      Text(
+                        "create_account.already_have_account".tr(),
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       const SizedBox(width: 5),
@@ -236,12 +274,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
                             (route) => false,
                           );
                         },
                         child: Text(
-                          'log in',
+                          'create_account.log_in'.tr(),
                           style: TextStyle(
                             color: Colors.orange,
                             fontSize: 17,
