@@ -49,7 +49,10 @@
     "Accessories": "Accessories",
     "Keys & Wallets": "Keys & Wallets",
     "Clothing": "Clothing",
-    "Others": "Others"
+    "Others": "Others",
+    "Medical": "Medical",
+    "Engineering": "Engineering",
+    "General": "General"
   },
   "locations": {
     "Medical - PH1": "Medical - PH1",
@@ -297,5 +300,23 @@
     "category_hint": "Select Category...",
     "update_btn": "Update Post",
     "required_field": "Required"
+  },
+  "explore_page": {
+    "search_hint": "Search for items...",
+    "categories_type": "Categories",
+    "location_type": "Location",
+    "browse_by": "Browse by ",
+    "campus_facilities": "Campus facilities",
+    "find_items_by_building": "find items by specific building",
+    "tap_to_change_building": "Tap to change building",
+    "select_location_continue": "Select a location to continue",
+    "choose_campus_facility": "Choose a campus facility above to explore available items in that area",
+    "no_posts": "No posts",
+    "select_location_sheet_title": "Select Location",
+    "general_facilities": "General Facilities",
+    "buildings_format": "{} Buildings",
+    "no_title": "No Title",
+    "no_description": "No Description",
+    "see_more": "see more"
   }
 }
