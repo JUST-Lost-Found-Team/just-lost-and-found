@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
+import '../services/notifications-handler.dart';
 import 'bottom_navigation_screens/home_screen.dart';
 import 'bottom_navigation_screens/chat_list_screen.dart';
 import 'bottom_navigation_screens/explore_screen.dart';
@@ -90,6 +91,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NotificationHandler.setup(context);
     context.locale;
     return Scaffold(
       backgroundColor: Colors.white,
