@@ -243,5 +243,16 @@
     "login_btn": "Log in",
     "no_account": "Don't have an account? ",
     "create_account": "Create account"
+  },
+  "forget_password": {
+    "title": "Forget Password?",
+    "instruction_part1": "Enter your ",
+    "instruction_part2": "JUST email",
+    "instruction_part3": ". and Check your inbox for a password reset link.",
+    "email_hint": "Email",
+    "email_empty_error": "Enter email",
+    "email_invalid_error": "Use your JUST university email only",
+    "success_msg": "Reset link sent! Check your inbox.",
+    "send_btn": "Send Reset Link"
   }
 }
