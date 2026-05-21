@@ -375,7 +375,11 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           ),
 
                           const SizedBox(height: 24),
-
+                          _buildResolutionPrompt(
+                            context,
+                            widget.post,
+                            widget.postId,
+                          ),
                           SizedBox(
                             width: double.infinity,
                             child: Builder(
@@ -582,6 +586,80 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 },
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResolutionPrompt(
+    BuildContext context,
+    Map<String, dynamic> post,
+    String postId,
+  ) {
+    final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    final bool isOwner = currentUserId == post['userId'];
+    final bool isResolved = post['isResolved'] ?? false;
+    final String status = post['status'] ?? 'Lost';
+
+    final createdAt =
+        (post['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now();
+    final difference = DateTime.now().difference(createdAt).inDays;
+
+    if (!isOwner || isResolved || difference < 5) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: ThemeManager.primaryYellow.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: ThemeManager.primaryYellow.withOpacity(0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              status == 'Lost'
+                  ? "post_details.did_you_find_prompt".tr()
+                  : "post_details.was_returned_prompt".tr(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: ThemeManager.primaryBlue,
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: () async {
+              PostActionsHelper.markAsResolved(
+                context,
+                postId,
+                onSuccess: () => Navigator.pop(context),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ThemeManager.primaryYellow,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            ),
+            child: Text(
+              "post_details.resolve_btn".tr(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
     );

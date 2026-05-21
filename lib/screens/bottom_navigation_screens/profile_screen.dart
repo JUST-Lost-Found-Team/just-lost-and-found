@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
@@ -370,6 +371,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             onTap: () {
                               context.setLocale(const Locale('en'));
+                              OneSignal.User.setLanguage('en');
 
                               Navigator.pop(context);
                             },
@@ -393,6 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : null,
                             onTap: () {
                               context.setLocale(const Locale('ar'));
+                              OneSignal.User.setLanguage('ar');
 
                               Navigator.pop(context);
                             },
@@ -480,6 +483,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           TextButton(
             onPressed: () async {
+              OneSignal.logout();
               await FirebaseAuth.instance.signOut();
               Navigator.pushAndRemoveUntil(
                 context,

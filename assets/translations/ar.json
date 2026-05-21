@@ -220,7 +220,11 @@
     "loading": "جاري التحميل...",
     "user": "مستخدم",
     "location_title": "المكان",
-    "chat_with": "تحدث مع {}"
+    "chat_with": "تحدث مع {}",
+    "did_you_find_prompt": "هل وجدت غرضك؟",
+    "was_returned_prompt": "هل تم إعادة هذا الغرض لصاحبه؟",
+    "resolve_btn": "تم الحل",
+    "snack_resolved_success": "تم تحديد المنشور كـ 'محلول' بنجاح!"
   },
   "profile_screen": {
     "student_name": "اسم الطالب",
@@ -332,5 +336,12 @@
     "delete_btn": "حذف",
     "snack_resolved": "تم تحديد المنشور كـ 'تم الحل'!",
     "snack_deleted": "تم حذف المنشور بنجاح"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات حتى الآن",
+    "lost_prompt": "مر 5 أيام على فقدانك لـ '{}'. هل وجدته؟",
+    "found_prompt": "مر 5 أيام على عثورك على '{}'. هل تم إعادته لصاحبه؟",
+    "just_now": "الآن"
   }
 }
