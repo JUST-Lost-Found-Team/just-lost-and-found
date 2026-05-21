@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
@@ -16,19 +17,19 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool loader = false;
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBFF),
       appBar: AppBar(
         backgroundColor: const Color(0xFFFDFBFF),
         leading: IconButton(
-          icon:const Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new,
-            color:ThemeManager.primaryBlue,
-            size:20,
-
+            color: ThemeManager.primaryBlue,
+            size: 20,
           ),
-          onPressed:(){Navigator.pop(context);} 
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SafeArea(
@@ -44,8 +45,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   height: 200,
                   fit: BoxFit.cover,
                 ),
-                const Text(
-                  'Forget Password?',
+                Text(
+                  'forget_password.title'.tr(),
                   style: TextStyle(
                     color: ThemeManager.primaryBlue,
                     fontWeight: FontWeight.bold,
@@ -58,16 +59,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        const TextSpan(text: 'Enter your verified'),
                         TextSpan(
-                          text: 'JUST email',
+                          text: 'forget_password.instruction_part1'.tr(),
+                        ),
+                        TextSpan(
+                          text: 'forget_password.instruction_part2'.tr(),
                           style: TextStyle(
                             color: ThemeManager.primaryYellow,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const TextSpan(
-                          text: '. Check your inbox for a password reset link.',
+                        TextSpan(
+                          text: 'forget_password.instruction_part3'.tr(),
                         ),
                       ],
                     ),
@@ -83,7 +86,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 TextFormField(
                   controller: emailCTRL,
                   decoration: InputDecoration(
-                    hintText: 'Email',
+                    hintText: 'forget_password.email_hint'.tr(),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.24),
                     border: OutlineInputBorder(
@@ -94,10 +97,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Enter email';
+                    if (value == null || value.isEmpty)
+                      return 'forget_password.email_empty_error'.tr();
 
                     if (!value.endsWith('just.edu.jo')) {
-                      return 'Use your JUST university email only';
+                      return 'forget_password.email_invalid_error'.tr();
                     }
                     return null;
                   },
@@ -126,16 +130,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Row(
+                                  content: Row(
                                     children: [
                                       Icon(
                                         Icons.check_circle,
                                         color: Colors.white,
                                       ),
                                       SizedBox(width: 10),
-                                      Text(
-                                        'Reset link sent! Check your inbox.',
-                                      ),
+                                      Text('forget_password.success_msg'.tr()),
                                     ],
                                   ),
                                   backgroundColor: ThemeManager.successGreen,
@@ -154,8 +156,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text(
-                            'Send Reset Link',
+                          child: Text(
+                            'forget_password.send_btn'.tr(),
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),

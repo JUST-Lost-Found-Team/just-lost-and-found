@@ -243,5 +243,16 @@
     "login_btn": "تسجيل الدخول",
     "no_account": "ليس لديك حساب؟ ",
     "create_account": "إنشاء حساب"
+  },
+  "forget_password": {
+    "title": "نسيت كلمة المرور؟",
+    "instruction_part1": "أدخل ",
+    "instruction_part2": "بريدك الجامعي (JUST)",
+    "instruction_part3": ". و تفقد صندوق الوارد للحصول على رابط إعادة تعيين كلمة السر.",
+    "email_hint": "البريد الإلكتروني",
+    "email_empty_error": "أدخل البريد الإلكتروني",
+    "email_invalid_error": "استخدم بريدك الجامعي (JUST) فقط",
+    "success_msg": "تم إرسال الرابط! تفقد صندوق الوارد.",
+    "send_btn": "إرسال الرابط"
   }
 }
