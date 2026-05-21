@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/post_details.dart';
 import 'package:just_lost_and_found/services/chat_service.dart';
+import 'package:just_lost_and_found/services/notifications-handler.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -33,6 +34,14 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _attachedPost = widget.postData;
+    NotificationHandler.currentActiveChatId = widget.receiverId;
+  }
+
+  @override
+  void dispose() {
+    NotificationHandler.currentActiveChatId = null;
+    _messageController.dispose();
+    super.dispose();
   }
 
   void sendMessage() async {
