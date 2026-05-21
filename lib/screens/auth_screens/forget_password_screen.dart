@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/Screens/auth_screens/login_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/services/Auth-service_screen.dart';
 

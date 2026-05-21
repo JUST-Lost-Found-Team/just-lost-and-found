@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,7 +22,7 @@ class ChatListScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, streamSnapshot) {
           if (streamSnapshot.hasError) {
-            return const Center(child: Text("Error fetching chats"));
+            return Center(child: Text("chat_list.error_fetching".tr()));
           }
           if (streamSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -40,8 +41,8 @@ class ChatListScreen extends StatelessWidget {
                     color: Colors.grey[400],
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "No messages yet.",
+                  Text(
+                    "chat_list.no_messages".tr(),
                     style: TextStyle(color: Colors.grey, fontSize: 18),
                   ),
                 ],
@@ -124,7 +125,8 @@ class ChatListScreen extends StatelessWidget {
                   final userData = usersData[otherUserId];
                   if (userData == null) return const SizedBox.shrink();
 
-                  final String otherUserName = userData['name'] ?? "JUST User";
+                  final String otherUserName =
+                      userData['name'] ?? "chat_list.default_user".tr();
                   final String otherUserImage = userData['profileImage'] ?? "";
 
                   final String lastSenderId =
@@ -160,7 +162,7 @@ class ChatListScreen extends StatelessWidget {
                     if (differenceInDays == 0) {
                       timeString = timeOnly;
                     } else if (differenceInDays == 1) {
-                      timeString = "Yesterday";
+                      timeString = "chat_list.yesterday".tr();
                     } else {
                       timeString =
                           "${msgDate.day}/${msgDate.month}/${msgDate.year}";
@@ -220,7 +222,7 @@ class ChatListScreen extends StatelessWidget {
                         builder: (context) {
                           String prefix = "";
                           if (lastSenderId == currentUserId) {
-                            prefix = "You: ";
+                            prefix = "chat_list.you_prefix".tr();
                           } else if (lastSenderId.isNotEmpty) {
                             final firstName = otherUserName.split(" ")[0];
                             prefix = "$firstName: ";
