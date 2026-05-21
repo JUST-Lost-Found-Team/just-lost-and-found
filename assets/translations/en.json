@@ -254,5 +254,17 @@
     "email_invalid_error": "Use your JUST university email only",
     "success_msg": "Reset link sent! Check your inbox.",
     "send_btn": "Send Reset Link"
+  },
+  "auth_services": {
+    "error_prefix": "Error: ",
+    "signin_success": "Sign In Successful!",
+    "reset_success": "Success: Reset link sent to your email"
+  },
+  "chat_list": {
+    "error_fetching": "Error fetching chats",
+    "no_messages": "No messages yet.",
+    "default_user": "JUST User",
+    "yesterday": "Yesterday",
+    "you_prefix": "You: "
   }
 }

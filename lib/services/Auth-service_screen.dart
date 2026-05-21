@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class AuthServices {
   static Future<void> SignUpWithEmail(
@@ -40,7 +42,10 @@ class AuthServices {
       );
       return true;
     } catch (e) {
-      showSnackBar('Error:${e.toString()}', context);
+      showSnackBar(
+        'auth_services.error_prefix:'.tr() + '${e.toString()}',
+        context,
+      );
       return false;
     }
   }
@@ -52,7 +57,7 @@ class AuthServices {
   ) async {
     bool success = await SignInWithEmail(email, password, context);
     if (success) {
-      showSnackBar("Sign In Successful!", context);
+      showSnackBar("auth_services.signin_success".tr(), context);
     }
   }
 
@@ -60,7 +65,7 @@ class AuthServices {
   static Future<String> resetPassword(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
-      return 'Success : Reset link sent to your email';
+      return 'auth_services.reset_success'.tr();
     } catch (e) {
       return 'Error: ${e.toString()}';
     }
@@ -79,7 +84,7 @@ class AuthServices {
 void showSnackBar(String message, BuildContext context) {
   final snackBar = SnackBar(
     content: Text(message, style: TextStyle(color: Colors.white)),
-    backgroundColor: Colors.orange,
+    backgroundColor: ThemeManager.primaryYellow,
     behavior: SnackBarBehavior.floating,
     duration: const Duration(seconds: 3),
   );

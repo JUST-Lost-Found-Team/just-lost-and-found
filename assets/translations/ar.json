@@ -254,5 +254,17 @@
     "email_invalid_error": "استخدم بريدك الجامعي (JUST) فقط",
     "success_msg": "تم إرسال الرابط! تفقد صندوق الوارد.",
     "send_btn": "إرسال الرابط"
+  },
+  "auth_services": {
+    "error_prefix": "حدث خطأ: ",
+    "signin_success": "تم تسجيل الدخول بنجاح!",
+    "reset_success": "نجاح: تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني"
+  },
+  "chat_list": {
+    "error_fetching": "حدث خطأ أثناء جلب المحادثات",
+    "no_messages": "لا توجد رسائل حتى الآن.",
+    "default_user": "مستخدم",
+    "yesterday": "أمس",
+    "you_prefix": "أنت: "
   }
 }
