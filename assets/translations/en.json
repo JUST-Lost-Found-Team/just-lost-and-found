@@ -266,5 +266,16 @@
     "default_user": "JUST User",
     "yesterday": "Yesterday",
     "you_prefix": "You: "
+  },
+  "chat_screen": {
+    "error_fetching": "Error fetching messages",
+    "say_hi": "Say hi! 👋",
+    "yesterday_time": "Yesterday, {}",
+    "snack_post_deleted": "This post has been deleted and is no longer available.",
+    "snack_post_resolved": "This item has already been resolved.",
+    "post_deleted_title": "Post Deleted",
+    "default_item_title": "Item",
+    "resolved_status": "Resolved",
+    "type_message_hint": "Type a message..."
   }
 }

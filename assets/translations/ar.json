@@ -266,5 +266,16 @@
     "default_user": "مستخدم",
     "yesterday": "أمس",
     "you_prefix": "أنت: "
+  },
+  "chat_screen": {
+    "error_fetching": "حدث خطأ أثناء جلب الرسائل",
+    "say_hi": "قل مرحباً! 👋",
+    "yesterday_time": "أمس، {}",
+    "snack_post_deleted": "تم حذف هذا المنشور ولم يعد متاحاً.",
+    "snack_post_resolved": "تم حل هذا المنشور مسبقاً.",
+    "post_deleted_title": "منشور محذوف",
+    "default_item_title": "غرض",
+    "resolved_status": "تم الحل",
+    "type_message_hint": "اكتب رسالة..."
   }
 }

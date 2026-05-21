@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/screens/bottom_navigation_screens/post_details.dart';
@@ -91,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text("Error fetching messages"));
+          return Center(child: Text("chat_screen.error_fetching".tr()));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -102,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
             child: Text(
-              "Say hi! 👋",
+              "chat_screen.say_hi".tr(),
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
           );
@@ -170,7 +171,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if (differenceInDays == 0) {
         timeString = timeOnly;
       } else if (differenceInDays == 1) {
-        timeString = "Yesterday, $timeOnly";
+        timeString = "chat_screen.yesterday_time".tr(args: [timeOnly]);
       } else {
         timeString =
             "${msgDate.day}/${msgDate.month}/${msgDate.year}, $timeOnly";
@@ -222,9 +223,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     onTap: () {
                       if (isDeleted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text(
-                              "This post has been deleted and is no longer available.",
+                              "chat_screen.snack_post_deleted".tr(),
                             ),
                             backgroundColor: Colors.red,
                           ),
@@ -233,9 +234,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       }
                       if (isResolved) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text(
-                              "This item has already been resolved.",
+                              "chat_screen.snack_post_resolved".tr(),
                             ),
                             backgroundColor: Colors.orange,
                           ),
@@ -307,8 +308,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             children: [
                               Text(
                                 isDeleted
-                                    ? "Post Deleted"
-                                    : (livePostData['title'] ?? 'Item'),
+                                    ? "chat_screen.post_deleted_title".tr()
+                                    : (livePostData['title'] ??
+                                          'chat_screen.default_item_title'
+                                              .tr()),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: isDeleted
@@ -339,7 +342,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   child: Text(
                                     isResolved
-                                        ? "Resolved"
+                                        ? "chat_screen.resolved_status".tr()
                                         : (livePostData['status'] ?? ''),
                                     style: TextStyle(
                                       color: isResolved
@@ -432,7 +435,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
                   fillColor: Colors.grey[300],
-                  hintText: "Type a message...",
+                  hintText: "chat_screen.type_message_hint".tr(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                     borderSide: BorderSide.none,
