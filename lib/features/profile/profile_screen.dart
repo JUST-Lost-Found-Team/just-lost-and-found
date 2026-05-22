@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:just_lost_and_found/screens/auth_screens/login_screen.dart';
-import 'package:just_lost_and_found/screens/bottom_navigation_screens/my_posts_screen.dart';
+import 'package:just_lost_and_found/features/auth/login_screen.dart';
+import 'package:just_lost_and_found/features/posts/my_posts_screen.dart';
 import 'package:just_lost_and_found/services/cloudinary_service.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 

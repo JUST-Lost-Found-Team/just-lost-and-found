@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
-import 'package:just_lost_and_found/screens/bottom_navigation_screens/chat_screen.dart';
+import 'package:just_lost_and_found/features/chat/chat_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:just_lost_and_found/helpers/date_helper.dart';
 

@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:just_lost_and_found/Screens/auth_screens/create_account_screen.dart';
-import 'package:just_lost_and_found/screens/main_layout_screen.dart';
+import 'package:just_lost_and_found/features/auth/create_account_screen.dart';
+import 'package:just_lost_and_found/layout/main_layout_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'on_boarding_screen.dart';
 
