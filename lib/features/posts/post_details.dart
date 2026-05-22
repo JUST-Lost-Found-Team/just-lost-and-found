@@ -37,6 +37,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final data = widget.post;
     final List<dynamic> images = data['images'] ?? [];
     final String title = data['title'] ?? "post_details.no_title".tr();
@@ -56,7 +57,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     final timeAgo = DateHelper.getTimeAgo(data['createdAt']);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.brightness == Brightness.dark
+          ? theme.scaffoldBackgroundColor
+          : Colors.white,
       body: Stack(
         children: [
           CustomScrollView(
@@ -65,7 +68,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 expandedHeight: images.isNotEmpty ? 280.0 : null,
                 pinned: true,
                 automaticallyImplyLeading: false,
-                backgroundColor: ThemeManager.primaryBlue,
+                backgroundColor: theme.appBarTheme.backgroundColor,
                 elevation: 0,
 
                 leading: Container(
@@ -136,9 +139,11 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   children: [
                     if (images.isEmpty)
                       Container(
+                        decoration: BoxDecoration(
+                          color: theme.appBarTheme.backgroundColor,
+                        ),
                         height: 70,
                         width: double.infinity,
-                        color: ThemeManager.primaryBlue,
                       ),
 
                     Padding(
@@ -167,15 +172,21 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                     ? const EdgeInsets.all(16)
                                     : EdgeInsets.zero,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: theme.brightness == Brightness.dark
+                                      ? theme.scaffoldBackgroundColor
+                                      : Colors.white,
                                   borderRadius: BorderRadius.circular(16),
 
                                   boxShadow: images.isEmpty
                                       ? [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.08,
-                                            ),
+                                            color:
+                                                theme.brightness ==
+                                                    Brightness.dark
+                                                ? Colors.grey.withOpacity(0.08)
+                                                : Colors.black.withOpacity(
+                                                    0.08,
+                                                  ),
                                             blurRadius: 15,
                                             offset: const Offset(0, 5),
                                           ),
@@ -206,9 +217,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                           children: [
                                             Text(
                                               sName,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: ThemeManager.primaryBlue,
+                                                color: theme.primaryColor,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -262,12 +273,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                 ?.uid ==
                                             widget.post['userId'])
                                           PopupMenuButton<String>(
-                                            color: Colors.white,
+                                            color: theme.popupMenuTheme.color,
                                             padding: EdgeInsets.zero,
                                             constraints: const BoxConstraints(),
                                             child: Icon(
                                               Icons.more_horiz_rounded,
-                                              color: Colors.grey[700],
+                                              color: Colors.grey,
                                               size: 28,
                                             ),
                                             onSelected: (value) {
@@ -359,7 +370,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                                 : "main_layout.filter.lost"
                                                       .tr()
                                                       .toUpperCase(),
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
@@ -421,9 +432,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                   textDirection: isArabic
                                       ? TextDirection.rtl
                                       : TextDirection.ltr,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.black87,
+                                    color: theme.textTheme.bodyMedium!.color,
                                     height: 1.4,
                                   ),
                                 );
@@ -439,7 +450,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                 children: [
                                   Icon(
                                     Icons.location_pin,
-                                    color: ThemeManager.primaryBlue,
+                                    color: theme.primaryColor,
                                     size: 20,
                                   ),
                                   const SizedBox(width: 8),
@@ -457,7 +468,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                               Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: theme.cardColor,
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
@@ -466,9 +477,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                       offset: const Offset(0, 5),
                                     ),
                                   ],
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
+                                  border: Border.all(color: theme.primaryColor),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -487,8 +496,11 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                                           child: Text(
                                             "locations.$loc".tr(),
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              color: Colors.black87,
+                                            style: TextStyle(
+                                              color: theme
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .color,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 13,
                                             ),
@@ -568,7 +580,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                       },
 
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF326182),
+                        backgroundColor: ThemeManager.primaryBlue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -596,6 +608,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
     Map<String, dynamic> post,
     String postId,
   ) {
+    final theme = Theme.of(context);
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
     final bool isOwner = currentUserId == post['userId'];
     final bool isResolved = post['isResolved'] ?? false;
@@ -627,9 +640,9 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               status == 'Lost'
                   ? "post_details.did_you_find_prompt".tr()
                   : "post_details.was_returned_prompt".tr(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: ThemeManager.primaryBlue,
+                color: theme.primaryColor,
                 fontSize: 14,
                 height: 1.4,
               ),

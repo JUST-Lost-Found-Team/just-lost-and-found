@@ -104,7 +104,7 @@ class MyPostsScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -204,10 +204,10 @@ class MyPostsScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           data['title'] ?? "my_posts.untitled".tr(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: ThemeManager.primaryBlue,
+                            color: theme.primaryColor,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -272,7 +272,10 @@ class MyPostsScreen extends StatelessWidget {
                   ),
                   Text(
                     data['description'] ?? "my_posts.no_description".tr(),
-                    style: TextStyle(color: Colors.grey[700], fontSize: 10),
+                    style: TextStyle(
+                      color: theme.textTheme.titleMedium!.color,
+                      fontSize: 10,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

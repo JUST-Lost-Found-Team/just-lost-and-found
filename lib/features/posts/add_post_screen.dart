@@ -29,7 +29,7 @@ class _AddPostState extends State<AddPost> {
       GlobalKey<FormFieldState>();
   List<String> _selectedLocations = [];
 
-  final Color _fillColor = Colors.grey.shade200;
+  //final Color _fillColor = Colors.grey.shade200;
 
   Future<void> _pickImagesFromGallery() async {
     final List<XFile> images = await _picker.pickMultiImage(
@@ -87,6 +87,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   void _showImageSourceActionSheet(BuildContext context) {
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -97,10 +98,7 @@ class _AddPostState extends State<AddPost> {
           child: Wrap(
             children: <Widget>[
               ListTile(
-                leading: const Icon(
-                  Icons.photo_library,
-                  color: ThemeManager.primaryBlue,
-                ),
+                leading: Icon(Icons.photo_library, color: theme.primaryColor),
                 title: Text('add_post.choose_from_gallery'.tr()),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -108,10 +106,7 @@ class _AddPostState extends State<AddPost> {
                 },
               ),
               ListTile(
-                leading: const Icon(
-                  Icons.photo_camera,
-                  color: ThemeManager.primaryBlue,
-                ),
+                leading: Icon(Icons.photo_camera, color: theme.primaryColor),
                 title: Text('add_post.take_a_photo'.tr()),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -203,11 +198,10 @@ class _AddPostState extends State<AddPost> {
   @override
   Widget build(BuildContext context) {
     int maxLocations = _isLost ? 3 : 1;
-
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           "add_post.app_bar_title".tr(),
@@ -242,7 +236,7 @@ class _AddPostState extends State<AddPost> {
                                 : Colors.white,
                             border: Border.all(
                               color: _isLost
-                                  ? ThemeManager.primaryBlue
+                                  ? theme.primaryColor
                                   : Colors.grey.shade300,
                               width: 2,
                             ),
@@ -283,7 +277,7 @@ class _AddPostState extends State<AddPost> {
                                 : Colors.white,
                             border: Border.all(
                               color: !_isLost
-                                  ? ThemeManager.primaryBlue
+                                  ? theme.primaryColor
                                   : Colors.grey.shade300,
                               width: 2,
                             ),
@@ -377,7 +371,7 @@ class _AddPostState extends State<AddPost> {
                             ),
                           ),
                           // backgroundColor: Colors.grey.shade400,
-                          backgroundColor: Colors.white,
+                          backgroundColor: theme.popupMenuTheme.color,
 
                           deleteIconColor: ThemeManager.errorRed,
                           onDeleted: () {
@@ -412,7 +406,7 @@ class _AddPostState extends State<AddPost> {
                             fontSize: 16,
                             color: isSelected
                                 ? Colors.grey.shade400
-                                : Colors.black87,
+                                : theme.textTheme.titleMedium!.color,
                           ),
                         ),
                       );
@@ -443,9 +437,9 @@ class _AddPostState extends State<AddPost> {
                           value: item,
                           child: Text(
                             "categories.$item".tr(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black87,
+                              color: theme.textTheme.titleMedium!.color,
                             ),
                           ),
                         ),
@@ -510,6 +504,7 @@ class _AddPostState extends State<AddPost> {
     required String hint,
     int maxLines = 1,
   }) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
@@ -520,7 +515,7 @@ class _AddPostState extends State<AddPost> {
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
         filled: true,
-        fillColor: _fillColor,
+        fillColor: theme.cardColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -541,11 +536,12 @@ class _AddPostState extends State<AddPost> {
     required Function(String?) onChanged,
     String? Function(String?)? validator,
   }) {
+    final theme = Theme.of(context);
     return DropdownButtonFormField<String>(
       key: key,
       isExpanded: true,
       value: value,
-      dropdownColor: Colors.white,
+      dropdownColor: theme.popupMenuTheme.color,
       menuMaxHeight: 400,
       borderRadius: BorderRadius.circular(15),
       items: items,
@@ -555,7 +551,7 @@ class _AddPostState extends State<AddPost> {
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
         filled: true,
-        fillColor: _fillColor,
+        fillColor: theme.cardColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -574,11 +570,12 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildImagePickerBox({required double height, required double width}) {
+    final theme = Theme.of(context);
     return Container(
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: _fillColor,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -596,6 +593,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildImagePreviewList() {
+    final theme = Theme.of(context);
     return SizedBox(
       height: 120,
       child: ListView.builder(
@@ -611,7 +609,7 @@ class _AddPostState extends State<AddPost> {
                 width: 100,
                 margin: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
-                  color: _fillColor,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Center(

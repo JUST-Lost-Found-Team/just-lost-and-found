@@ -29,7 +29,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
   String? _selectedCategory;
   List<String> _selectedLocations = [];
 
-  final Color _fillColor = Colors.grey.shade200;
+  // final Color _fillColor = Colors.grey.shade200;
 
   @override
   void initState() {
@@ -112,16 +112,17 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     int maxLocations = _isLost ? 3 : 1;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           "edit_post.title".tr(),
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -199,10 +200,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
-                              color: Color(0xFF333333),
+                              //color: Color(0xFF333333),
                             ),
                           ),
-                          backgroundColor: Colors.white,
+                          backgroundColor: theme.popupMenuTheme.color,
                           deleteIconColor: Colors.red.shade700,
                           deleteIcon: const Icon(Icons.close, size: 18),
                           shape: RoundedRectangleBorder(
@@ -300,46 +301,52 @@ class _EditPostScreenState extends State<EditPostScreen> {
     ),
   );
 
-  Widget _buildToggleButton(String text, bool isActive) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 14),
-    decoration: BoxDecoration(
-      color: isActive ? ThemeManager.primaryBlue : Colors.white,
-      border: Border.all(
-        color: isActive ? ThemeManager.primaryBlue : Colors.grey.shade300,
-        width: 2,
+  Widget _buildToggleButton(String text, bool isActive) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: isActive ? ThemeManager.primaryBlue : Colors.white,
+        border: Border.all(
+          color: isActive ? theme.primaryColor : Colors.grey.shade300,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Center(
-      child: Text(
-        text,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: isActive ? Colors.white : Colors.grey.shade600,
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: isActive ? Colors.white : Colors.grey.shade600,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
     int maxLines = 1,
-  }) => TextFormField(
-    controller: controller,
-    maxLines: maxLines,
-    validator: (v) => v!.isEmpty ? "edit_post.required_field".tr() : null,
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: _fillColor,
-      hintText: hint,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
+  }) {
+    final theme = Theme.of(context);
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      validator: (v) => v!.isEmpty ? "edit_post.required_field".tr() : null,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: theme.cardColor,
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   // Widget _buildDropdown({
   //   Key?key,
@@ -365,20 +372,25 @@ class _EditPostScreenState extends State<EditPostScreen> {
     required List<DropdownMenuItem<String>> items,
     required ValueChanged<String?> onChanged,
   }) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: _fillColor,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          dropdownColor: theme.popupMenuTheme.color,
           key: key,
           value: value,
           hint: Text(
             hint,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            style: TextStyle(
+              color: theme.textTheme.titleMedium!.color,
+              fontSize: 14,
+            ),
           ),
           isExpanded: true,
           menuMaxHeight: 300,
