@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/screens/bottom_navigation_screens/post_details.dart';
+import 'package:just_lost_and_found/features/posts/post_details.dart';
 import 'package:just_lost_and_found/services/chat_service.dart';
 import 'package:just_lost_and_found/services/notifications-handler.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';

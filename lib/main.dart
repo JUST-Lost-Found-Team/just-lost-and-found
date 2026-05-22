@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:just_lost_and_found/screens/onboarding_screens/splash_screen.dart';
+import 'package:just_lost_and_found/features/onboarding/splash_screen.dart';
 import 'package:just_lost_and_found/services/notifications-handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';

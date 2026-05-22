@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:just_lost_and_found/screens/bottom_navigation_screens/notification_screen.dart';
+import 'package:just_lost_and_found/features/notifications/notification_screen.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import '../services/notifications-handler.dart';
-import 'bottom_navigation_screens/home_screen.dart';
-import 'bottom_navigation_screens/chat_list_screen.dart';
-import 'bottom_navigation_screens/explore_screen.dart';
-import 'bottom_navigation_screens/profile_screen.dart';
-import 'bottom_navigation_screens/add_post_screen.dart';
+import '../features/posts/home_screen.dart';
+import '../features/chat/chat_list_screen.dart';
+import '../features/posts/explore_screen.dart';
+import '../features/profile/profile_screen.dart';
+import '../features/posts/add_post_screen.dart';
 
 class MainLayoutScreen extends StatefulWidget {
   const MainLayoutScreen({Key? key}) : super(key: key);

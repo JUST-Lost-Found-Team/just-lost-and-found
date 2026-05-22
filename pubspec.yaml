@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.3.1
   easy_localization: ^3.0.8
   onesignal_flutter: ^5.5.4
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

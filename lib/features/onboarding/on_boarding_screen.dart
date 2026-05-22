@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:just_lost_and_found/screens/auth_screens/create_account_screen.dart';
+import 'package:just_lost_and_found/features/auth/create_account_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
