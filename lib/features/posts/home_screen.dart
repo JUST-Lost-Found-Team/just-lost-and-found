@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     postsQuery = postsQuery.orderBy("createdAt", descending: true);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFD5D5D5),
+      //backgroundColor: const Color(0xFFD5D5D5),
       body: Column(
         children: [
           Expanded(
@@ -135,6 +135,7 @@ class _HomePageState extends State<HomePage> {
     required List<dynamic> images,
     required String? userId,
   }) {
+    final theme = Theme.of(context);
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     if (userId != null && !_userFuturesCache.containsKey(userId)) {
@@ -186,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         margin: const EdgeInsets.only(bottom: 16),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Padding(
@@ -265,10 +266,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               postUserName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: ThemeManager.primaryBlue,
+                                color: theme.primaryColor,
+                                //     color: ThemeManager.primaryBlue,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -279,14 +281,14 @@ class _HomePageState extends State<HomePage> {
                                 Icon(
                                   Icons.location_on_outlined,
                                   size: 12,
-                                  color: Colors.grey[700],
+                                  color: Colors.grey,
                                 ),
                                 Expanded(
                                   child: Text(
                                     displayLocation,
                                     style: TextStyle(
                                       fontSize: 9,
-                                      color: Colors.grey[600],
+                                      color: Colors.grey,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -325,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                   height: 22,
 
                                   child: PopupMenuButton<String>(
-                                    color: Colors.grey[100],
+                                    color: theme.popupMenuTheme.color,
 
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
@@ -438,11 +440,7 @@ class _HomePageState extends State<HomePage> {
                       textDirection: isArabic
                           ? TextDirection.rtl
                           : TextDirection.ltr,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: theme.textTheme.titleMedium,
                     );
                   },
                 ),
@@ -463,11 +461,7 @@ class _HomePageState extends State<HomePage> {
                           ? TextDirection.rtl
                           : TextDirection.ltr,
                       text: TextSpan(
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          height: 1.4,
-                        ),
+                        style: theme.textTheme.bodyMedium,
                         children: [
                           TextSpan(
                             text: description.length > 80
@@ -477,8 +471,8 @@ class _HomePageState extends State<HomePage> {
                           if (description.length > 80)
                             TextSpan(
                               text: "home_page.see_more".tr(),
-                              style: const TextStyle(
-                                color: ThemeManager.primaryBlue,
+                              style: TextStyle(
+                                color: theme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

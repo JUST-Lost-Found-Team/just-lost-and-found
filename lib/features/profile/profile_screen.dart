@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:just_lost_and_found/helpers/theme_provider.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import 'package:just_lost_and_found/features/auth/login_screen.dart';
 import 'package:just_lost_and_found/features/posts/my_posts_screen.dart';
 import 'package:just_lost_and_found/services/cloudinary_service.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -112,12 +114,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final theme = Theme.of(context);
     final String userName =
         user?.displayName ?? "profile_screen.student_name".tr();
     final String userEmail = user?.email ?? "email@just.edu.jo";
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -132,34 +135,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(
                           height: 180,
                           width: double.infinity,
-                          color: ThemeManager.primaryBlue,
+                          color: theme.brightness == Brightness.dark
+                              ? ThemeManager.darkCard
+                              : ThemeManager.primaryBlue,
                           alignment: Alignment.topCenter,
                           padding: const EdgeInsets.only(top: 50),
-                          // child: const Text('Profile',
-                          //     style: TextStyle(
-                          //         color: Colors.white,
-                          //         fontSize: 22,
-                          //         fontWeight: FontWeight.bold)),
                         ),
 
                         Expanded(
                           child: Container(
+                            color: theme.scaffoldBackgroundColor,
                             width: double.infinity,
-                            color: Colors.white,
                             child: Column(
                               children: [
                                 const SizedBox(height: 95),
                                 Text(
                                   userName,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: ThemeManager.primaryBlue,
+                                    color: theme.primaryColor,
                                   ),
                                 ),
                                 Text(
                                   userEmail,
-                                  style: const TextStyle(color: Colors.grey),
+                                  // style: const TextStyle(col),
                                 ),
 
                                 const SizedBox(height: 30),
@@ -167,6 +167,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   "profile_screen.my_posts".tr(),
                                 ),
                                 _buildMenuItem(
+                                  context,
+                                  themeProvider,
                                   Icons.post_add,
                                   "profile_screen.view_all".tr(),
                                   () {
@@ -184,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 _buildSectionHeader(
                                   "profile_screen.settings".tr(),
                                 ),
-                                _buildSettingsBox(),
+                                _buildSettingsBox(context, themeProvider),
 
                                 const Spacer(),
                                 const SizedBox(height: 20),
@@ -282,14 +284,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSectionHeader(String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 30, bottom: 8),
       child: Align(
         alignment: AlignmentDirectional.centerStart,
         child: Text(
           title,
-          style: const TextStyle(
-            color: ThemeManager.primaryBlue,
+          style: TextStyle(
+            color: theme.primaryColor,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -298,23 +301,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildMenuItem(
+    BuildContext context,
+    ThemeProvider themeProvider,
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(30),
         ),
         child: ListTile(
           title: Text(
             title,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
               fontWeight: FontWeight.w500,
+              color: theme.textTheme.bodyLarge?.color,
             ),
           ),
-          leading: Icon(icon, color: Colors.black),
+          leading: Icon(icon),
           trailing: Icon(
             Icons.arrow_forward_ios,
             color: ThemeManager.primaryYellow,
@@ -326,24 +336,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildSettingsBox() {
+  Widget _buildSettingsBox(BuildContext context, ThemeProvider themeProvider) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: theme.cardColor,
+
           borderRadius: BorderRadius.circular(30),
         ),
         child: Column(
           children: [
             _buildListTile(
               context,
+              themeProvider,
               "profile_screen.language".tr(),
               Icons.language,
               () {
                 showModalBottomSheet(
                   context: context,
-                  backgroundColor: Theme.of(context).cardColor,
+                  backgroundColor: theme.cardColor,
+
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(20),
@@ -365,9 +379,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 20),
                           ListTile(
-                            title: const Text(
+                            title: Text(
                               "English",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: theme.textTheme.bodyLarge?.color,
+                              ),
                             ),
                             onTap: () {
                               context.setLocale(const Locale('en'));
@@ -383,9 +400,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : null,
                           ),
                           ListTile(
-                            title: const Text(
+                            title: Text(
                               "العربية",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: theme.textTheme.bodyLarge?.color,
+                              ),
                             ),
                             trailing: context.locale.languageCode == 'ar'
                                 ? const Icon(
@@ -410,20 +430,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const Divider(height: 0, thickness: 0.5, endIndent: 20, indent: 20),
             ListTile(
-              title: Text("profile_screen.light_mode".tr()),
-              leading: const Icon(
-                Icons.wb_sunny_outlined,
-                color: ThemeManager.primaryYellow,
+              title: themeProvider.isDark
+                  ? Text("profile_screen.dark_mode".tr())
+                  : Text("profile_screen.light_mode".tr()),
+              leading: Icon(
+                themeProvider.isDark
+                    ? Icons.nightlight_round
+                    : Icons.wb_sunny_rounded,
+                color: themeProvider.isDark
+                    ? ThemeManager.primaryBlue
+                    : ThemeManager.primaryYellow,
               ),
               trailing: Switch(
-                value: true,
+                value: themeProvider.isDark,
                 activeColor: ThemeManager.primaryYellow,
-                onChanged: (val) {},
+                onChanged: (value) => themeProvider.toggleTheme(),
               ),
             ),
             Divider(height: 0, thickness: 0.5, endIndent: 20, indent: 20),
             _buildListTile(
               context,
+              themeProvider,
               "profile_screen.log_out".tr(),
               Icons.logout,
               () => _showLogoutDialog(context),
@@ -437,20 +464,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildListTile(
     BuildContext context,
+    ThemeProvider themeProvider,
     String title,
     IconData icon,
     VoidCallback onTap, {
     bool isRed = false,
   }) {
+    final theme = Theme.of(context);
+
     return ListTile(
       title: Text(
         title,
         style: TextStyle(
-          color: isRed ? Colors.red : Colors.black,
+          color: isRed
+              ? ThemeManager.errorRed
+              : theme.textTheme.bodyLarge?.color,
           fontWeight: FontWeight.w500,
         ),
       ),
-      leading: Icon(icon, color: isRed ? Colors.red : Colors.black),
+      leading: Icon(
+        icon,
+        color: isRed ? ThemeManager.errorRed : theme.textTheme.bodyLarge?.color,
+      ),
       trailing: Icon(
         Icons.arrow_forward_ios,
         color: ThemeManager.primaryYellow,
@@ -461,18 +496,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
-            Icon(Icons.logout, color: ThemeManager.errorRed),
-            SizedBox(width: 9),
-            Text("profile_screen.log_out".tr()),
+            const Icon(Icons.logout, color: ThemeManager.errorRed),
+            const SizedBox(width: 9),
+            Text(
+              "profile_screen.log_out".tr(),
+              style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+            ),
           ],
         ),
-        content: Text("profile_screen.logout_confirmation".tr()),
+        content: Text(
+          "profile_screen.logout_confirmation".tr(),
+          style: TextStyle(color: theme.textTheme.bodyMedium?.color),
+        ),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

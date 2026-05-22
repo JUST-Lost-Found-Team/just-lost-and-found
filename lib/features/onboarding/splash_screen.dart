@@ -48,7 +48,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.brightness == Brightness.dark
+          ? theme.scaffoldBackgroundColor
+          : Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
               "splash.tagline1".tr(),
               style: TextStyle(
                 fontSize: 20,
-                color: ThemeManager.primaryBlue,
+                color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -67,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
               "splash.tagline2".tr(),
               style: TextStyle(
                 fontSize: 20,
-                color: ThemeManager.primaryBlue,
+                color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),

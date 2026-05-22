@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:just_lost_and_found/features/posts/edit_post_screen.dart';
 import 'package:just_lost_and_found/features/posts/post_details.dart';
+import 'package:just_lost_and_found/helpers/post_actions_helper.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
 
 class MyPostsScreen extends StatelessWidget {
@@ -11,11 +12,12 @@ class MyPostsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      backgroundColor: const Color(0xFFD5D5D5),
+      //backgroundColor: const Color(0xFFD5D5D5),
       appBar: AppBar(
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           "my_posts.title".tr(),
@@ -42,11 +44,7 @@ class MyPostsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.post_add_rounded,
-                    size: 100,
-                    color: Colors.grey[300],
-                  ),
+                  Icon(Icons.post_add_rounded, size: 100, color: Colors.grey),
                   const SizedBox(height: 15),
                   Text(
                     "my_posts.no_posts_yet".tr(),
@@ -88,6 +86,7 @@ class MyPostsScreen extends StatelessWidget {
     String docId,
     BuildContext context,
   ) {
+    final theme = Theme.of(context);
     bool hasImage =
         data['images'] != null && (data['images'] as List).isNotEmpty;
     String? imageURL = hasImage ? data['images'][0] : null;
@@ -213,59 +212,61 @@ class MyPostsScreen extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      PopupMenuButton<String>(
-                        padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.more_horiz, size: 18),
-                        onSelected: (value) {
-                          if (value == 'resolved')
-                            _markAsResolved(docId, context);
-                          if (value == 'edit')
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPostScreen(
-                                  postData: data,
-                                  postId: docId,
+                      SizedBox(
+                        height: 22,
+
+                        child: PopupMenuButton<String>(
+                          color: theme.popupMenuTheme.color,
+
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(Icons.more_horiz, size: 24),
+                          onSelected: (value) {
+                            if (value == 'resolved') {
+                              PostActionsHelper.markAsResolved(context, docId);
+                            } else if (value == 'edit') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditPostScreen(
+                                    postData: data,
+                                    postId: docId,
+                                  ),
+                                ),
+                              );
+                            } else if (value == 'delete') {
+                              PostActionsHelper.deletePost(context, docId);
+                            }
+                          },
+                          itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                              value: 'resolved',
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.check_circle_outline,
+                                  color: Colors.green,
+                                ),
+                                title: Text(
+                                  "post_actions.mark_resolved_title".tr(),
                                 ),
                               ),
-                            );
-                          if (value == 'delete')
-                            _showDeleteConfirmation(docId, context);
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'resolved',
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.check_circle_outline,
-                                color: Colors.green,
-                              ),
-                              title: Text(
-                                "post_actions.mark_resolved_title".tr(),
+                            ),
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: ListTile(
+                                leading: Icon(Icons.edit, color: Colors.blue),
+                                title: Text("home_page.edit".tr()),
                               ),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.edit,
-                                color: Colors.blue,
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: ListTile(
+                                leading: Icon(Icons.delete, color: Colors.red),
+                                title: Text("post_actions.delete_title".tr()),
                               ),
-                              title: Text("home_page.edit".tr()),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              title: Text("post_actions.delete_title".tr()),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

@@ -10,11 +10,12 @@ class PostActionsHelper {
     String docId, {
     VoidCallback? onSuccess,
   }) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: theme.cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -74,6 +75,7 @@ class PostActionsHelper {
                 }
               },
               style: ElevatedButton.styleFrom(
+                fixedSize: Size(100, 50),
                 backgroundColor: ThemeManager.successGreen,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -98,11 +100,12 @@ class PostActionsHelper {
     String docId, {
     VoidCallback? onSuccess,
   }) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: theme.cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -159,6 +162,7 @@ class PostActionsHelper {
                 }
               },
               style: ElevatedButton.styleFrom(
+                fixedSize: Size(100, 50),
                 backgroundColor: ThemeManager.errorRed,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

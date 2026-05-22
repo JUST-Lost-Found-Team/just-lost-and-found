@@ -43,12 +43,13 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     int index, {
     bool hasUnread = false,
   }) {
+    final theme = Theme.of(context);
     Widget iconWidget = Icon(
       icon,
       size: 28,
       color: _currentIndex == index
           ? ThemeManager.primaryYellow
-          : ThemeManager.primaryBlue,
+          : theme.primaryColor,
     );
 
     if (hasUnread) {
@@ -80,7 +81,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                       : FontWeight.normal,
                   color: _currentIndex == index
                       ? ThemeManager.primaryYellow
-                      : ThemeManager.primaryBlue,
+                      : theme.primaryColor,
                 ),
               ),
             ),
@@ -99,14 +100,15 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     NotificationHandler.setup(context);
     context.locale;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         titleSpacing: 20,
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
 
         title: _currentIndex == 0
             ? Row(
@@ -142,7 +144,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         actions: [
           if (_currentIndex == 0) ...[
             PopupMenuButton<String>(
-              color: Colors.white,
+              color: theme.popupMenuTheme.color,
               icon: const Icon(Icons.filter_alt_rounded, color: Colors.white),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -166,16 +168,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                               ? FontWeight.bold
                               : FontWeight.normal,
                           color: selectedFilter == 'All'
-                              ? ThemeManager.primaryBlue
-                              : Colors.black87,
+                              ? theme.primaryColor
+                              : theme.textTheme.titleMedium!.color,
                         ),
                       ),
                       if (selectedFilter == 'All')
-                        Icon(
-                          Icons.check,
-                          color: ThemeManager.primaryBlue,
-                          size: 20,
-                        ),
+                        Icon(Icons.check, color: theme.primaryColor, size: 20),
                     ],
                   ),
                 ),
@@ -191,16 +189,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                               ? FontWeight.bold
                               : FontWeight.normal,
                           color: selectedFilter == 'Lost'
-                              ? ThemeManager.primaryBlue
-                              : Colors.black87,
+                              ? theme.primaryColor
+                              : theme.textTheme.titleMedium!.color,
                         ),
                       ),
                       if (selectedFilter == 'Lost')
-                        Icon(
-                          Icons.check,
-                          color: ThemeManager.primaryBlue,
-                          size: 20,
-                        ),
+                        Icon(Icons.check, color: theme.primaryColor, size: 20),
                     ],
                   ),
                 ),
@@ -216,16 +210,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                               ? FontWeight.bold
                               : FontWeight.normal,
                           color: selectedFilter == 'Found'
-                              ? ThemeManager.primaryBlue
-                              : Colors.black87,
+                              ? theme.primaryColor
+                              : theme.textTheme.titleMedium!.color,
                         ),
                       ),
                       if (selectedFilter == 'Found')
-                        Icon(
-                          Icons.check,
-                          color: ThemeManager.primaryBlue,
-                          size: 20,
-                        ),
+                        Icon(Icons.check, color: theme.primaryColor, size: 20),
                     ],
                   ),
                 ),
@@ -311,8 +301,8 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         child: BottomAppBar(
           elevation: 25,
           shadowColor: Colors.black,
-          surfaceTintColor: Colors.white,
-          color: Colors.white,
+          //  surfaceTintColor: Colors.white,
+          color: theme.navigationBarTheme.backgroundColor,
           shape: const CircularNotchedRectangle(),
           notchMargin: 10,
           child: SizedBox(

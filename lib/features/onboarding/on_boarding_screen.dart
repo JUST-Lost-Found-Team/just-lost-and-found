@@ -32,6 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final List<Map<String, String>> onboardingData = [
       {
         "title": "onboarding_screen.title_1".tr(),
@@ -53,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: Stack(
         children: [
           Positioned(
@@ -86,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Container(
               height: screenHeight * 0.44,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -112,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
-                        color: ThemeManager.primaryBlue,
+                        color: theme.primaryColor,
                         height: 1.2,
                       ),
                     ),
@@ -122,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
-                        color: subtitleColor,
+                        // color: subtitleColor,
                         height: 1.5,
                       ),
                     ),
