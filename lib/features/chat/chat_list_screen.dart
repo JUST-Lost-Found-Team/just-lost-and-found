@@ -12,9 +12,8 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFD5D5D5),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('chat_rooms')
@@ -35,11 +34,7 @@ class ChatListScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.chat_bubble_outline,
-                    size: 80,
-                    color: Colors.grey[400],
-                  ),
+                  Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey),
                   const SizedBox(height: 16),
                   Text(
                     "chat_list.no_messages".tr(),
@@ -175,7 +170,9 @@ class ChatListScreen extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: hasUnreadMessages ? Colors.white : Colors.white60,
+                      color: hasUnreadMessages
+                          ? theme.popupMenuTheme.color
+                          : theme.cardColor,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -212,7 +209,7 @@ class ChatListScreen extends StatelessWidget {
                           fontWeight: hasUnreadMessages
                               ? FontWeight.w900
                               : FontWeight.bold,
-                          color: ThemeManager.primaryBlue,
+                          color: theme.primaryColor,
                           fontSize: 16,
                         ),
                         maxLines: 1,
@@ -236,7 +233,7 @@ class ChatListScreen extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: hasUnreadMessages
-                                    ? Colors.black87
+                                    ? theme.textTheme.titleMedium!.color
                                     : Colors.grey.shade600,
                                 fontWeight: hasUnreadMessages
                                     ? FontWeight.bold
@@ -257,7 +254,7 @@ class ChatListScreen extends StatelessWidget {
                               timeString,
                               style: TextStyle(
                                 color: hasUnreadMessages
-                                    ? ThemeManager.primaryBlue
+                                    ? theme.primaryColor
                                     : Colors.grey.shade500,
                                 fontSize: 11,
                                 fontWeight: hasUnreadMessages

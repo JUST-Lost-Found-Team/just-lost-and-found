@@ -12,16 +12,16 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
-
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFD5D5D5),
+      //backgroundColor: const Color(0xFFD5D5D5),
       appBar: AppBar(
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           "notifications.title".tr(),
           style: const TextStyle(
-            color: Colors.white,
+            // color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -49,7 +49,7 @@ class NotificationsScreen extends StatelessWidget {
                   Icon(
                     Icons.notifications_off_outlined,
                     size: 80,
-                    color: Colors.grey[400],
+                    color: Colors.grey,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -117,7 +117,9 @@ class NotificationsScreen extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: isRead ? Colors.white70 : Colors.white,
+                    color: isRead
+                        ? theme.cardColor
+                        : theme.popupMenuTheme.color,
                     borderRadius: BorderRadius.circular(12),
                     border: isRead
                         ? null
@@ -133,7 +135,9 @@ class NotificationsScreen extends StatelessWidget {
                           : ThemeManager.primaryBlue.withOpacity(0.1),
                       child: Icon(
                         Icons.notifications_active,
-                        color: isRead ? Colors.grey : ThemeManager.primaryBlue,
+                        color: isRead
+                            ? Colors.grey
+                            : ThemeManager.primaryYellow,
                       ),
                     ),
                     title: Text(
@@ -143,7 +147,7 @@ class NotificationsScreen extends StatelessWidget {
                         fontWeight: isRead
                             ? FontWeight.normal
                             : FontWeight.bold,
-                        color: Colors.black87,
+                        //  color: Colors.black87,
                       ),
                     ),
                     subtitle: Text(

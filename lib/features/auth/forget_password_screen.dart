@@ -16,13 +16,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool loader = false;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFDFBFF),
+      backgroundColor: theme.brightness == Brightness.dark
+          ? theme.scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFDFBFF),
+        backgroundColor: theme.brightness == Brightness.dark
+            ? theme.scaffoldBackgroundColor
+            : Colors.white,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios_new,
+            Icons.arrow_back,
             color: ThemeManager.primaryBlue,
             size: 20,
           ),
@@ -75,7 +80,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.black54,
+                      //    color: Colors.black54,
                       fontSize: 15,
                       height: 1.4,
                     ),

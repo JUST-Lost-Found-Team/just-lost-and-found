@@ -233,6 +233,7 @@
     "settings": "الإعدادات",
     "language": "اللغة",
     "light_mode": "الوضع الفاتح",
+    "dark_mode": "الوضع الليلي",
     "log_out": "تسجيل الخروج",
     "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "cancel": "إلغاء"

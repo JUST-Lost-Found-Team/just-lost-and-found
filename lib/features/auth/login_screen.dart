@@ -61,7 +61,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.brightness == Brightness.dark
+          ? theme.scaffoldBackgroundColor
+          : Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -77,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30),
                     Image.asset(
                       'assets/images/logo.png',
-                      height: 200,
+                      height: 180,
                       fit: BoxFit.cover,
                     ),
                     Text(
@@ -85,14 +89,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         color: ThemeManager.primaryBlue,
                         fontWeight: FontWeight.bold,
-                        fontSize: 35,
+                        fontSize: 32,
                       ),
                     ),
                     // SizedBox(height: 10,),
+                    SizedBox(height: 8),
                     Text(
                       'login_screen.login_to_continue'.tr(),
                       style: TextStyle(
-                        color: Color.fromARGB(159, 23, 20, 20),
+                        // color: Color.fromARGB(159, 23, 20, 20),
                         fontSize: 18,
                       ),
                     ),
@@ -100,12 +105,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: emailCTRL,
                       decoration: InputDecoration(
-                        hintText: 'login_screen.email_hint'.tr(),
+                        hint: Text('login_screen.email_hint'.tr()),
                         filled: true,
                         fillColor: Colors.grey.withOpacity(0.24),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: ThemeManager.primaryYellow,
+                            width: 1.5,
+                          ),
                         ),
                         prefixIcon: const Icon(Icons.email),
                       ),
@@ -124,12 +136,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: passwordCTRL,
                       decoration: InputDecoration(
-                        hintText: 'login_screen.password_hint'.tr(),
+                        hint: Text('login_screen.password_hint'.tr()),
                         filled: true,
                         fillColor: Colors.grey.withOpacity(0.24),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: ThemeManager.primaryYellow,
+                            width: 1.5,
+                          ),
                         ),
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: GestureDetector(
@@ -212,8 +231,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           "login_screen.no_account".tr(),
-                          style: TextStyle(color: Colors.black, fontSize: 15),
+                          style: TextStyle(fontSize: 16),
                         ),
+                        SizedBox(width: 8),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -228,8 +248,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             'login_screen.create_account'.tr(),
                             style: TextStyle(
                               color: ThemeManager.primaryYellow,
-                              fontSize: 17,
-                              decoration: TextDecoration.underline,
+                              fontSize: 16,
+                              // decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w600,
                               decorationColor: ThemeManager.primaryYellow,
                               decorationThickness: 2,

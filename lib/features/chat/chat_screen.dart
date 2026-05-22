@@ -65,10 +65,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFD5D5D5),
       appBar: AppBar(
-        backgroundColor: ThemeManager.primaryBlue,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
@@ -156,6 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble(Map<String, dynamic> data) {
+    final theme = Theme.of(context);
     bool isMe = data['senderId'] == _auth.currentUser!.uid;
     Map<String, dynamic>? attachedProduct = data['postAttachment'];
     bool isRead = data['isRead'] ?? false;
@@ -236,7 +237,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             content: Text(
                               "chat_screen.snack_post_deleted".tr(),
                             ),
-                            backgroundColor: Colors.red,
+                            backgroundColor: ThemeManager.errorRed,
                           ),
                         );
                         return;
@@ -247,7 +248,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             content: Text(
                               "chat_screen.snack_post_resolved".tr(),
                             ),
-                            backgroundColor: Colors.orange,
+                            backgroundColor: ThemeManager.successGreen,
                           ),
                         );
                         return;
@@ -421,6 +422,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageInput() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -443,7 +445,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 maxLines: 5,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  fillColor: Colors.grey[300],
+                  fillColor: theme.cardColor,
                   hintText: "chat_screen.type_message_hint".tr(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:just_lost_and_found/features/onboarding/splash_screen.dart';
 import 'package:just_lost_and_found/services/notifications-handler.dart';
+import 'package:just_lost_and_found/services/theme_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
+import 'helpers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +27,16 @@ Future<void> main() async {
 
   runApp(
     EasyLocalization(
-      child: MyApp(seenOnboarding: seenOnboarding),
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       //  fallbackLocale: const Locale('en'),
       saveLocale: true,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ],
+        child: MyApp(seenOnboarding: seenOnboarding),
+      ),
     ),
   );
 }
@@ -40,12 +48,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(seenOnboarding: seenOnboarding),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeManager.lightTheme,
+          darkTheme: ThemeManager.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: SplashScreen(seenOnboarding: seenOnboarding),
+        );
+      },
     );
   }
 }
