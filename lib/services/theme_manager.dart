@@ -141,18 +141,17 @@ class ThemeManager {
         iconTheme: IconThemeData(color: Colors.white),
       ),
 
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryYellow,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          textStyle: _darkTextTheme.labelLarge,
-        ),
-      ),
-
+      // elevatedButtonTheme: ElevatedButtonThemeData(
+      //   style: ElevatedButton.styleFrom(
+      //     backgroundColor: primaryYellow,
+      //     foregroundColor: Colors.white,
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(12),
+      //     ),
+      //     padding: const EdgeInsets.symmetric(vertical: 15),
+      //     textStyle: _darkTextTheme.labelLarge,
+      //   ),
+      // ),
       dividerColor: const Color(0xFF333333),
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
