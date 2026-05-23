@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       'login_screen.welcome_back'.tr(),
                       style: TextStyle(
-                        color: ThemeManager.primaryBlue,
+                        color: theme.primaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
                       ),

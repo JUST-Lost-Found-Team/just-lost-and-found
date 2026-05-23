@@ -102,7 +102,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 Text(
                   'create_account.title'.tr(),
                   style: TextStyle(
-                    color: ThemeManager.primaryBlue,
+                    color: theme.primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 32,
                   ),

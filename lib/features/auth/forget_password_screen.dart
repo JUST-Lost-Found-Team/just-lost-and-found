@@ -26,11 +26,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             ? theme.scaffoldBackgroundColor
             : Colors.white,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: ThemeManager.primaryBlue,
-            size: 20,
-          ),
+          icon: Icon(Icons.arrow_back, color: theme.primaryColor, size: 24),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -52,9 +48,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 Text(
                   'forget_password.title'.tr(),
                   style: TextStyle(
-                    color: ThemeManager.primaryBlue,
+                    color: theme.primaryColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 32,
                   ),
                 ),
                 const SizedBox(height: 12),
