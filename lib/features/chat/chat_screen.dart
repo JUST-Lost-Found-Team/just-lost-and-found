@@ -1,11 +1,16 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:just_lost_and_found/features/posts/post_details.dart';
 import 'package:just_lost_and_found/services/chat_service.dart';
 import 'package:just_lost_and_found/services/notifications-handler.dart';
 import 'package:just_lost_and_found/services/theme_manager.dart';
+import 'package:just_lost_and_found/services/cloudinary_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
@@ -29,7 +34,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Map<String, dynamic>? _attachedPost;
-
+  bool _isUploadingImage = false;
+  File? _selectedImageFile;
   @override
   void initState() {
     super.initState();
@@ -45,22 +51,121 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessage() async {
-    if (_messageController.text.trim().isNotEmpty) {
-      String msgText = _messageController.text.trim();
-      _messageController.clear();
+    if (_messageController.text.trim().isEmpty && _selectedImageFile == null)
+      return;
 
-      await _chatService.sendMessage(
-        widget.receiverId,
-        msgText,
-        postAttachment: _attachedPost,
-      );
+    String msgText = _messageController.text.trim();
+    String? imageUrl;
 
-      if (_attachedPost != null) {
-        setState(() {
-          _attachedPost = null;
-        });
+    if (_selectedImageFile != null) {
+      setState(() => _isUploadingImage = true);
+      try {
+        Cloudinary cloudinary = Cloudinary();
+        imageUrl = await cloudinary.uploadToCloudinary(_selectedImageFile!);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Error uploading image"),
+            backgroundColor: Colors.red,
+          ),
+        );
+        setState(() => _isUploadingImage = false);
+        return;
       }
     }
+
+    await _chatService.sendMessage(
+      widget.receiverId,
+      msgText,
+      postAttachment: _attachedPost,
+      imageUrl: imageUrl,
+    );
+
+    _messageController.clear();
+    setState(() {
+      _attachedPost = null;
+      _selectedImageFile = null;
+      _isUploadingImage = false;
+    });
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: source,
+      imageQuality: 70,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showImageOptions() {
+    final theme = Theme.of(context);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: theme.cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: const Icon(
+                  Icons.camera_alt,
+                  color: ThemeManager.primaryBlue,
+                ),
+                title: Text(
+                  "add_post.take_a_photo".tr(),
+                  style: TextStyle(
+                    color: theme.textTheme.bodyLarge?.color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_library,
+                  color: ThemeManager.primaryBlue,
+                ),
+                title: Text(
+                  "add_post.choose_from_gallery".tr(),
+                  style: TextStyle(
+                    color: theme.textTheme.bodyLarge?.color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -86,7 +191,11 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(child: _buildMessageList()),
-
+          if (_isUploadingImage)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+              child: LinearProgressIndicator(color: ThemeManager.primaryYellow),
+            ),
           _buildMessageInput(),
         ],
       ),
@@ -160,8 +269,10 @@ class _ChatScreenState extends State<ChatScreen> {
     bool isMe = data['senderId'] == _auth.currentUser!.uid;
     Map<String, dynamic>? attachedProduct = data['postAttachment'];
     bool isRead = data['isRead'] ?? false;
-
+    String? imageUrl = data['imageUrl'];
+    String msgText = data['message'] ?? '';
     String timeString = "";
+
     if (data['timestamp'] != null) {
       DateTime msgDate = (data['timestamp'] as Timestamp).toDate();
       DateTime now = DateTime.now();
@@ -373,24 +484,44 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 },
               ),
-
+            if (imageUrl != null && imageUrl.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    width: 220,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      width: 220,
+                      height: 220,
+                      color: Colors.grey[300],
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+              ),
             Wrap(
               alignment: WrapAlignment.end,
               crossAxisAlignment: WrapCrossAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    end: 12.0,
-                    bottom: 2.0,
-                  ),
-                  child: Text(
-                    data['message'],
-                    style: TextStyle(
-                      color: isMe ? Colors.white : Colors.black87,
-                      fontSize: 16,
+                if (msgText.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      end: 12.0,
+                      bottom: 2.0,
+                    ),
+                    child: Text(
+                      msgText,
+                      style: TextStyle(
+                        color: isMe ? Colors.white : Colors.black87,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -435,43 +566,96 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                minLines: 1,
-                maxLines: 5,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  fillColor: theme.cardColor,
-                  hintText: "chat_screen.type_message_hint".tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_selectedImageFile != null)
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(
+                    bottom: 10,
+                    left: 12,
+                    right: 12,
+                    top: 8,
                   ),
-                  filled: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+                  height: 120,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: FileImage(_selectedImageFile!),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
+
+                if (!_isUploadingImage)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedImageFile = null),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.redAccent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: const BoxDecoration(
-                color: ThemeManager.primaryBlue,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.send, color: Colors.white),
-                onPressed: sendMessage,
-              ),
+          SafeArea(
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.add_photo_alternate_outlined),
+                  color: ThemeManager.primaryBlue,
+                  onPressed: _isUploadingImage ? null : _showImageOptions,
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    minLines: 1,
+                    maxLines: 5,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      fillColor: theme.cardColor,
+                      hintText: "chat_screen.type_message_hint".tr(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  decoration: const BoxDecoration(
+                    color: ThemeManager.primaryBlue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    onPressed: _isUploadingImage ? null : sendMessage,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -18,6 +18,7 @@ class ChatService {
     String receiverId,
     String message, {
     Map<String, dynamic>? postAttachment,
+    String? imageUrl,
   }) async {
     final String currentUserId = _auth.currentUser!.uid;
 
@@ -27,6 +28,7 @@ class ChatService {
       'message': message,
       'timestamp': FieldValue.serverTimestamp(),
       'postAttachment': postAttachment,
+      'imageUrl': imageUrl,
       'isRead': false,
     };
 
@@ -38,14 +40,18 @@ class ChatService {
         .collection('messages')
         .add(newMessage);
 
+    String displayLastMessage = message.isNotEmpty
+        ? message
+        : (imageUrl != null ? "📷 Photo" : "");
+
     await _firestore.collection('chat_rooms').doc(chatRoomId).set({
       'users': [currentUserId, receiverId],
-      'lastMessage': message,
+      'lastMessage': displayLastMessage,
       'timestamp': FieldValue.serverTimestamp(),
       'lastMessageSenderId': currentUserId,
       'isRead': false,
     }, SetOptions(merge: true));
-    _sendPushNotification(receiverId, message, currentUserId);
+    _sendPushNotification(receiverId, displayLastMessage, currentUserId);
   }
 
   Future<void> _sendPushNotification(

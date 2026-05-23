@@ -118,7 +118,9 @@ class NotificationsScreen extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isRead
-                        ? theme.cardColor
+                        ? theme.brightness == Brightness.dark
+                              ? theme.cardColor
+                              : Colors.grey.shade200
                         : theme.popupMenuTheme.color,
                     borderRadius: BorderRadius.circular(12),
                     border: isRead
