@@ -145,7 +145,7 @@ class _ExplorePageState extends State<ExplorePage> {
       }
 
       if (isFilteringByLocation) {
-        return location == selectedLocationFilter!.trim().toLowerCase();
+        return location.contains(selectedLocationFilter!.trim().toLowerCase());
       }
       selectedLocationFilter = null;
 
