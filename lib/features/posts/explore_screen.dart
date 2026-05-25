@@ -174,6 +174,7 @@ class _ExplorePageState extends State<ExplorePage> {
               setState(() {
                 selectedCategory = index;
                 searchController.clear();
+                FocusScope.of(context).unfocus();
               });
 
               applyFilters();
@@ -393,6 +394,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     final String category = post['category'] ?? 'General';
 
                     return _buildPostCard(
+                      focusNode: _focusNode,
                       context: context,
                       post: post,
                       docId: docId,
@@ -689,6 +691,7 @@ class LocationSelectionSheet extends StatelessWidget {
 }
 
 Widget _buildPostCard({
+  required FocusNode focusNode,
   required BuildContext context,
   required Map<String, dynamic> post,
   required docId,
@@ -706,6 +709,7 @@ Widget _buildPostCard({
 
   return GestureDetector(
     onTap: () {
+      focusNode.unfocus();
       Navigator.push(
         context,
         MaterialPageRoute(
