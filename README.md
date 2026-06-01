@@ -52,22 +52,27 @@ A comprehensive cross-platform mobile application built to help university stude
 
 ### Status-Based Feed Report
 *The main feed filtered explicitly by 'Found' or 'Lost' status.*
+
 <img width="385" height="775" alt="Screenshot 2026-05-28 190757" src="https://github.com/user-attachments/assets/b984c59f-a2ca-425a-8fdd-101c221328f8" />
 
 
 ### Explore Report (Advanced Data Retrieval)
 *Showing advanced data retrieval based on specific categories, locations, or search keywords.*
+
 <img width="389" height="776" alt="Screenshot 2026-05-28 191141" src="https://github.com/user-attachments/assets/ca14032d-fc88-4874-8b67-450cb7b1ffd5" />
 
 
 ### Active Conversations Summary
 *A chronological layout displaying active chat rooms and the latest messages.*
+
 <img width="389" height="775" alt="Screenshot 2026-05-28 190336" src="https://github.com/user-attachments/assets/56724a61-4a96-477a-8c88-5f355f1ceb81" />
 
 ### User Activity Report (My Posts)
 *Tracking the user's reported items and their current resolutions status.*
+
 <img width="392" height="769" alt="Screenshot 2026-05-28 191548" src="https://github.com/user-attachments/assets/ff5f0215-56f4-4e61-bb65-e275dddea76c" />
 
 ### System Alerts Report
 *Showing the history of automated 5-day follow-up reminders.*
+
 <img width="389" height="774" alt="Screenshot 2026-05-28 192447" src="https://github.com/user-attachments/assets/7a051758-63bb-426e-b616-b0f113108066" />
