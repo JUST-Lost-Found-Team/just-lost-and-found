@@ -21,10 +21,10 @@ A comprehensive cross-platform mobile application built to help university stude
 ## 📱 Application Layouts & Reports
 
 ### Splash & Onboarding Screens
-<img width="397" height="776" alt="Screenshot 2026-05-28 151419" src="https://github.com/user-attachments/assets/d44a96b9-87d4-4d9d-a7e5-c5f6229b58e0" />
-<img width="398" height="777" alt="Screenshot 2026-05-28 151517" src="https://github.com/user-attachments/assets/4d2c5f57-fd80-45e7-a89c-4462051e8366" />
-<img width="394" height="774" alt="Screenshot 2026-05-28 151602" src="https://github.com/user-attachments/assets/2d02b91d-32c9-457a-8b19-bc1a3d84a5a1" />
-<img width="392" height="776" alt="Screenshot 2026-05-28 151656" src="https://github.com/user-attachments/assets/137f0a71-0186-48c8-a396-ddceff75b121" />
+<img width="200"  alt="Screenshot 2026-05-28 151419" src="https://github.com/user-attachments/assets/d44a96b9-87d4-4d9d-a7e5-c5f6229b58e0 " />
+<img width="200"  alt="Screenshot 2026-05-28 151517" src="https://github.com/user-attachments/assets/4d2c5f57-fd80-45e7-a89c-4462051e8366" />
+<img width="200"  alt="Screenshot 2026-05-28 151602" src="https://github.com/user-attachments/assets/2d02b91d-32c9-457a-8b19-bc1a3d84a5a1" />
+<img width="200"  alt="Screenshot 2026-05-28 151656" src="https://github.com/user-attachments/assets/137f0a71-0186-48c8-a396-ddceff75b121" />
 
 ### Authentication Screens
 <img width="392" height="778" alt="Screenshot 2026-05-28 151845" src="https://github.com/user-attachments/assets/613acb2d-e065-4282-850e-def147fea1df" />
