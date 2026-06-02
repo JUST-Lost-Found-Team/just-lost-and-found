@@ -400,19 +400,17 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
           String title = data['title'] ?? 'عنصر';
           String status = data['status'] ?? 'Lost';
 
-          String msg = status == 'Lost'
-              ? "notifications.lost_prompt".tr(args: [title])
-              : "notifications.found_prompt".tr(args: [title]);
+          int totalDaysPassed = DateTime.now().difference(createdAt).inDays;
 
           await FirebaseFirestore.instance.collection('notifications').add({
             'userId': user.uid,
             'postId': doc.id,
             'type': status == 'Lost' ? 'lost' : 'found',
             'itemName': title,
+            'daysPassed': totalDaysPassed,
             'isRead': false,
             'createdAt': FieldValue.serverTimestamp(),
           });
-
           await FirebaseFirestore.instance
               .collection('posts')
               .doc(doc.id)

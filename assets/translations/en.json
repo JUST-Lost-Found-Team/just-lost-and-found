@@ -341,8 +341,8 @@
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications yet",
-    "lost_prompt": "It's been 5 days since you lost '{}'. Did you find it?",
-    "found_prompt": "It's been 5 days since you found '{}'. Was it returned to its owner?",
+    "lost_prompt": "It's been {days} days since you lost {item}. Did you find it?",
+    "found_prompt": "It's been {days} days since you found {item}. Was it returned to its owner?",
     "just_now": "Just now"
   }
 }
