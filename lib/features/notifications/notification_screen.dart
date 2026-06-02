@@ -74,13 +74,21 @@ class NotificationsScreen extends StatelessWidget {
 
               String displayMessage = data['message'] ?? '';
 
+              final int daysPassed = data['daysPassed'] ?? 5;
+
               if (data['type'] == 'lost') {
                 displayMessage = "notifications.lost_prompt".tr(
-                  args: [data['itemName'] ?? ''],
+                  namedArgs: {
+                    'item': data['itemName'] ?? '',
+                    'days': daysPassed.toString(),
+                  },
                 );
               } else if (data['type'] == 'found') {
                 displayMessage = "notifications.found_prompt".tr(
-                  args: [data['itemName'] ?? ''],
+                  namedArgs: {
+                    'item': data['itemName'] ?? '',
+                    'days': daysPassed.toString(),
+                  },
                 );
               }
 
