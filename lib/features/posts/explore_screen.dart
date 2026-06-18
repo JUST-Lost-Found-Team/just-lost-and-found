@@ -130,6 +130,12 @@ class _ExplorePageState extends State<ExplorePage> {
     final bool isFilteringByLocation = selectedLocationFilter != null;
 
     final results = allPosts.where((post) {
+      final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+      if (post['userId'] == currentUserId) {
+        return false;
+      }
+
       final title = post['title']?.toString().toLowerCase() ?? '';
       final description = post['description']?.toString().toLowerCase() ?? '';
       final category = post['category']?.toString().trim().toLowerCase() ?? '';
