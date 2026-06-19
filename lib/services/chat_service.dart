@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -75,11 +74,14 @@ class ChatService {
           'Content-Type': 'application/json; charset=utf-8',
 
           'Authorization':
-              'Basic os_v2_app_qbufkzohunhrzo62eaqmgccx6synpa67vz7eon4aqt7kjg67ahzyqpi6wiaq3b426qztspqskdvffgg44mrgaq4nwiuhstlqtvspila',
+              'Basic os_v2_app_qbufkzohunhrzo62eaqmgccx6twukccitmuuua4vi7pw7xf42jjaykqxlc56r4zwflffpou4gcc3p63nscx6fr6ruej2zy7pnyj6l2i',
         },
         body: jsonEncode({
           'app_id': '80685565-c7a3-4f1c-bbda-2020c30857f4',
-          'include_external_user_ids': [receiverId],
+          'target_channel': 'push',
+          'include_aliases': {
+            'external_id': [receiverId],
+          },
           'headings': {'en': senderName, 'ar': senderName},
           'contents': {'en': message, 'ar': message},
           'data': {'senderId': currentUserId, 'senderName': senderName},
