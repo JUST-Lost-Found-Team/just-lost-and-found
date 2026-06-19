@@ -85,6 +85,7 @@ class PostActionsHelper {
                 "post_actions.confirm_btn".tr(),
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
